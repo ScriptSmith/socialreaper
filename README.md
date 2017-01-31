@@ -1,12 +1,10 @@
-# socialreaper
-[Documentation](https://socialreaper.readthedocs.io) 
 ![](https://readthedocs.org/projects/socialreaper/badge/?version=latest)
-
-[Build](https://travis-ci.org/ScriptSmith/socialreaper)
 ![](https://travis-ci.org/ScriptSmith/socialreaper.svg?branch=master)
-
+# socialreaper
 `socialreaper` is a Python 3 library that scrapes Facebook, Twitter, Reddit 
 and Youtube. 
+
+[Documentation](https://socialreaper.readthedocs.io) 
 
 # Example
 ## Facebook
