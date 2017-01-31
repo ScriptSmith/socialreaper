@@ -38,7 +38,7 @@ to_csv(list(tweets), filename='trump.csv')
 ```
 
 ## Reddit
-Get the top 10 comments from 50 threads of all time on reddit
+Get the top 10 comments from the 50 threads of all time on reddit
 ```python
 from socialreaper import Reddit
 from socialreaper.tools import flatten
