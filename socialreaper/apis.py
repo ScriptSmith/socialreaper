@@ -34,9 +34,6 @@ class API:
         """
         An interface for get requests that handles errors more gracefully to
         prevent data loss
-        :param args:
-        :param kwargs:
-        :return:
         """
 
         try:

@@ -8,10 +8,11 @@ import collections
 def flatten(dictionary, parent_key=False, separator='.'):
     """
     Turn a nested dictionary into a flattened dictionary
-    :param dictionary:
-    :param parent_key:
+
+    :param dictionary: The dictionary to flatten
+    :param parent_key: The string to prepend to dictionary's keys
     :param separator: The string used to separate flattened keys
-    :return:
+    :return: A flattened dictionary
     """
 
     items = []
@@ -27,6 +28,14 @@ def flatten(dictionary, parent_key=False, separator='.'):
 
 
 def fill_gaps(list_dicts):
+    """
+    Fill gaps in a list of dictionaries. Add empty keys to dictionaries in
+    the list that don't contain other entries' keys
+
+    :param list_dicts: A list of dictionaries
+    :return: A list of dictionaries with identical keys
+    """
+
     field_names = []  # != set bc. preserving order is better for output
     for datum in list_dicts:
         for key in datum.keys():
@@ -103,11 +112,29 @@ def to_csv(data, field_names=None, filename='data.csv',
 
 
 def to_json(data, filename='data.json', indent=4):
+    """
+    Write an object to a json file
+
+    :param data: The object
+    :param filename: The name of the file
+    :param indent: The indentation of the file
+    :return: None
+    """
+
     with open(filename, 'w') as f:
         f.write(json.dumps(data, indent=indent))
 
 
 def save_file(filename, source, folder="Downloads"):
+    """
+    Download and save a file at path
+
+    :param filename: The name of the file
+    :param source: The location of the resource online
+    :param folder: The directory the file will be saved in
+    :return: None
+    """
+
     r = requests.get(source, stream=True)
     if r.status_code == 200:
         if not path.isdir(folder):
