@@ -1,0 +1,1067 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>socialreaper package &#8212; socialreaper 0.1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="socialreaper-package">
+<h1>socialreaper package<a class="headerlink" href="#socialreaper-package" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+</div>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-socialreaper.apis">
+<span id="socialreaper-apis-module"></span><h2>socialreaper.apis module<a class="headerlink" href="#module-socialreaper.apis" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="socialreaper.apis.API">
+<em class="property">class </em><code class="descclassname">socialreaper.apis.</code><code class="descname">API</code><a class="headerlink" href="#socialreaper.apis.API" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<dl class="method">
+<dt id="socialreaper.apis.API.get">
+<code class="descname">get</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#socialreaper.apis.API.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>An interface for get requests that handles errors more gracefully to
+prevent data loss</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="socialreaper.apis.API.log_error">
+<code class="descname">log_error</code><span class="sig-paren">(</span><em>e</em><span class="sig-paren">)</span><a class="headerlink" href="#socialreaper.apis.API.log_error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print errors. Stop travis-ci from leaking api keys</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>e</strong> &#8211; The error</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="socialreaper.apis.Facebook">
+<em class="property">class </em><code class="descclassname">socialreaper.apis.</code><code class="descname">Facebook</code><span class="sig-paren">(</span><em>api_key</em><span class="sig-paren">)</span><a class="headerlink" href="#socialreaper.apis.Facebook" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#socialreaper.apis.API" title="socialreaper.apis.API"><code class="xref py py-class docutils literal"><span class="pre">socialreaper.apis.API</span></code></a></p>
+<dl class="method">
+<dt id="socialreaper.apis.Facebook.api_call">
+<code class="descname">api_call</code><span class="sig-paren">(</span><em>edge</em>, <em>parameters</em>, <em>return_results=True</em><span class="sig-paren">)</span><a class="headerlink" href="#socialreaper.apis.Facebook.api_call" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="socialreaper.apis.Facebook.page_posts">
+<code class="descname">page_posts</code><span class="sig-paren">(</span><em>page_id</em>, <em>after=''</em>, <em>post_type='posts'</em>, <em>include_hidden=False</em>, <em>params=None</em><span class="sig-paren">)</span><a class="headerlink" href="#socialreaper.apis.Facebook.page_posts" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>page_id</strong> &#8211; </li>
+<li><strong>after</strong> &#8211; </li>
+<li><strong>post_type</strong> &#8211; Can be &#8216;posts&#8217;, &#8216;feed&#8217;, &#8216;tagged&#8217;, &#8216;promotable_posts&#8217;</li>
+<li><strong>include_hidden</strong> &#8211; </li>
+<li><strong>params</strong> &#8211; </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="socialreaper.apis.Facebook.post">
+<code class="descname">post</code><span class="sig-paren">(</span><em>post_id</em>, <em>params=None</em><span class="sig-paren">)</span><a class="headerlink" href="#socialreaper.apis.Facebook.post" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>post_id</strong> &#8211; </li>
+<li><strong>params</strong> &#8211; </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="socialreaper.apis.Facebook.post_comments">
+<code class="descname">post_comments</code><span class="sig-paren">(</span><em>post_id</em>, <em>after=''</em>, <em>order='chronological'</em>, <em>filter='stream'</em>, <em>params=None</em><span class="sig-paren">)</span><a class="headerlink" href="#socialreaper.apis.Facebook.post_comments" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>post_id</strong> &#8211; </li>
+<li><strong>after</strong> &#8211; </li>
+<li><strong>order</strong> &#8211; Can be &#8216;ranked&#8217;, &#8216;chronological&#8217;, &#8216;reverse_chronological&#8217;</li>
+<li><strong>filter</strong> &#8211; Can be &#8216;stream&#8217;, &#8216;toplevel&#8217;</li>
+<li><strong>params</strong> &#8211; </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="socialreaper.apis.Reddit">
+<em class="property">class </em><code class="descclassname">socialreaper.apis.</code><code class="descname">Reddit</code><span class="sig-paren">(</span><em>application_id</em>, <em>application_secret</em><span class="sig-paren">)</span><a class="headerlink" href="#socialreaper.apis.Reddit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#socialreaper.apis.API" title="socialreaper.apis.API"><code class="xref py py-class docutils literal"><span class="pre">socialreaper.apis.API</span></code></a></p>
+<dl class="method">
+<dt id="socialreaper.apis.Reddit.api_call">
+<code class="descname">api_call</code><span class="sig-paren">(</span><em>edge</em>, <em>parameters</em>, <em>return_results=True</em><span class="sig-paren">)</span><a class="headerlink" href="#socialreaper.apis.Reddit.api_call" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="socialreaper.apis.Reddit.auth">
+<code class="descname">auth</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#socialreaper.apis.Reddit.auth" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="socialreaper.apis.Reddit.more_children">
+<code class="descname">more_children</code><span class="sig-paren">(</span><em>children</em>, <em>link_id</em>, <em>sort='new'</em>, <em>params=None</em><span class="sig-paren">)</span><a class="headerlink" href="#socialreaper.apis.Reddit.more_children" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="socialreaper.apis.Reddit.search">
+<code class="descname">search</code><span class="sig-paren">(</span><em>query</em>, <em>count=100</em>, <em>order='new'</em>, <em>page=''</em>, <em>result_type='link'</em>, <em>time_period='all'</em>, <em>params=None</em><span class="sig-paren">)</span><a class="headerlink" href="#socialreaper.apis.Reddit.search" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="socialreaper.apis.Reddit.subreddit">
+<code class="descname">subreddit</code><span class="sig-paren">(</span><em>subreddit</em>, <em>count=100</em>, <em>category='new'</em>, <em>page=''</em>, <em>params=None</em>, <em>time_period='all'</em><span class="sig-paren">)</span><a class="headerlink" href="#socialreaper.apis.Reddit.subreddit" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="socialreaper.apis.Reddit.thread_comments">
+<code class="descname">thread_comments</code><span class="sig-paren">(</span><em>thread_id</em>, <em>subreddit</em>, <em>count=1000</em>, <em>order='top'</em>, <em>params=None</em><span class="sig-paren">)</span><a class="headerlink" href="#socialreaper.apis.Reddit.thread_comments" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="socialreaper.apis.Reddit.user">
+<code class="descname">user</code><span class="sig-paren">(</span><em>user</em>, <em>count=100</em>, <em>order='new'</em>, <em>page=''</em>, <em>result_type='overview'</em>, <em>params=None</em>, <em>time_period='all'</em><span class="sig-paren">)</span><a class="headerlink" href="#socialreaper.apis.Reddit.user" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="socialreaper.apis.Twitter">
+<em class="property">class </em><code class="descclassname">socialreaper.apis.</code><code class="descname">Twitter</code><span class="sig-paren">(</span><em>app_key</em>, <em>app_secret</em>, <em>oauth_token</em>, <em>oauth_token_secret</em><span class="sig-paren">)</span><a class="headerlink" href="#socialreaper.apis.Twitter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#socialreaper.apis.API" title="socialreaper.apis.API"><code class="xref py py-class docutils literal"><span class="pre">socialreaper.apis.API</span></code></a></p>
+<dl class="method">
+<dt id="socialreaper.apis.Twitter.api_call">
+<code class="descname">api_call</code><span class="sig-paren">(</span><em>edge</em>, <em>parameters</em>, <em>return_results=True</em><span class="sig-paren">)</span><a class="headerlink" href="#socialreaper.apis.Twitter.api_call" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="socialreaper.apis.Twitter.search">
+<code class="descname">search</code><span class="sig-paren">(</span><em>query</em>, <em>count=100</em>, <em>max_id=''</em>, <em>result_type='mixed'</em>, <em>include_entities=True</em>, <em>params=None</em><span class="sig-paren">)</span><a class="headerlink" href="#socialreaper.apis.Twitter.search" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="socialreaper.apis.Twitter.user">
+<code class="descname">user</code><span class="sig-paren">(</span><em>username</em>, <em>count=200</em>, <em>max_id=None</em>, <em>exclude_replies=False</em>, <em>include_retweets=False</em>, <em>params=None</em><span class="sig-paren">)</span><a class="headerlink" href="#socialreaper.apis.Twitter.user" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="socialreaper.apis.Youtube">
+<em class="property">class </em><code class="descclassname">socialreaper.apis.</code><code class="descname">Youtube</code><span class="sig-paren">(</span><em>api_key</em><span class="sig-paren">)</span><a class="headerlink" href="#socialreaper.apis.Youtube" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#socialreaper.apis.API" title="socialreaper.apis.API"><code class="xref py py-class docutils literal"><span class="pre">socialreaper.apis.API</span></code></a></p>
+<dl class="method">
+<dt id="socialreaper.apis.Youtube.api_call">
+<code class="descname">api_call</code><span class="sig-paren">(</span><em>edge</em>, <em>parameters</em>, <em>return_results=True</em><span class="sig-paren">)</span><a class="headerlink" href="#socialreaper.apis.Youtube.api_call" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="socialreaper.apis.Youtube.channel">
+<code class="descname">channel</code><span class="sig-paren">(</span><em>channel_id</em>, <em>count=50</em>, <em>order='date'</em>, <em>page=''</em>, <em>result_type='video'</em>, <em>params=None</em><span class="sig-paren">)</span><a class="headerlink" href="#socialreaper.apis.Youtube.channel" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="socialreaper.apis.Youtube.channel_comments">
+<code class="descname">channel_comments</code><span class="sig-paren">(</span><em>channel_id</em>, <em>count=100</em>, <em>order='time'</em>, <em>page=''</em>, <em>search_term=''</em>, <em>text_format='html'</em>, <em>params=None</em><span class="sig-paren">)</span><a class="headerlink" href="#socialreaper.apis.Youtube.channel_comments" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="socialreaper.apis.Youtube.guess_channel_id">
+<code class="descname">guess_channel_id</code><span class="sig-paren">(</span><em>username</em>, <em>count=5</em><span class="sig-paren">)</span><a class="headerlink" href="#socialreaper.apis.Youtube.guess_channel_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="socialreaper.apis.Youtube.search">
+<code class="descname">search</code><span class="sig-paren">(</span><em>query</em>, <em>count=50</em>, <em>order='relevance'</em>, <em>page=''</em>, <em>result_type='video'</em>, <em>channel_id=None</em>, <em>channel_type=None</em>, <em>event_type=None</em>, <em>location=None</em>, <em>location_radius=None</em>, <em>published_after=None</em>, <em>published_before=None</em>, <em>region_code=None</em>, <em>relevance_language=None</em>, <em>safe_search=None</em>, <em>topic_id=None</em>, <em>video_caption=None</em>, <em>video_category_id=None</em>, <em>video_definition=None</em>, <em>video_dimension=None</em>, <em>video_duration=None</em>, <em>video_embeddable=None</em>, <em>video_license=None</em>, <em>video_syndicated=None</em>, <em>video_type=None</em>, <em>params=None</em><span class="sig-paren">)</span><a class="headerlink" href="#socialreaper.apis.Youtube.search" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="socialreaper.apis.Youtube.video_comments">
+<code class="descname">video_comments</code><span class="sig-paren">(</span><em>video_id</em>, <em>count=100</em>, <em>order='time'</em>, <em>page=''</em>, <em>search_terms=None</em>, <em>text_format='html'</em>, <em>params=None</em><span class="sig-paren">)</span><a class="headerlink" href="#socialreaper.apis.Youtube.video_comments" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="socialreaper.apis.Youtube.videos">
+<code class="descname">videos</code><span class="sig-paren">(</span><em>video_ids</em>, <em>count=50</em>, <em>page=''</em>, <em>params=None</em><span class="sig-paren">)</span><a class="headerlink" href="#socialreaper.apis.Youtube.videos" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-socialreaper.exceptions">
+<span id="socialreaper-exceptions-module"></span><h2>socialreaper.exceptions module<a class="headerlink" href="#module-socialreaper.exceptions" title="Permalink to this headline">¶</a></h2>
+<dl class="exception">
+<dt id="socialreaper.exceptions.ApiError">
+<em class="property">exception </em><code class="descclassname">socialreaper.exceptions.</code><code class="descname">ApiError</code><a class="headerlink" href="#socialreaper.exceptions.ApiError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">Exception</span></code></p>
+<p>The non-fatal failure of the api to fulfill a request</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="socialreaper.exceptions.FatalApiError">
+<em class="property">exception </em><code class="descclassname">socialreaper.exceptions.</code><code class="descname">FatalApiError</code><a class="headerlink" href="#socialreaper.exceptions.FatalApiError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">Exception</span></code></p>
+<p>The fatal failure of the api to fulfill a request</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-socialreaper.generators">
+<span id="socialreaper-generators-module"></span><h2>socialreaper.generators module<a class="headerlink" href="#module-socialreaper.generators" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="socialreaper.generators.Facebook">
+<em class="property">class </em><code class="descclassname">socialreaper.generators.</code><code class="descname">Facebook</code><span class="sig-paren">(</span><em>api_key</em>, <em>log_function=&lt;built-in function print&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#socialreaper.generators.Facebook" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#socialreaper.generators.Source" title="socialreaper.generators.Source"><code class="xref py py-class docutils literal"><span class="pre">socialreaper.generators.Source</span></code></a></p>
+<dl class="method">
+<dt id="socialreaper.generators.Facebook.page_posts">
+<code class="descname">page_posts</code><span class="sig-paren">(</span><em>page_id</em>, <em>count=50</em>, <em>post_type='posts'</em>, <em>include_hidden=False</em><span class="sig-paren">)</span><a class="headerlink" href="#socialreaper.generators.Facebook.page_posts" title="Permalink to this definition">¶</a></dt>
+<dd><p>Page&#8217;s posts</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>page_id</strong> &#8211; The id of the page</li>
+<li><strong>count</strong> &#8211; The number of posts to retrieve</li>
+<li><strong>post_type</strong> &#8211; The type of posts. Can be &#8216;posts&#8217; for posts
+published by the page, &#8216;feed&#8217; for posts made to the
+timeline of the page by anyone, &#8216;tagged&#8217; for public
+posts tagging the page, &#8216;promotable_posts&#8217; for
+posts that can be boosted (including unpublished
+and scheduled posts</li>
+<li><strong>include_hidden</strong> &#8211; Include posts hidden by the page</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">List of posts</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="socialreaper.generators.Facebook.page_posts_comments">
+<code class="descname">page_posts_comments</code><span class="sig-paren">(</span><em>page_id</em>, <em>post_count=50</em>, <em>post_type='posts'</em>, <em>include_hidden_posts=False</em>, <em>comment_count=50</em>, <em>comment_category='stream'</em>, <em>comment_order='chronological'</em><span class="sig-paren">)</span><a class="headerlink" href="#socialreaper.generators.Facebook.page_posts_comments" title="Permalink to this definition">¶</a></dt>
+<dd><p>Page&#8217;s post&#8217;s comments</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>page_id</strong> &#8211; The id of the page</li>
+<li><strong>post_count</strong> &#8211; The number of posts to retrieve</li>
+<li><strong>post_type</strong> &#8211; The type of posts. Can be &#8216;posts&#8217; for posts
+published by the page, &#8216;feed&#8217; for posts made to the
+timeline of the page by anyone, &#8216;tagged&#8217; for public
+posts tagging the page, &#8216;promotable_posts&#8217; for
+posts that can be boosted (including unpublished
+and scheduled posts</li>
+<li><strong>include_hidden_posts</strong> &#8211; Include posts hidden bby the page</li>
+<li><strong>comment_count</strong> &#8211; The number of comments</li>
+<li><strong>comment_category</strong> &#8211; The type of comment. Can be &#8216;stream&#8217;,
+&#8216;toplevel&#8217;</li>
+<li><strong>comment_order</strong> &#8211; The order of comments. Can be &#8216;chronological&#8217;,
+&#8216;reverse_chronological&#8217;</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">List of comments with associated post ids</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="socialreaper.generators.Facebook.post_comments">
+<code class="descname">post_comments</code><span class="sig-paren">(</span><em>post_id</em>, <em>count=50</em>, <em>category='stream'</em>, <em>order='chronological'</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#socialreaper.generators.Facebook.post_comments" title="Permalink to this definition">¶</a></dt>
+<dd><p>Post&#8217;s comments</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>post_id</strong> &#8211; The id of the post</li>
+<li><strong>count</strong> &#8211; The number of comments to return</li>
+<li><strong>category</strong> &#8211; The type of comment. Can be &#8216;stream&#8217;, &#8216;toplevel&#8217;</li>
+<li><strong>order</strong> &#8211; The order of comments. Can be &#8216;chronological&#8217;,
+&#8216;reverse_chronological&#8217;</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">List of comments</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="socialreaper.generators.Facebook.posts">
+<code class="descname">posts</code><span class="sig-paren">(</span><em>post_ids</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#socialreaper.generators.Facebook.posts" title="Permalink to this definition">¶</a></dt>
+<dd><p>Posts</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>post_ids</strong> &#8211; List of post ids</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">List of posts</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="socialreaper.generators.Reddit">
+<em class="property">class </em><code class="descclassname">socialreaper.generators.</code><code class="descname">Reddit</code><span class="sig-paren">(</span><em>application_id</em>, <em>application_secret</em>, <em>log_function=&lt;built-in function print&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#socialreaper.generators.Reddit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#socialreaper.generators.Source" title="socialreaper.generators.Source"><code class="xref py py-class docutils literal"><span class="pre">socialreaper.generators.Source</span></code></a></p>
+<dl class="method">
+<dt id="socialreaper.generators.Reddit.search">
+<code class="descname">search</code><span class="sig-paren">(</span><em>query</em>, <em>count=50</em>, <em>order='new'</em>, <em>time_period='all'</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#socialreaper.generators.Reddit.search" title="Permalink to this definition">¶</a></dt>
+<dd><p>Search&#8217;s threads</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>query</strong> &#8211; The search query</li>
+<li><strong>count</strong> &#8211; The number of threads to return</li>
+<li><strong>order</strong> &#8211; The order of the threads. Can be &#8216;top&#8217;, &#8216;new&#8217;,
+&#8216;relevance&#8217;, &#8216;comments&#8217;.</li>
+<li><strong>time_period</strong> &#8211; The time period in which the thread was created.
+Can be &#8216;all&#8217;, &#8216;year&#8217;, &#8216;month&#8217;, &#8216;week&#8217;, &#8216;today&#8217;,
+&#8216;hour&#8217;</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A list of threads</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="socialreaper.generators.Reddit.search_thread_comments">
+<code class="descname">search_thread_comments</code><span class="sig-paren">(</span><em>query</em>, <em>thread_count=50</em>, <em>comment_count=500</em>, <em>search_order='top'</em>, <em>search_time_period='all'</em>, <em>comment_order='top'</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#socialreaper.generators.Reddit.search_thread_comments" title="Permalink to this definition">¶</a></dt>
+<dd><p>Search thread comments</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>query</strong> &#8211; The search query</li>
+<li><strong>thread_count</strong> &#8211; The number of threads to retrieve comments from</li>
+<li><strong>comment_count</strong> &#8211; The number of comments to retrieve from each
+thread</li>
+<li><strong>search_order</strong> &#8211; The order of the threads. Can be &#8216;top&#8217;, &#8216;new&#8217;,
+&#8216;relevance&#8217;, &#8216;comments&#8217;.</li>
+<li><strong>search_time_period</strong> &#8211; The time period of the search. Can be
+&#8216;all&#8217;, &#8216;year&#8217;, &#8216;month&#8217;, &#8216;week&#8217;, &#8216;today&#8217;,
+&#8216;hour&#8217;</li>
+<li><strong>comment_order</strong> &#8211; The order of the comments. Can be &#8216;top&#8217;, &#8216;new&#8217;,
+&#8216;best&#8217;, &#8216;controversial&#8217;, &#8216;old&#8217;, &#8216;q&amp;a&#8217;</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A list of comments</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="socialreaper.generators.Reddit.subreddit">
+<code class="descname">subreddit</code><span class="sig-paren">(</span><em>subreddit</em>, <em>count=100</em>, <em>category='new'</em>, <em>time_period='all'</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#socialreaper.generators.Reddit.subreddit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Subreddit&#8217;s threads</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>subreddit</strong> &#8211; The name of the subreddit</li>
+<li><strong>count</strong> &#8211; The number of threads to return</li>
+<li><strong>category</strong> &#8211; The type of thread. Can be &#8216;top&#8217;, &#8216;new&#8217;, &#8216;hot&#8217;,
+&#8216;rising&#8217;, &#8216;controversial&#8217;</li>
+<li><strong>time_period</strong> &#8211; The time period in which the thread was created.
+Can be &#8216;all&#8217;, &#8216;year&#8217;, &#8216;month&#8217;, &#8216;week&#8217;, &#8216;today&#8217;,
+&#8216;hour&#8217;</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A list of threads</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="socialreaper.generators.Reddit.subreddit_thread_comments">
+<code class="descname">subreddit_thread_comments</code><span class="sig-paren">(</span><em>subreddit</em>, <em>thread_count=50</em>, <em>comment_count=500</em>, <em>thread_order='top'</em>, <em>search_time_period='all'</em>, <em>comment_order='top'</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#socialreaper.generators.Reddit.subreddit_thread_comments" title="Permalink to this definition">¶</a></dt>
+<dd><p>Subreddit thread comments</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>subreddit</strong> &#8211; The name of the subreddit</li>
+<li><strong>thread_count</strong> &#8211; The number of threads to retrieve comments from</li>
+<li><strong>comment_count</strong> &#8211; The number of comments to retrieve from each
+thread</li>
+<li><strong>thread_order</strong> &#8211; The order of the threads. Can be &#8216;top&#8217;, &#8216;new&#8217;,
+&#8216;relevance&#8217;, &#8216;comments&#8217;.</li>
+<li><strong>search_time_period</strong> &#8211; The time period of the search. Can be
+&#8216;all&#8217;, &#8216;year&#8217;, &#8216;month&#8217;, &#8216;week&#8217;, &#8216;today&#8217;,
+&#8216;hour&#8217;</li>
+<li><strong>comment_order</strong> &#8211; The order of the comments. Can be &#8216;top&#8217;, &#8216;new&#8217;,
+&#8216;best&#8217;, &#8216;controversial&#8217;, &#8216;old&#8217;, &#8216;q&amp;a&#8217;</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A list of comments</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="socialreaper.generators.Reddit.thread_comments">
+<code class="descname">thread_comments</code><span class="sig-paren">(</span><em>thread_id</em>, <em>subreddit</em>, <em>count=200</em>, <em>order='top'</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#socialreaper.generators.Reddit.thread_comments" title="Permalink to this definition">¶</a></dt>
+<dd><p>Threads&#8217;s comments</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>thread_id</strong> &#8211; The id of the thread</li>
+<li><strong>subreddit</strong> &#8211; The name of the thread&#8217;s subreddit</li>
+<li><strong>count</strong> &#8211; The number of comments to return</li>
+<li><strong>order</strong> &#8211; The order of the comments. Can be &#8216;top&#8217;, &#8216;new&#8217;, &#8216;best&#8217;,
+&#8216;controversial&#8217;, &#8216;old&#8217;, &#8216;q&amp;a&#8217;</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A list of comments</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="socialreaper.generators.Reddit.threads">
+<code class="descname">threads</code><span class="sig-paren">(</span><em>id_sub_list</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#socialreaper.generators.Reddit.threads" title="Permalink to this definition">¶</a></dt>
+<dd><p>Threads</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>id_sub_list</strong> &#8211; A list of tuples containing thread ids and
+subreddits</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A list of threads</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="socialreaper.generators.Reddit.user">
+<code class="descname">user</code><span class="sig-paren">(</span><em>user</em>, <em>count=100</em>, <em>order='new'</em>, <em>result_type='overview'</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#socialreaper.generators.Reddit.user" title="Permalink to this definition">¶</a></dt>
+<dd><p>User&#8217;s posts</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>user</strong> &#8211; The user&#8217;s name</li>
+<li><strong>count</strong> &#8211; The number of results</li>
+<li><strong>order</strong> &#8211; The order of results. Can be &#8216;new&#8217;, &#8216;hot&#8217;, &#8216;top&#8217;,
+&#8216;controversial&#8217;</li>
+<li><strong>result_type</strong> &#8211; The type of result. Can be &#8216;overview&#8217;,
+&#8216;submitted&#8217;, &#8216;comments&#8217;, &#8216;gilded&#8217;</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A list of posts</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="socialreaper.generators.Source">
+<em class="property">class </em><code class="descclassname">socialreaper.generators.</code><code class="descname">Source</code><span class="sig-paren">(</span><em>log_function=&lt;built-in function print&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#socialreaper.generators.Source" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<dl class="method">
+<dt id="socialreaper.generators.Source.log_error">
+<code class="descname">log_error</code><span class="sig-paren">(</span><em>e</em><span class="sig-paren">)</span><a class="headerlink" href="#socialreaper.generators.Source.log_error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print errors. Stop travis-ci from leaking api keys</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>e</strong> &#8211; The error</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="socialreaper.generators.Twitter">
+<em class="property">class </em><code class="descclassname">socialreaper.generators.</code><code class="descname">Twitter</code><span class="sig-paren">(</span><em>app_key</em>, <em>app_secret</em>, <em>oauth_token</em>, <em>oauth_token_secret</em>, <em>log_function=&lt;built-in function print&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#socialreaper.generators.Twitter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#socialreaper.generators.Source" title="socialreaper.generators.Source"><code class="xref py py-class docutils literal"><span class="pre">socialreaper.generators.Source</span></code></a></p>
+<dl class="method">
+<dt id="socialreaper.generators.Twitter.search">
+<code class="descname">search</code><span class="sig-paren">(</span><em>query</em>, <em>count=100</em>, <em>result_type='mixed'</em>, <em>include_entities=True</em>, <em>max_id=''</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#socialreaper.generators.Twitter.search" title="Permalink to this definition">¶</a></dt>
+<dd><p>Search results</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>query</strong> &#8211; The search query. Can use standard twitter search syntax</li>
+<li><strong>count</strong> &#8211; The number of results</li>
+<li><strong>result_type</strong> &#8211; The type of result. Can be &#8216;mixed&#8217;, &#8216;recent&#8217;,
+&#8216;popular&#8217;</li>
+<li><strong>include_entities</strong> &#8211; Include tweet&#8217;s entities</li>
+<li><strong>max_id</strong> &#8211; The maximum id the results can contain. Used to limit
+recent results</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">The list of resulting tweets</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="socialreaper.generators.Twitter.user">
+<code class="descname">user</code><span class="sig-paren">(</span><em>username</em>, <em>count=3200</em>, <em>exclude_replies=False</em>, <em>include_retweets=False</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#socialreaper.generators.Twitter.user" title="Permalink to this definition">¶</a></dt>
+<dd><p>User&#8217;s tweets</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>username</strong> &#8211; The user&#8217;s twitter handle</li>
+<li><strong>count</strong> &#8211; The number of results to return. Note that the maximum
+of 3200 is not always reflected in the amount of
+tweets twitter may return</li>
+<li><strong>exclude_replies</strong> &#8211; Exclude tweets in reply to other tweets</li>
+<li><strong>include_retweets</strong> &#8211; Include retweets of other tweets</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A list of the user&#8217;s tweets</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="socialreaper.generators.Youtube">
+<em class="property">class </em><code class="descclassname">socialreaper.generators.</code><code class="descname">Youtube</code><span class="sig-paren">(</span><em>api_key</em>, <em>log_function=&lt;built-in function print&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#socialreaper.generators.Youtube" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#socialreaper.generators.Source" title="socialreaper.generators.Source"><code class="xref py py-class docutils literal"><span class="pre">socialreaper.generators.Source</span></code></a></p>
+<dl class="method">
+<dt id="socialreaper.generators.Youtube.channel">
+<code class="descname">channel</code><span class="sig-paren">(</span><em>channel_id</em>, <em>count=200</em>, <em>order='date'</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#socialreaper.generators.Youtube.channel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Channel videos</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>channel_id</strong> &#8211; The channel id (not the name)</li>
+<li><strong>count</strong> &#8211; The number of videos to return</li>
+<li><strong>order</strong> &#8211; The order of videos. Can be &#8216;date&#8217;, &#8216;rating&#8217;,
+&#8216;relevance&#8217;, &#8216;reviewCount&#8217;, &#8216;title&#8217;</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">The list of videos</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="socialreaper.generators.Youtube.channel_video_comments">
+<code class="descname">channel_video_comments</code><span class="sig-paren">(</span><em>channel_id</em>, <em>video_count=50</em>, <em>video_order='relevance'</em>, <em>comment_count=50</em>, <em>comment_order='relevance'</em>, <em>comment_text=None</em>, <em>comment_format='html'</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#socialreaper.generators.Youtube.channel_video_comments" title="Permalink to this definition">¶</a></dt>
+<dd><p>Channel video comments</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>channel_id</strong> &#8211; The id of the channel (not the name)</li>
+<li><strong>video_count</strong> &#8211; The number of videos to retrieve</li>
+<li><strong>video_order</strong> &#8211; The order of the results. Can be &#8216;date&#8217;, &#8216;rating&#8217;,
+&#8216;relevance&#8217;, &#8216;reviewCount&#8217;, &#8216;title&#8217;</li>
+<li><strong>comment_count</strong> &#8211; The number of comments to retrieve from each video</li>
+<li><strong>comment_order</strong> &#8211; The order of the comments. Can be &#8216;time&#8217;,
+&#8216;relevance&#8217;</li>
+<li><strong>comment_text</strong> &#8211; List of strings that the comments must
+contain</li>
+<li><strong>comment_format</strong> &#8211; The format of the comment. Can be &#8216;plainText&#8217;,
+&#8216;html&#8217;</li>
+<li><strong>kwargs</strong> &#8211; </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A list of comments</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="socialreaper.generators.Youtube.guess_channel_id">
+<code class="descname">guess_channel_id</code><span class="sig-paren">(</span><em>channel_name</em>, <em>count=5</em><span class="sig-paren">)</span><a class="headerlink" href="#socialreaper.generators.Youtube.guess_channel_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Guess the channel id given a channel name</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>channel_name</strong> &#8211; The name of the channel</li>
+<li><strong>count</strong> &#8211; The number of results to return</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A list of channels</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="socialreaper.generators.Youtube.search">
+<code class="descname">search</code><span class="sig-paren">(</span><em>query</em>, <em>count=50</em>, <em>order='date'</em>, <em>channel_id=None</em>, <em>event_type=None</em>, <em>location=None</em>, <em>location_radius=None</em>, <em>published_after=None</em>, <em>published_before=None</em>, <em>region_code=None</em>, <em>relevance_language=None</em>, <em>safe_search=None</em>, <em>topic_id=None</em>, <em>video_caption=None</em>, <em>video_category_id=None</em>, <em>video_definition=None</em>, <em>video_dimension=None</em>, <em>video_duration=None</em>, <em>video_embeddable=None</em>, <em>video_license=None</em>, <em>video_syndicated=None</em>, <em>video_type=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#socialreaper.generators.Youtube.search" title="Permalink to this definition">¶</a></dt>
+<dd><p>Search</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>query</strong> &#8211; The search query</li>
+<li><strong>count</strong> &#8211; The number of results to return</li>
+<li><strong>order</strong> &#8211; The order of the results. Can be &#8216;date&#8217;, &#8216;rating&#8217;,
+&#8216;relevance&#8217;, &#8216;reviewCount&#8217;, &#8216;title&#8217;</li>
+<li><strong>channel_id</strong> &#8211; The id of the channel (not its name). Restricts
+results to only those from the channel</li>
+<li><strong>event_type</strong> &#8211; The broadcast event type. Can be &#8216;completed&#8217;,
+&#8216;live&#8217;, &#8216;upcoming&#8217;</li>
+<li><strong>location</strong> &#8211; The location&#8217;s coordinates. In lat,lng format</li>
+<li><strong>location_radius</strong> &#8211; The radius the location can be in. Can use m
+or km</li>
+<li><strong>published_after</strong> &#8211; RFC 3339 formatted time</li>
+<li><strong>published_before</strong> &#8211; RFC 3339 formatted time</li>
+<li><strong>region_code</strong> &#8211; two-letter ISO country code</li>
+<li><strong>relevance_language</strong> &#8211; Search results most relevant to ISO 639-1
+two-letter language code</li>
+<li><strong>safe_search</strong> &#8211; Can be &#8216;moderate&#8217;, &#8216;none&#8217;, &#8216;strict&#8217;</li>
+<li><strong>topic_id</strong> &#8211; Freebase topic id</li>
+<li><strong>video_caption</strong> &#8211; Videos containing captions. Can be &#8216;any&#8217;,
+&#8216;closedCaption&#8217;, &#8216;none&#8217;</li>
+<li><strong>video_category_id</strong> &#8211; The youtube video category id</li>
+<li><strong>video_definition</strong> &#8211; The resolution of the video. Can be &#8216;any&#8217;,
+&#8216;high&#8217;, &#8216;standard&#8217;</li>
+<li><strong>video_dimension</strong> &#8211; The number of dimensions. Can be &#8216;any&#8217;, &#8216;2d&#8217;,
+&#8216;3d&#8217;</li>
+<li><strong>video_duration</strong> &#8211; The duration of the video. Can be &#8216;any&#8217;,
+&#8216;long&#8217;, &#8216;medium&#8217;, &#8216;short&#8217; (x&gt;0, x&gt;20, 20&gt;x&gt;4,
+4&gt;x)</li>
+<li><strong>video_embeddable</strong> &#8211; Can the video be embedded</li>
+<li><strong>video_license</strong> &#8211; The video&#8217;s license. Can be &#8216;any&#8217;,
+&#8216;creativeCommon&#8217;, &#8216;youtube&#8217;</li>
+<li><strong>video_syndicated</strong> &#8211; Can the video be played outside youtube.com</li>
+<li><strong>video_type</strong> &#8211; The type of video. Can be &#8216;any&#8217;, &#8216;episode&#8217;, &#8216;movie&#8217;</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">The list of results</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="socialreaper.generators.Youtube.search_video_comments">
+<code class="descname">search_video_comments</code><span class="sig-paren">(</span><em>query</em>, <em>video_count=50</em>, <em>video_order='date'</em>, <em>channel_id=None</em>, <em>event_type=None</em>, <em>location=None</em>, <em>location_radius=None</em>, <em>published_after=None</em>, <em>published_before=None</em>, <em>region_code=None</em>, <em>relevance_language=None</em>, <em>safe_search=None</em>, <em>topic_id=None</em>, <em>video_caption=None</em>, <em>video_category_id=None</em>, <em>video_definition=None</em>, <em>video_dimension=None</em>, <em>video_duration=None</em>, <em>video_embeddable=None</em>, <em>video_license=None</em>, <em>video_syndicated=None</em>, <em>video_type=None</em>, <em>comment_count=50</em>, <em>comment_order='time'</em>, <em>comment_search_terms=None</em>, <em>comment_format='html'</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#socialreaper.generators.Youtube.search_video_comments" title="Permalink to this definition">¶</a></dt>
+<dd><p>Search video comments</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>query</strong> &#8211; The search query</li>
+<li><strong>video_count</strong> &#8211; The number of videos to retrieve</li>
+<li><strong>comment_count</strong> &#8211; The number of comments to return per video</li>
+<li><strong>video_order</strong> &#8211; The order of the results. Can be &#8216;date&#8217;, &#8216;rating&#8217;,
+&#8216;relevance&#8217;, &#8216;reviewCount&#8217;, &#8216;title&#8217;</li>
+<li><strong>channel_id</strong> &#8211; The id of the channel (not its name). Restricts
+results to only those from the channel</li>
+<li><strong>event_type</strong> &#8211; The broadcast event type. Can be &#8216;completed&#8217;,
+&#8216;live&#8217;, &#8216;upcoming&#8217;</li>
+<li><strong>location</strong> &#8211; The location&#8217;s coordinates. In lat,lng format</li>
+<li><strong>location_radius</strong> &#8211; The radius the location can be in. Can use m
+or km</li>
+<li><strong>published_after</strong> &#8211; RFC 3339 formatted time</li>
+<li><strong>published_before</strong> &#8211; RFC 3339 formatted time</li>
+<li><strong>region_code</strong> &#8211; two-letter ISO country code</li>
+<li><strong>relevance_language</strong> &#8211; Search results most relevant to ISO 639-1
+two-letter language code</li>
+<li><strong>safe_search</strong> &#8211; Can be &#8216;moderate&#8217;, &#8216;none&#8217;, &#8216;strict&#8217;</li>
+<li><strong>topic_id</strong> &#8211; Freebase topic id</li>
+<li><strong>video_caption</strong> &#8211; Videos containing captions. Can be &#8216;any&#8217;,
+&#8216;closedCaption&#8217;, &#8216;none&#8217;</li>
+<li><strong>video_category_id</strong> &#8211; The youtube video category id</li>
+<li><strong>video_definition</strong> &#8211; The resolution of the video. Can be &#8216;any&#8217;,
+&#8216;high&#8217;, &#8216;standard&#8217;</li>
+<li><strong>video_dimension</strong> &#8211; The number of dimensions. Can be &#8216;any&#8217;, &#8216;2d&#8217;,
+&#8216;3d&#8217;</li>
+<li><strong>video_duration</strong> &#8211; The duration of the video. Can be &#8216;any&#8217;,
+&#8216;long&#8217;, &#8216;medium&#8217;, &#8216;short&#8217; (x&gt;0, x&gt;20, 20&gt;x&gt;4,
+4&gt;x)</li>
+<li><strong>video_embeddable</strong> &#8211; Can the video be embedded</li>
+<li><strong>video_license</strong> &#8211; The video&#8217;s license. Can be &#8216;any&#8217;,
+&#8216;creativeCommon&#8217;, &#8216;youtube&#8217;</li>
+<li><strong>video_syndicated</strong> &#8211; Can the video be played outside youtube.com</li>
+<li><strong>video_type</strong> &#8211; The type of video. Can be &#8216;any&#8217;, &#8216;episode&#8217;, &#8216;movie&#8217;</li>
+<li><strong>comment_order</strong> &#8211; The order of the comments. Can be &#8216;time&#8217;,
+&#8216;relevance&#8217;</li>
+<li><strong>comment_search_terms</strong> &#8211; List of strings that the comments must
+contain</li>
+<li><strong>comment_format</strong> &#8211; The format of the comment. Can be &#8216;plainText&#8217;,
+&#8216;html&#8217;</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">The list of comments</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="socialreaper.generators.Youtube.video_comments">
+<code class="descname">video_comments</code><span class="sig-paren">(</span><em>video_id</em>, <em>count=200</em>, <em>order='time'</em>, <em>search_terms=None</em>, <em>comment_format='html'</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#socialreaper.generators.Youtube.video_comments" title="Permalink to this definition">¶</a></dt>
+<dd><p>Video comments</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>video_id</strong> &#8211; The id of the video</li>
+<li><strong>count</strong> &#8211; The number of comments to return</li>
+<li><strong>order</strong> &#8211; The order of the comments. Can be &#8216;time&#8217;, &#8216;relevance&#8217;</li>
+<li><strong>search_terms</strong> &#8211; List of strings that the comments must contain</li>
+<li><strong>comment_format</strong> &#8211; The format of the comment. Can be &#8216;plainText&#8217;,
+&#8216;html&#8217;</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">The list of comments</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="socialreaper.generators.Youtube.videos">
+<code class="descname">videos</code><span class="sig-paren">(</span><em>videos</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#socialreaper.generators.Youtube.videos" title="Permalink to this definition">¶</a></dt>
+<dd><p>Videos</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>videos</strong> &#8211; List of video ids</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A list of videos</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-socialreaper.tools">
+<span id="socialreaper-tools-module"></span><h2>socialreaper.tools module<a class="headerlink" href="#module-socialreaper.tools" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="socialreaper.tools.fill_gaps">
+<code class="descclassname">socialreaper.tools.</code><code class="descname">fill_gaps</code><span class="sig-paren">(</span><em>list_dicts</em><span class="sig-paren">)</span><a class="headerlink" href="#socialreaper.tools.fill_gaps" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fill gaps in a list of dictionaries. Add empty keys to dictionaries in
+the list that don&#8217;t contain other entries&#8217; keys</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>list_dicts</strong> &#8211; A list of dictionaries</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A list of dictionaries with identical keys</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="socialreaper.tools.flatten">
+<code class="descclassname">socialreaper.tools.</code><code class="descname">flatten</code><span class="sig-paren">(</span><em>dictionary</em>, <em>parent_key=False</em>, <em>separator='.'</em><span class="sig-paren">)</span><a class="headerlink" href="#socialreaper.tools.flatten" title="Permalink to this definition">¶</a></dt>
+<dd><p>Turn a nested dictionary into a flattened dictionary</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>dictionary</strong> &#8211; The dictionary to flatten</li>
+<li><strong>parent_key</strong> &#8211; The string to prepend to dictionary&#8217;s keys</li>
+<li><strong>separator</strong> &#8211; The string used to separate flattened keys</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A flattened dictionary</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="socialreaper.tools.save_file">
+<code class="descclassname">socialreaper.tools.</code><code class="descname">save_file</code><span class="sig-paren">(</span><em>filename</em>, <em>source</em>, <em>folder='Downloads'</em><span class="sig-paren">)</span><a class="headerlink" href="#socialreaper.tools.save_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Download and save a file at path</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>filename</strong> &#8211; The name of the file</li>
+<li><strong>source</strong> &#8211; The location of the resource online</li>
+<li><strong>folder</strong> &#8211; The directory the file will be saved in</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="socialreaper.tools.to_csv">
+<code class="descclassname">socialreaper.tools.</code><code class="descname">to_csv</code><span class="sig-paren">(</span><em>data</em>, <em>field_names=None</em>, <em>filename='data.csv'</em>, <em>overwrite=True</em>, <em>write_headers=True</em>, <em>append=False</em>, <em>flat=True</em>, <em>primary_fields=None</em>, <em>sort_fields=True</em><span class="sig-paren">)</span><a class="headerlink" href="#socialreaper.tools.to_csv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a list of dicts to a csv file</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>data</strong> &#8211; List of dicts</li>
+<li><strong>field_names</strong> &#8211; The list column names</li>
+<li><strong>filename</strong> &#8211; The name of the file</li>
+<li><strong>overwrite</strong> &#8211; Overwrite the file if exists</li>
+<li><strong>write_headers</strong> &#8211; Write the headers to the csv file</li>
+<li><strong>append</strong> &#8211; Write new rows if the file exists</li>
+<li><strong>flat</strong> &#8211; Flatten the dictionary before saving</li>
+<li><strong>primary_fields</strong> &#8211; The first columns of the csv file</li>
+<li><strong>sort_fields</strong> &#8211; Sort the field names alphabetically</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="socialreaper.tools.to_json">
+<code class="descclassname">socialreaper.tools.</code><code class="descname">to_json</code><span class="sig-paren">(</span><em>data</em>, <em>filename='data.json'</em>, <em>indent=4</em><span class="sig-paren">)</span><a class="headerlink" href="#socialreaper.tools.to_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write an object to a json file</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>data</strong> &#8211; The object</li>
+<li><strong>filename</strong> &#8211; The name of the file</li>
+<li><strong>indent</strong> &#8211; The indentation of the file</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-socialreaper">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-socialreaper" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="#">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">socialreaper package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-socialreaper.apis">socialreaper.apis module</a></li>
+<li><a class="reference internal" href="#module-socialreaper.exceptions">socialreaper.exceptions module</a></li>
+<li><a class="reference internal" href="#module-socialreaper.generators">socialreaper.generators module</a></li>
+<li><a class="reference internal" href="#module-socialreaper.tools">socialreaper.tools module</a></li>
+<li><a class="reference internal" href="#module-socialreaper">Module contents</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="#">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/index.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, Adam Smith.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
+      
+      |
+      <a href="_sources/index.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
