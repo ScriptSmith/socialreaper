@@ -4,9 +4,14 @@
 `socialreaper` is a Python 3 library that scrapes Facebook, Twitter, Reddit 
 and Youtube. 
 
-[Documentation](https://socialreaper.readthedocs.io) 
+[Documentation](https://socialreaper.readthedocs.io)
 
-# Example
+# Install
+`pip install socialreaper`
+
+`>>> import socialreaper`
+
+# Examples
 ## Facebook
 Get the comments from McDonalds' 1000 most recent posts
 ```python
