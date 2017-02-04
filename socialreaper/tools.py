@@ -95,7 +95,7 @@ def to_csv(data, field_names=None, filename='data.csv',
         data = sorted(data, key=lambda k: k[field_names[0]], reverse=True)
 
     # Write the file
-    with open(filename, write_type) as f:
+    with open(filename, write_type, encoding='utf-8') as f:
         writer = csv.DictWriter(f, fieldnames=field_names)
         if not append or write_headers:
             writer.writeheader()
