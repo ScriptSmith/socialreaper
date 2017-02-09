@@ -4,9 +4,14 @@
 `socialreaper` is a Python 3 library that scrapes Facebook, Twitter, Reddit 
 and Youtube. 
 
-[Documentation](https://socialreaper.readthedocs.io) 
+[Documentation](https://socialreaper.readthedocs.io)
 
-# Example
+# Install
+`pip install socialreaper`
+
+`>>> import socialreaper`
+
+# Examples
 ## Facebook
 Get the comments from McDonalds' 1000 most recent posts
 ```python
@@ -43,7 +48,7 @@ Get the top 10 comments from the top 50 threads of all time on reddit
 from socialreaper import Reddit
 from socialreaper.tools import flatten
 
-rdt = Reddit("USnY_aKOHDd32w", "wxzi-vu1KXJBr-FEZIO352iUM4E")
+rdt = Reddit("xxx", "xxx")
  
 comments = rdt.subreddit_thread_comments("all", thread_count=50, 
     comment_count=500, thread_order="top", comment_order="top", 
