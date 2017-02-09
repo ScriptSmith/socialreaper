@@ -33,7 +33,7 @@ def fill_gaps(list_dicts):
     the list that don't contain other entries' keys
 
     :param list_dicts: A list of dictionaries
-    :return: A list of dictionaries with identical keys
+    :return: A list of field names, a list of dictionaries with identical keys
     """
 
     field_names = []  # != set bc. preserving order is better for output
@@ -142,3 +142,8 @@ def save_file(filename, source, folder="Downloads"):
         with open("%s/%s" % (folder, filename), 'wb') as f:
             for chunk in r:
                 f.write(chunk)
+
+
+def iter_print(iterable):
+    for item in iterable:
+        print(item)

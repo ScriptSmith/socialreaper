@@ -618,10 +618,10 @@ class Youtube(Source):
         for video in search:
 
             try:
-                comments = list(self.video_comments(
+                comments = self.video_comments(
                     video['id']['videoId'], count=comment_count,
                     order=comment_order, search_terms=comment_search_terms,
-                    comment_format=comment_format, params=kwargs))
+                    comment_format=comment_format, params=kwargs)
             except (ApiError, FatalApiError) as e:
                 self.log_error(e)
                 self.log_error("Function halted")
