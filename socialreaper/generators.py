@@ -98,7 +98,7 @@ class Facebook(Source):
                 return
 
     def page_posts(self, page_id, count=50, post_type="posts",
-                   include_hidden=False):
+                   include_hidden=False, **kwargs):
         """
         Page's posts
 
@@ -116,8 +116,9 @@ class Facebook(Source):
 
         num_posts = 0
         try:
-            posts = self.api.page_posts(page_id, post_type=post_type,
-                                        include_hidden=include_hidden)
+            posts = self.api.page_posts(
+                page_id, post_type=post_type, include_hidden=include_hidden,
+                params=kwargs)
         except (ApiError, FatalApiError) as e:
             self.log_error(e)
             self.log_error("Function halted")
@@ -666,10 +667,10 @@ class Youtube(Source):
         for video in videos:
 
             try:
-                comments = list(self.video_comments(
+                comments = self.video_comments(
                     video['id']['videoId'], count=comment_count,
                     order=comment_order, search_terms=comment_text,
-                    comment_format=comment_format, params=kwargs))
+                    comment_format=comment_format, params=kwargs)
             except (ApiError, FatalApiError) as e:
                 self.log_error(e)
                 self.log_error("Function halted")
@@ -787,6 +788,7 @@ class Reddit(Source):
 
             after = threads['data'].get('after')
             if not after:
+
                 return
             try:
                 threads = self.api.subreddit(
@@ -1040,6 +1042,16 @@ class Reddit(Source):
             return
 
         for thread in threads:
+            if isinstance(thread, FatalApiError):
+                self.log_error(thread)
+                self.log_error("Function halted")
+                yield thread
+                return
+
+            elif isinstance(thread, ApiError):
+                self.log_error(thread)
+                self.log_error("Skipped request")
+                continue
 
             try:
                 comments = self.thread_comments(
