@@ -616,6 +616,16 @@ class Youtube(Source):
             return
 
         for video in search:
+            if isinstance(video, FatalApiError):
+                self.log_error(video)
+                self.log_error("Function halted")
+                yield video
+                return
+
+            elif isinstance(video, ApiError):
+                self.log_error(video)
+                self.log_error("Skipped request")
+                continue
 
             try:
                 comments = self.video_comments(
@@ -665,6 +675,16 @@ class Youtube(Source):
             return
 
         for video in videos:
+            if isinstance(video, FatalApiError):
+                self.log_error(video)
+                self.log_error("Function halted")
+                yield video
+                return
+
+            elif isinstance(video, ApiError):
+                self.log_error(video)
+                self.log_error("Skipped request")
+                continue
 
             try:
                 comments = self.video_comments(
@@ -992,6 +1012,16 @@ class Reddit(Source):
             return
 
         for thread in search:
+            if isinstance(thread, FatalApiError):
+                self.log_error(thread)
+                self.log_error("Function halted")
+                yield thread
+                return
+
+            elif isinstance(thread, ApiError):
+                self.log_error(thread)
+                self.log_error("Skipped request")
+                continue
 
             try:
                 comments = self.thread_comments(
