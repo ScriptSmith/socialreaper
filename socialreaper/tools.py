@@ -108,6 +108,8 @@ def to_csv(data, field_names=None, filename='data.csv',
                 elif type(datum[key]) is str:
                     datum[key] = datum[key].strip()
 
+                datum[key] = str(datum[key])
+
             writer.writerow(datum)
 
 

@@ -14,6 +14,7 @@ class API:
         self.retry_rate = 5
         self.num_retries = 5
         self.failed_last = False
+        self.force_stop = False
         self.common_errors = (requests.exceptions.ConnectionError,
                               requests.exceptions.Timeout,
                               requests.exceptions.HTTPError)
@@ -28,6 +29,18 @@ class API:
 
         if not environ.get('CI'):
             self.log_function(e)
+
+    def _sleep(self, seconds):
+        """
+        Sleep between requests, but don't force asynchronous code to wait
+
+        :param seconds: The number of seconds to sleep
+        :return: None
+        """
+        for _ in range(seconds):
+            if not self.force_stop:
+                sleep(1)
+        self.force_stop = True
 
     def get(self, *args, **kwargs):
 
@@ -47,7 +60,7 @@ class API:
             for i in range(1, self.num_retries):
                 sleep_time = self.retry_rate * i
                 self.log_function("Retrying in %s seconds" % sleep_time)
-                sleep(sleep_time)
+                self._sleep(sleep_time)
                 try:
                     req = requests.get(*args, **kwargs)
                     req.raise_for_status()
