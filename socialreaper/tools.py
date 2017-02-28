@@ -21,7 +21,8 @@ def flatten(dictionary, parent_key=False, separator='.'):
         if isinstance(value, collections.MutableMapping):
             items.extend(flatten(value, new_key, separator).items())
         elif isinstance(value, list):
-            items.append((new_key, str(value)))
+            for k, v in enumerate(value):
+                items.extend(flatten({str(k): v}, new_key).items())
         else:
             items.append((new_key, value))
     return dict(items)
