@@ -6,6 +6,8 @@ and Youtube.
 
 [Documentation](https://socialreaper.readthedocs.io)
 
+Not a programmer? [Try the GUI](https://github.com/scriptsmith/reaper)
+
 # Install
 `pip install socialreaper`
 
