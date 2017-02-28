@@ -51,7 +51,7 @@ class Facebook(Source):
                 return
 
     def post_comments(self, post_id, count=50, category="stream",
-                      order="chronological", **kwargs):
+                      order="chronological", fields=None, **kwargs):
         """
         Post's comments
 
@@ -60,13 +60,19 @@ class Facebook(Source):
         :param category: The type of comment. Can be 'stream', 'toplevel'
         :param order: The order of comments. Can be 'chronological',
                       'reverse_chronological'
+        :param fields: Can be 'id', 'application', 'attachment', 'can_comment',
+        'can_remove', 'can_hide', 'can_like', 'can_reply_privately', 'comments',
+        'comment_count', 'created_time', 'from', 'likes', 'like_count',
+        'live_broadcast_timestamp', 'message', 'message_tags', 'object',
+        'parent', 'private_reply_conversation', 'user_likes'
         :return: List of comments
         """
 
         num_comments = 0
         try:
             comments = self.api.post_comments(
-                post_id, filter=category, order=order, params=kwargs)
+                post_id, filter=category, order=order, fields=fields,
+                params=kwargs)
         except (ApiError, FatalApiError) as e:
             self.log_error(e)
             self.log_error("Function halted")
@@ -90,7 +96,7 @@ class Facebook(Source):
             try:
                 comments = self.api.post_comments(
                     post_id, after=cursors['after'], filter=category,
-                    order=order, params=kwargs)
+                    order=order, fields=fields, params=kwargs)
             except (ApiError, FatalApiError) as e:
                 self.log_error(e)
                 self.log_error("Function halted")
@@ -152,7 +158,7 @@ class Facebook(Source):
                             post_type="posts",
                             include_hidden_posts=False, comment_count=50,
                             comment_category="stream",
-                            comment_order="chronological"):
+                            comment_order="chronological", comment_fields=None):
         """
         Page's post's comments
 
@@ -170,6 +176,12 @@ class Facebook(Source):
                                  'toplevel'
         :param comment_order: The order of comments. Can be 'chronological',
                               'reverse_chronological'
+        :param comment_fields: Can be 'id', 'application', 'attachment',
+        'can_comment', 'can_remove', 'can_hide', 'can_like',
+        'can_reply_privately', 'comments', 'comment_count', 'created_time',
+        'from', 'likes', 'like_count', 'live_broadcast_timestamp', 'message',
+        'message_tags', 'object', 'parent', 'private_reply_conversation',
+        'user_likes'
         :return: List of comments with associated post ids
         """
         try:
@@ -192,7 +204,8 @@ class Facebook(Source):
             try:
                 comments = self.post_comments(
                     post['id'], count=comment_count,
-                    category=comment_category, order=comment_order)
+                    category=comment_category, order=comment_order,
+                    fields=comment_fields)
 
                 for comment in comments:
                     comment['post_id'] = post['id']

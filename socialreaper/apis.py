@@ -417,7 +417,7 @@ class Facebook(API):
         return self.api_call('%s/%s' % (page_id, post_type), parameters)
 
     def post_comments(self, post_id, after='', order="chronological",
-                      filter="stream", params=None):
+                      filter="stream", fields=None, params=None):
 
         """
 
@@ -425,12 +425,21 @@ class Facebook(API):
         :param after:
         :param order: Can be 'ranked', 'chronological', 'reverse_chronological'
         :param filter: Can be 'stream', 'toplevel'
+        :param fields: Can be 'id', 'application', 'attachment', 'can_comment',
+        'can_remove', 'can_hide', 'can_like', 'can_reply_privately', 'comments',
+        'comment_count', 'created_time', 'from', 'likes', 'like_count',
+        'live_broadcast_timestamp', 'message', 'message_tags', 'object',
+        'parent', 'private_reply_conversation', 'user_likes'
         :param params:
         :return:
         """
+        if fields:
+            fields = ",".join(fields)
+
         parameters = {"access_token": self.key,
                       "after": after,
                       "order": order,
+                      "fields": fields,
                       "filter": filter}
         if params:
             for key, value in params.items():
