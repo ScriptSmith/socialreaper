@@ -40,7 +40,6 @@ class API:
         for _ in range(seconds):
             if not self.force_stop:
                 sleep(1)
-        self.force_stop = True
 
     def get(self, *args, **kwargs):
 
@@ -397,7 +396,7 @@ class Facebook(API):
         return self.api_call('%s' % post_id, parameters)
 
     def page_posts(self, page_id, after='', post_type="posts",
-                   include_hidden=False, params=None):
+                   include_hidden=False, fields=None, params=None):
 
         """
 
@@ -405,11 +404,16 @@ class Facebook(API):
         :param after:
         :param post_type: Can be 'posts', 'feed', 'tagged', 'promotable_posts'
         :param include_hidden:
+        :param fields:
         :param params:
         :return:
         """
+        if fields:
+            fields = ",".join(fields)
+
         parameters = {"access_token": self.key,
                       "after": after,
+                      "fields": fields,
                       "include_hidden": include_hidden}
         if params:
             for key, value in params.items():

@@ -68,6 +68,9 @@ class Facebook(Source):
         :return: List of comments
         """
 
+        # solve error related to undocumented api functionality
+        order = order if order != "ranked" else None
+
         num_comments = 0
         try:
             comments = self.api.post_comments(
@@ -104,7 +107,7 @@ class Facebook(Source):
                 return
 
     def page_posts(self, page_id, count=50, post_type="posts",
-                   include_hidden=False, **kwargs):
+                   include_hidden=False, fields=None, **kwargs):
         """
         Page's posts
 
@@ -116,6 +119,22 @@ class Facebook(Source):
                           posts tagging the page, 'promotable_posts' for
                           posts that can be boosted (including unpublished
                           and scheduled posts
+        :param fields: Can be 'actions', 'admin_creator',
+        'allowed_advertising_objectives', 'application', 'backdated_time',
+        'call_to_action', 'caption', 'child_attachments',
+        'comments_mirroring_domain', 'coordinates', 'created_time',
+        'description', 'event', 'expanded_height', 'expanded_width',
+        'feed_targeting', 'from', 'full_picture', 'height', 'icon', 'id',
+        'instagram_eligibility', 'is_app_share', 'is_expired', 'is_hidden', '
+        is_popular', 'is_published', 'is_spherical', 'link', 'message',
+        'message_tags', 'multi_share_end_card', 'multi_share_optimized',
+        'name', 'object_id', 'parent_id', 'picture', 'place', 'privacy',
+        'promotion_status', 'properties', 'scheduled_publish_time', 'shares',
+        'source', 'status_type', 'story', 'story_tags', 'subscribed', 'target',
+        'targeting', 'timeline_visibility', 'type', 'updated_time', 'via',
+        'width', 'attachments', 'comments', 'dynamic_posts', 'insights',
+        'likes', 'permalink_url', 'reactions', 'sharedposts', 'sponsor_tags',
+        'to', 'with_tags'
         :param include_hidden: Include posts hidden by the page
         :return: List of posts
         """
@@ -124,7 +143,7 @@ class Facebook(Source):
         try:
             posts = self.api.page_posts(
                 page_id, post_type=post_type, include_hidden=include_hidden,
-                params=kwargs)
+                fields=fields, params=kwargs)
         except (ApiError, FatalApiError) as e:
             self.log_error(e)
             self.log_error("Function halted")
@@ -208,6 +227,17 @@ class Facebook(Source):
                     fields=comment_fields)
 
                 for comment in comments:
+                    if isinstance(comment, FatalApiError):
+                        self.log_error(comment)
+                        self.log_error("Function halted")
+                        yield comment
+                        return
+
+                    elif isinstance(comment, ApiError):
+                        self.log_error(comment)
+                        self.log_error("Skipped request")
+                        continue
+
                     comment['post_id'] = post['id']
                     yield comment
             except ApiError as e:
