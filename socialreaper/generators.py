@@ -29,11 +29,12 @@ class Facebook(Source):
         self.api = apis.Facebook(api_key)
         self.api.log_function = log_function
 
-    def posts(self, post_ids, **kwargs):
+    def posts(self, post_ids, fields=None, **kwargs):
         """
         Posts
 
         :param post_ids: List of post ids
+        :param fields: List of fields
         :return: List of posts
         """
 
@@ -42,7 +43,7 @@ class Facebook(Source):
 
         for post_id in post_ids:
             try:
-                post = self.api.post(post_id, params=kwargs)
+                post = self.api.post(post_id, fields=fields, params=kwargs)
                 yield post
             except (ApiError, FatalApiError) as e:
                 self.log_error(e)
@@ -760,8 +761,10 @@ class Youtube(Source):
             yield e
             return
 
-        for channel in channels:
-            yield channel
+        channels = list(channels)
+        if len(channels) > 0:
+            for channel in channels:
+                yield {"id": channel.get('id')}
 
 
 class Reddit(Source):

@@ -37,7 +37,7 @@ class API:
         :param seconds: The number of seconds to sleep
         :return: None
         """
-        for _ in range(seconds):
+        for _ in range(int(seconds)):
             if not self.force_stop:
                 sleep(1)
 
@@ -380,16 +380,20 @@ class Facebook(API):
         if return_results:
             return req.json()
 
-    def post(self, post_id, params=None):
+    def post(self, post_id, fields=None, params=None):
 
         """
 
         :param post_id:
+        :param fields:
         :param params:
         :return:
         """
+        if fields:
+            fields = ",".join(fields)
 
-        parameters = {"access_token": self.key}
+        parameters = {"fields": fields,
+                      "access_token": self.key}
         if params:
             for key, value in params.items():
                 parameters[key] = value
