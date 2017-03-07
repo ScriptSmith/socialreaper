@@ -765,6 +765,8 @@ class Youtube(Source):
         if len(channels) > 0:
             for channel in channels:
                 yield {"id": channel.get('id')}
+        else:
+            yield {"id": "Could not find youtube channel"}
 
 
 class Reddit(Source):
