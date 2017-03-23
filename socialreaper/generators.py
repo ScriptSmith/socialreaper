@@ -167,7 +167,8 @@ class Facebook(Source):
             parsed = parse_qs(urlparse(next_link)[4])
 
             try:
-                posts = self.api.page_posts(page_id, params=parsed)
+                posts = self.api.page_posts(page_id, post_type=post_type,
+                                            params=parsed)
             except (ApiError, FatalApiError) as e:
                 self.log_error(e)
                 self.log_error("Function halted")
