@@ -857,12 +857,11 @@ class Reddit(Source):
 
             after = threads['data'].get('after')
             if not after:
-
                 return
             try:
                 threads = self.api.subreddit(
                     subreddit, count=count, category=category,
-                    time_period="all", page=after, params=kwargs)
+                    time_period=time_period, page=after, params=kwargs)
             except (ApiError, FatalApiError) as e:
                 self.log_error(e)
                 self.log_error("Function halted")
