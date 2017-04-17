@@ -15,6 +15,7 @@ class API:
         self.num_retries = 5
         self.failed_last = False
         self.force_stop = False
+        self.ignore_errors = False
         self.common_errors = (requests.exceptions.ConnectionError,
                               requests.exceptions.Timeout,
                               requests.exceptions.HTTPError)
@@ -76,7 +77,10 @@ class API:
                 raise FatalApiError(e)
 
         except requests.exceptions.RequestException as e:
-            raise FatalApiError(e)
+            if self.ignore_errors:
+                return None
+            else:
+                raise FatalApiError(e)
 
 
 class Youtube(API):
@@ -96,6 +100,9 @@ class Youtube(API):
             sleep(time_diff)
 
         self.last_request = time()
+
+        if not req:
+            return None
 
         if return_results:
             return req.json()

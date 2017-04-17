@@ -539,11 +539,16 @@ class Youtube(Source):
         :return: The list of comments
         """
 
+        self.api.common_errors = self.api.common_errors[:2]
         num_comments = 0
         try:
+            self.api.ignore_errors = True
             comments = self.api.video_comments(
                 video_id, count=count, order=order, search_terms=search_terms,
                 text_format=comment_format, params=kwargs)
+            self.api.ignore_errors = False
+            if not comments:
+                return
         except (ApiError, FatalApiError) as e:
             self.log_error(e)
             self.log_error("Function halted")
