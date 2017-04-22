@@ -52,7 +52,9 @@ class Facebook(Source):
                 return
 
     def post_comments(self, post_id, count=50, category="stream",
-                      order="chronological", fields=None, **kwargs):
+                      order="chronological", include_post=False,
+                      post_fields=None, fields=None,
+                      **kwargs):
         """
         Post's comments
 
@@ -60,7 +62,9 @@ class Facebook(Source):
         :param count: The number of comments to return
         :param category: The type of comment. Can be 'stream', 'toplevel'
         :param order: The order of comments. Can be 'chronological',
-                      'reverse_chronological'
+                      'reverse_chronological',
+        :param include_post: Include the original post
+        :param post_fields: The fields for the original post
         :param fields: Can be 'id', 'application', 'attachment', 'can_comment',
         'can_remove', 'can_hide', 'can_like', 'can_reply_privately', 'comments',
         'comment_count', 'created_time', 'from', 'likes', 'like_count',
@@ -74,6 +78,11 @@ class Facebook(Source):
 
         num_comments = 0
         try:
+            if include_post:
+                if not post_fields:
+                    post_fields = ['id', 'from', 'message', 'created_time']
+                post = self.api.post(post_id, fields=post_fields)
+
             comments = self.api.post_comments(
                 post_id, filter=category, order=order, fields=fields,
                 params=kwargs)
@@ -89,6 +98,8 @@ class Facebook(Source):
 
             for comment in comments['data']:
                 num_comments += 1
+                if include_post:
+                    comment["original_post"] = post
                 yield comment
                 if num_comments >= count:
                     return
@@ -177,7 +188,8 @@ class Facebook(Source):
 
     def page_posts_comments(self, page_id, post_count=50,
                             post_type="posts",
-                            include_hidden_posts=False, comment_count=50,
+                            include_hidden_posts=False, include_post=False,
+                            post_fields=None, comment_count=50,
                             comment_category="stream",
                             comment_order="chronological", comment_fields=None):
         """
@@ -192,6 +204,8 @@ class Facebook(Source):
                           posts that can be boosted (including unpublished
                           and scheduled posts
         :param include_hidden_posts: Include posts hidden bby the page
+        :param include_post: Include the original post inside the comment
+        :param post_fields: The fields for the original post
         :param comment_count: The number of comments
         :param comment_category: The type of comment. Can be 'stream',
                                  'toplevel'
@@ -226,6 +240,7 @@ class Facebook(Source):
                 comments = self.post_comments(
                     post['id'], count=comment_count,
                     category=comment_category, order=comment_order,
+                    include_post=include_post, post_fields=post_fields,
                     fields=comment_fields)
 
                 for comment in comments:
