@@ -1,5 +1,6 @@
 from urllib.parse import urlparse, parse_qs
 from os import environ
+from copy import deepcopy
 
 from . import apis
 from .apis import ApiError, FatalApiError
@@ -255,7 +256,6 @@ class Facebook(Source):
                         self.log_error("Skipped request")
                         continue
 
-                    comment['post_id'] = post['id']
                     yield comment
             except ApiError as e:
                 self.log_error(e)
@@ -413,7 +413,7 @@ class Youtube(Source):
         :param query: The search query
         :param count: The number of results to return
         :param order: The order of the results. Can be 'date', 'rating',
-                      'relevance', 'reviewCount', 'title'
+                      'relevance', 'viewCount', 'title'
         :param channel_id: The id of the channel (not its name). Restricts
                            results to only those from the channel
         :param event_type: The broadcast event type. Can be 'completed',
@@ -577,6 +577,13 @@ class Youtube(Source):
             for comment in comments['items']:
                 num_comments += 1
                 yield comment
+
+                if comment.get('replies'):
+                    for reply in comment['replies']['comments']:
+                        num_comments += 1
+                        reply['parent'] = comment.get('snippet')
+                        yield reply
+
                 if num_comments >= count:
                     return
 
@@ -616,7 +623,7 @@ class Youtube(Source):
         :param video_count: The number of videos to retrieve
         :param comment_count: The number of comments to return per video
         :param video_order: The order of the results. Can be 'date', 'rating',
-                            'relevance', 'reviewCount', 'title'
+                            'relevance', 'viewCount', 'title'
         :param channel_id: The id of the channel (not its name). Restricts
                            results to only those from the channel
         :param event_type: The broadcast event type. Can be 'completed',
@@ -704,7 +711,9 @@ class Youtube(Source):
                 return
 
             for comment in comments:
+                comment['original_video'] = video
                 yield comment
+
 
     def channel_video_comments(self, channel_id, video_count=50,
                                video_order="relevance", comment_count=50,
@@ -717,7 +726,7 @@ class Youtube(Source):
         :param channel_id: The id of the channel (not the name)
         :param video_count: The number of videos to retrieve
         :param video_order: The order of the results. Can be 'date', 'rating',
-                            'relevance', 'reviewCount', 'title'
+                            'relevance', 'viewCount', 'title'
         :param comment_count: The number of comments to retrieve from each video
         :param comment_order: The order of the comments. Can be 'time',
                               'relevance'
@@ -763,6 +772,7 @@ class Youtube(Source):
                 return
 
             for comment in comments:
+                comment['original_video'] = video
                 yield comment
 
     def guess_channel_id(self, channel_name, count=5):
@@ -935,7 +945,7 @@ class Reddit(Source):
                 yield e
                 return
 
-    def _extract_comment(self, comment):
+    def _extract_comment(self, comment, include_parent=False):
         """
         Get the parent comment and replies from a comment
 
@@ -945,8 +955,16 @@ class Reddit(Source):
 
         lst = []
         if comment['data'].get('replies', False):
+            if include_parent:
+                copy = deepcopy(comment)
+                copy['data'].pop('replies', None)
+                copy.pop('parent', None)
+
             for reply in comment['data']['replies']['data']['children']:
-                lst.extend(self._extract_comment(reply))
+                if include_parent:
+                    reply['parent'] = copy
+                lst.extend(self._extract_comment(
+                    reply, include_parent=include_parent))
             del comment['data']['replies']
         lst.insert(0, comment)
         return lst
@@ -974,7 +992,7 @@ class Reddit(Source):
             yield thread
 
     def thread_comments(self, thread_id, subreddit, count=200, order="top",
-                        **kwargs):
+                        include_parent=False, **kwargs):
         """
         Threads's comments
 
@@ -983,6 +1001,7 @@ class Reddit(Source):
         :param count: The number of comments to return
         :param order: The order of the comments. Can be 'top', 'new', 'best',
                       'controversial', 'old', 'q&a'
+        :param include_parent: Include the comment parent in the comment
         :return: A list of comments
         """
 
@@ -991,6 +1010,7 @@ class Reddit(Source):
         try:
             comments = self.api.thread_comments(
                 thread_id, subreddit, count=count, order=order, params=kwargs)
+            thread = comments[0]['data']['children'][0]
         except (ApiError, FatalApiError) as e:
             self.log_error(e)
             self.log_error("Function halted")
@@ -1006,7 +1026,10 @@ class Reddit(Source):
 
         # Get reddit's first lot of comments
         for top_level_comment in comments[1]['data']['children']:
-            for comment in self._extract_comment(top_level_comment):
+            if include_parent:
+                top_level_comment['parent'] = thread
+            for comment in self._extract_comment(
+                    top_level_comment, include_parent=include_parent):
                 if comment['kind'] != "more":
                     num_comments += 1
                     yield comment
@@ -1014,6 +1037,9 @@ class Reddit(Source):
                         return
                 else:
                     more.extend(comment['data']['children'])
+
+        if include_parent:
+            return
 
         # Request hidden comments
         name = comments[0]['data']['children'][0]['data']['name']
@@ -1051,7 +1077,8 @@ class Reddit(Source):
     def search_thread_comments(self, query, thread_count=50,
                                comment_count=500, search_order="top",
                                search_time_period="all",
-                               comment_order="top", **kwargs):
+                               comment_order="top", include_parent=False,
+                               **kwargs):
         """
         Search thread comments
 
@@ -1066,6 +1093,7 @@ class Reddit(Source):
                                    'hour'
         :param comment_order: The order of the comments. Can be 'top', 'new',
                               'best', 'controversial', 'old', 'q&a'
+        :param include_parent: Include the parent in the comment
         :return: A list of comments
         """
 
@@ -1094,7 +1122,8 @@ class Reddit(Source):
             try:
                 comments = self.thread_comments(
                     thread['data']['id'], thread['data']['subreddit'],
-                    count=comment_count, order=comment_order, params=kwargs)
+                    count=comment_count, order=comment_order,
+                    include_parent=include_parent, params=kwargs)
             except ApiError as e:
                 self.log_error(e)
                 self.log_error("Request skipped")
@@ -1111,7 +1140,8 @@ class Reddit(Source):
     def subreddit_thread_comments(self, subreddit, thread_count=50,
                                   comment_count=500, thread_order="top",
                                   search_time_period="all",
-                                  comment_order="top", **kwargs):
+                                  comment_order="top", include_parent=False,
+                                  **kwargs):
         """
         Subreddit thread comments
 
@@ -1126,6 +1156,7 @@ class Reddit(Source):
                                    'hour'
         :param comment_order: The order of the comments. Can be 'top', 'new',
                               'best', 'controversial', 'old', 'q&a'
+        :param include_parent: Include the parent in the comment
         :return: A list of comments
         """
 
@@ -1154,7 +1185,8 @@ class Reddit(Source):
             try:
                 comments = self.thread_comments(
                     thread['data']['id'], thread['data']['subreddit'],
-                    count=comment_count, order=comment_order, params=kwargs)
+                    count=comment_count, order=comment_order,
+                    include_parent=include_parent, params=kwargs)
             except ApiError as e:
                 self.log_error(e)
                 self.log_error("Request skipped")
