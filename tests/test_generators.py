@@ -98,7 +98,7 @@ class TestFacebook(Generator):
         self.assertIsNot(reverse_comments, chronological_comments)
 
     def test_page_posts(self):
-        posts = self.fbk.page_posts("McdonaldsAU", count=25)
+        posts = self.fbk.page_posts("McdonaldsAU", count=50)
         posts = list(posts)
 
         self.check_list(posts)

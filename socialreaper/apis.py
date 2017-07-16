@@ -5,7 +5,7 @@ import requests
 import requests.auth
 from requests_oauthlib import OAuth1
 
-from .exceptions import *
+from exceptions import *
 
 
 class API:
@@ -371,7 +371,7 @@ class Facebook(API):
         super().__init__()
 
         self.key = api_key
-        self.url = "https://graph.facebook.com/v2.8"
+        self.url = "https://graph.facebook.com/v2.9"
         self.request_rate = 2
         self.last_request = time()
 
@@ -386,6 +386,26 @@ class Facebook(API):
 
         if return_results:
             return req.json()
+
+    def node_edge(self, node, edge, fields=None, params=None):
+
+        """
+
+        :param node:
+        :param edge:
+        :param fields:
+        :param params:
+        :return:
+        """
+        if fields:
+            fields = ",".join(fields)
+
+        parameters = {"fields": fields,
+                      "access_token": self.key}
+        if params:
+            for key, value in params.items():
+                parameters[key] = value
+        return self.api_call('%s/%s' % (node, edge), parameters)
 
     def post(self, post_id, fields=None, params=None):
 
