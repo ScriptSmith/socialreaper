@@ -1,8 +1,6 @@
 from apis import Facebook as FacebookApi
 from exceptions import ApiError, FatalApiError
 from urllib.parse import urlparse, parse_qs
-from os import environ, mkdir
-from tools import to_csv
 
 
 class IterError(Exception):
@@ -141,6 +139,10 @@ class IterIter:
 class Facebook(Source):
     def __init__(self, api_key):
         self.api_key = api_key
+        self.dummy_api = FacebookApi(api_key)
+
+        # Make use of nested queries, limiting scraping time
+        self.nested_queries = False
 
     def test(self):
         try:
@@ -152,7 +154,8 @@ class Facebook(Source):
             return False, e
 
     def no_edge(self, node, fields, **kwargs):
-        return self.FacebookIter(self.api_key, node, "", fields, **kwargs)
+        return iter([])
+        # return self.FacebookIter(self.api_key, node, "", fields, **kwargs)
 
     def one_edge(self, node, edge, fields, **kwargs):
         return self.FacebookIter(self.api_key, node, edge, fields, **kwargs)
@@ -219,584 +222,485 @@ class Facebook(Source):
     def page_events(self, page_id, fields=None, **kwargs):
         return self.one_edge(page_id, "events", fields, **kwargs)
 
-    def page_events_admins(self):
-        pass
+    def page_events_admins(self, page_id, events_fields=None, admins_fields=None, events_args=None, admins_args=None):
+        return self.two_edge(page_id, self.page_events, self.event_admins, events_fields, admins_fields, events_args, admins_args)
 
-    def page_events_attending(self):
-        pass
+    def page_events_attending(self, page_id, events_fields=None, attending_fields=None, events_args=None, attending_args=None):
+        return self.two_edge(page_id, self.page_events, self.event_attending, events_fields, attending_fields, events_args, attending_args)
 
-    def page_events_comments(self):
-        pass
+    def page_events_comments(self, page_id, events_fields=None, comments_fields=None, events_args=None, comments_args=None):
+        return self.two_edge(page_id, self.page_events, self.event_comments, events_fields, comments_fields, events_args, comments_args)
 
-    def page_events_declined(self):
-        pass
+    def page_events_declined(self, page_id, events_fields=None, declined_fields=None, events_args=None, declined_args=None):
+        return self.two_edge(page_id, self.page_events, self.event_declined, events_fields, declined_fields, events_args, declined_args)
 
-    def page_events_feed(self):
-        pass
+    def page_events_feed(self, page_id, events_fields=None, feed_fields=None, events_args=None, feed_args=None):
+        return self.two_edge(page_id, self.page_events, self.event_feed, events_fields, feed_fields, events_args, feed_args)
 
-    def page_events_feed_likes(self):
-        pass
+    def page_events_feed_likes(self, page_id, events_fields=None, feed_fields=None, likes_fields=None, events_args=None, feed_args=None, likes_args=None):
+        return self.three_edge(page_id, self.page_events_feed, self.post_likes, events_fields, feed_fields, likes_fields, events_args, feed_args, likes_args)
 
-    def page_events_feed_reactions(self):
-        pass
+    def page_events_feed_reactions(self, page_id, events_fields=None, feed_fields=None, reactions_fields=None, events_args=None, feed_args=None, reactions_args=None):
+        return self.three_edge(page_id, self.page_events_feed, self.post_reactions, events_fields, feed_fields, reactions_fields, events_args, feed_args, reactions_args)
 
-    def page_events_feed_comments(self):
-        pass
+    def page_events_feed_comments(self, page_id, events_fields=None, feed_fields=None, comments_fields=None, events_args=None, feed_args=None, comments_args=None):
+        return self.three_edge(page_id, self.page_events_feed, self.post_comments, events_fields, feed_fields, comments_fields, events_args, feed_args, comments_args)
 
-    def page_events_feed_sharedposts(self):
-        pass
+    def page_events_feed_sharedposts(self, page_id, events_fields=None, feed_fields=None, sharedposts_fields=None, events_args=None, feed_args=None, sharedposts_args=None):
+        return self.three_edge(page_id, self.page_events_feed, self.post_sharedposts, events_fields, feed_fields, sharedposts_fields, events_args, feed_args, sharedposts_args)
 
-    def page_events_feed_attachments(self):
-        pass
+    def page_events_feed_attachments(self, page_id, events_fields=None, feed_fields=None, attachments_fields=None, events_args=None, feed_args=None, attachments_args=None):
+        return self.three_edge(page_id, self.page_events_feed, self.post_attachments, events_fields, feed_fields, attachments_fields, events_args, feed_args, attachments_args)
 
-    def page_events_interested(self):
-        pass
+    def page_events_interested(self, page_id, events_fields=None, interested_fields=None, events_args=None, interested_args=None):
+        return self.two_edge(page_id, self.page_events, self.event_interested, events_fields, interested_fields, events_args, interested_args)
 
-    def page_events_live_videos(self):
-        pass
+    def page_events_live_videos(self, page_id, events_fields=None, live_videos_fields=None, events_args=None, live_videos_args=None):
+        return self.two_edge(page_id, self.page_events, self.event_live_videos, events_fields, live_videos_fields, events_args, live_videos_args)
 
-    def page_events_live_videos_likes(self):
-        pass
+    def page_events_live_videos_likes(self, page_id, events_fields=None, live_videos_fields=None, likes_fields=None, events_args=None, live_videos_args=None, likes_args=None):
+        return self.three_edge(page_id, self.page_events_live_videos, self.live_videos_likes, events_fields, live_videos_fields, likes_fields, events_args, live_videos_args, likes_args)
 
-    def page_events_live_videos_reactions(self):
-        pass
+    def page_events_live_videos_reactions(self, page_id, events_fields=None, live_videos_fields=None, reactions_fields=None, events_args=None, live_videos_args=None, reactions_args=None):
+        return self.three_edge(page_id, self.page_events_live_videos, self.live_videos_reactions, events_fields, live_videos_fields, reactions_fields, events_args, live_videos_args, reactions_args)
 
-    def page_events_live_videos_comments(self):
-        pass
+    def page_events_live_videos_comments(self, page_id, events_fields=None, live_videos_fields=None, comments_fields=None, events_args=None, live_videos_args=None, comments_args=None):
+        return self.three_edge(page_id, self.page_events_live_videos, self.live_videos_comments, events_fields, live_videos_fields, comments_fields, events_args, live_videos_args, comments_args)
 
-    def page_events_live_videos_errors(self):
-        pass
+    def page_events_live_videos_errors(self, page_id, events_fields=None, live_videos_fields=None, errors_fields=None, events_args=None, live_videos_args=None, errors_args=None):
+        return self.three_edge(page_id, self.page_events_live_videos, self.live_videos_errors, events_fields, live_videos_fields, errors_fields, events_args, live_videos_args, errors_args)
 
-    def page_events_live_videos_blocked_users(self):
-        pass
+    def page_events_live_videos_blocked_users(self, page_id, events_fields=None, live_videos_fields=None, blocked_users_fields=None, events_args=None, live_videos_args=None, blocked_users_args=None):
+        return self.three_edge(page_id, self.page_events_live_videos, self.live_videos_blocked_users, events_fields, live_videos_fields, blocked_users_fields, events_args, live_videos_args, blocked_users_args)
 
-    def page_events_maybe(self):
-        pass
+    def page_events_maybe(self, page_id, events_fields=None, maybe_fields=None, events_args=None, maybe_args=None):
+        return self.two_edge(page_id, self.page_events, self.event_maybe, events_fields, maybe_fields, events_args, maybe_args)
 
-    def page_events_noreply(self):
-        pass
+    def page_events_noreply(self, page_id, events_fields=None, noreply_fields=None, events_args=None, noreply_args=None):
+        return self.two_edge(page_id, self.page_events, self.event_noreply, events_fields, noreply_fields, events_args, noreply_args)
 
-    def page_events_photos(self):
-        pass
+    def page_events_photos(self, page_id, events_fields=None, photos_fields=None, events_args=None, photos_args=None):
+        return self.two_edge(page_id, self.page_events, self.event_photos, events_fields, photos_fields, events_args, photos_args)
 
-    def page_events_photos_likes(self):
-        pass
+    def page_events_photos_likes(self, page_id, events_fields=None, photos_fields=None, likes_fields=None, events_args=None, photos_args=None, likes_args=None):
+        return self.three_edge(page_id, self.page_events_photos, self.photo_likes, events_fields, photos_fields, likes_fields, events_args, photos_args, likes_args)
 
-    def page_events_photos_reactions(self):
-        pass
+    def page_events_photos_reactions(self, page_id, events_fields=None, photos_fields=None, reactions_fields=None, events_args=None, photos_args=None, reactions_args=None):
+        return self.three_edge(page_id, self.page_events_photos, self.photo_reactions, events_fields, photos_fields, reactions_fields, events_args, photos_args, reactions_args)
 
-    def page_events_photos_comments(self):
-        pass
+    def page_events_photos_comments(self, page_id, events_fields=None, photos_fields=None, comments_fields=None, events_args=None, photos_args=None, comments_args=None):
+        return self.three_edge(page_id, self.page_events_photos, self.photo_comments, events_fields, photos_fields, comments_fields, events_args, photos_args, comments_args)
 
-    def page_events_photos_sharedposts(self):
-        pass
+    def page_events_photos_sharedposts(self, page_id, events_fields=None, photos_fields=None, sharedposts_fields=None, events_args=None, photos_args=None, sharedposts_args=None):
+        return self.three_edge(page_id, self.page_events_photos, self.photo_sharedposts, events_fields, photos_fields, sharedposts_fields, events_args, photos_args, sharedposts_args)
 
-    def page_events_photos_sponsor_tags(self):
-        pass
+    def page_events_photos_sponsor_tags(self, page_id, events_fields=None, photos_fields=None, sponsor_tags_fields=None, events_args=None, photos_args=None, sponsor_tags_args=None):
+        return self.three_edge(page_id, self.page_events_photos, self.photo_sponsor_tags, events_fields, photos_fields, sponsor_tags_fields, events_args, photos_args, sponsor_tags_args)
 
-    def page_events_photos_tags(self):
-        pass
+    def page_events_photos_tags(self, page_id, events_fields=None, photos_fields=None, tags_fields=None, events_args=None, photos_args=None, tags_args=None):
+        return self.three_edge(page_id, self.page_events_photos, self.photo_tags, events_fields, photos_fields, tags_fields, events_args, photos_args, tags_args)
 
-    def page_events_picture(self):
-        pass
+    def page_events_picture(self, page_id, events_fields=None, picture_fields=None, events_args=None, picture_args=None):
+        return self.two_edge(page_id, self.page_events, self.event_picture, events_fields, picture_fields, events_args, picture_args)
 
-    def page_events_roles(self):
-        pass
+    def page_events_roles(self, page_id, events_fields=None, roles_fields=None, events_args=None, roles_args=None):
+        return self.two_edge(page_id, self.page_events, self.event_roles, events_fields, roles_fields, events_args, roles_args)
 
-    def page_events_videos(self):
-        pass
+    def page_albums(self, page_id, fields=None, **kwargs):
+        return self.one_edge(page_id, "albums", fields, **kwargs)
 
-    def page_events_videos_likes(self):
-        pass
+    def page_albums_picture(self, page_id, albums_fields=None, picture_fields=None, albums_args=None, picture_args=None):
+        return self.two_edge(page_id, self.page_albums, self.album_picture, albums_fields, picture_fields, albums_args, picture_args)
 
-    def page_events_videos_reactions(self):
-        pass
+    def page_albums_photos(self, page_id, albums_fields=None, photos_fields=None, albums_args=None, photos_args=None):
+        return self.two_edge(page_id, self.page_albums, self.album_photos, albums_fields, photos_fields, albums_args, photos_args)
 
-    def page_events_videos_comments(self):
-        pass
+    def page_albums_photos_likes(self, page_id, albums_fields=None, photos_fields=None, likes_fields=None, albums_args=None, photos_args=None, likes_args=None):
+        return self.three_edge(page_id, self.page_albums_photos, self.photo_likes, albums_fields, photos_fields, likes_fields, albums_args, photos_args, likes_args)
 
-    def page_events_videos_sharedposts(self):
-        pass
+    def page_albums_photos_reactions(self, page_id, albums_fields=None, photos_fields=None, reactions_fields=None, albums_args=None, photos_args=None, reactions_args=None):
+        return self.three_edge(page_id, self.page_albums_photos, self.photo_reactions, albums_fields, photos_fields, reactions_fields, albums_args, photos_args, reactions_args)
 
-    def page_events_videos(self):
-        pass
+    def page_albums_photos_comments(self, page_id, albums_fields=None, photos_fields=None, comments_fields=None, albums_args=None, photos_args=None, comments_args=None):
+        return self.three_edge(page_id, self.page_albums_photos, self.photo_comments, albums_fields, photos_fields, comments_fields, albums_args, photos_args, comments_args)
 
-    def page_events_videos_auto_generated_captions(self):
-        pass
+    def page_albums_photos_sharedposts(self, page_id, albums_fields=None, photos_fields=None, sharedposts_fields=None, albums_args=None, photos_args=None, sharedposts_args=None):
+        return self.three_edge(page_id, self.page_albums_photos, self.photo_sharedposts, albums_fields, photos_fields, sharedposts_fields, albums_args, photos_args, sharedposts_args)
 
-    def page_events_videos_captions(self):
-        pass
+    def page_albums_photos_sponsor_tags(self, page_id, albums_fields=None, photos_fields=None, sponsor_tags_fields=None, albums_args=None, photos_args=None, sponsor_tags_args=None):
+        return self.three_edge(page_id, self.page_albums_photos, self.photo_sponsor_tags, albums_fields, photos_fields, sponsor_tags_fields, albums_args, photos_args, sponsor_tags_args)
 
-    def page_events_videos_comments(self):
-        pass
+    def page_albums_photos_tags(self, page_id, albums_fields=None, photos_fields=None, tags_fields=None, albums_args=None, photos_args=None, tags_args=None):
+        return self.three_edge(page_id, self.page_albums_photos, self.photo_tags, albums_fields, photos_fields, tags_fields, albums_args, photos_args, tags_args)
 
-    def page_events_videos_crosspost_shared_pages(self):
-        pass
+    def page_albums_sharedposts(self, page_id, albums_fields=None, sharedposts_fields=None, albums_args=None, sharedposts_args=None):
+        return self.two_edge(page_id, self.page_albums, self.album_sharedposts, albums_fields, sharedposts_fields, albums_args, sharedposts_args)
 
-    def page_events_videos_likes(self):
-        pass
+    def page_albums_likes(self, page_id, albums_fields=None, likes_fields=None, albums_args=None, likes_args=None):
+        return self.two_edge(page_id, self.page_albums, self.album_likes, albums_fields, likes_fields, albums_args, likes_args)
 
-    def page_events_videos_reactions(self):
-        pass
+    def page_albums_reactions(self, page_id, albums_fields=None, reactions_fields=None, albums_args=None, reactions_args=None):
+        return self.two_edge(page_id, self.page_albums, self.album_reactions, albums_fields, reactions_fields, albums_args, reactions_args)
 
-    def page_events_videos_sharedposts(self):
-        pass
+    def page_albums_comments(self, page_id, albums_fields=None, comments_fields=None, albums_args=None, comments_args=None):
+        return self.two_edge(page_id, self.page_albums, self.album_comments, albums_fields, comments_fields, albums_args, comments_args)
 
-    def page_events_videos_sponsor_tags(self):
-        pass
+    def page_photos(self, page_id, fields=None, **kwargs):
+        return self.one_edge(page_id, "photos", fields, **kwargs)
 
-    def page_events_videos_tags(self):
-        pass
+    def page_photos_likes(self, page_id, photos_fields=None, likes_fields=None, photos_args=None, likes_args=None):
+        return self.two_edge(page_id, self.page_photos, self.photo_likes, photos_fields, likes_fields, photos_args, likes_args)
 
-    def page_events_videos_thumbnails(self):
-        pass
+    def page_photos_reactions(self, page_id, photos_fields=None, reactions_fields=None, photos_args=None, reactions_args=None):
+        return self.two_edge(page_id, self.page_photos, self.photo_reactions, photos_fields, reactions_fields, photos_args, reactions_args)
 
-    def page_events_videos_insights(self):
-        pass
+    def page_photos_comments(self, page_id, photos_fields=None, comments_fields=None, photos_args=None, comments_args=None):
+        return self.two_edge(page_id, self.page_photos, self.photo_comments, photos_fields, comments_fields, photos_args, comments_args)
 
-    def page_albums(self):
-        pass
+    def page_photos_sharedposts(self, page_id, photos_fields=None, sharedposts_fields=None, photos_args=None, sharedposts_args=None):
+        return self.two_edge(page_id, self.page_photos, self.photo_sharedposts, photos_fields, sharedposts_fields, photos_args, sharedposts_args)
 
-    def page_albums_picture(self):
-        pass
+    def page_photos_sponsor_tags(self, page_id, photos_fields=None, sponsor_tags_fields=None, photos_args=None, sponsor_tags_args=None):
+        return self.two_edge(page_id, self.page_photos, self.photo_sponsor_tags, photos_fields, sponsor_tags_fields, photos_args, sponsor_tags_args)
 
-    def page_albums_photos(self):
-        pass
+    def page_photos_tags(self, page_id, photos_fields=None, tags_fields=None, photos_args=None, tags_args=None):
+        return self.two_edge(page_id, self.page_photos, self.photo_tags, photos_fields, tags_fields, photos_args, tags_args)
 
-    def page_albums_photos_likes(self):
-        pass
+    def page_live_videos(self, page_id, fields=None, **kwargs):
+        return self.one_edge(page_id, "live_videos", fields, **kwargs)
 
-    def page_albums_photos_reactions(self):
-        pass
+    def page_live_videos_likes(self, page_id, live_videos_fields=None, likes_fields=None, live_videos_args=None, likes_args=None):
+        return self.two_edge(page_id, self.page_live_videos, self.live_video_likes, live_videos_fields, likes_fields, live_videos_args, likes_args)
 
-    def page_albums_photos_comments(self):
-        pass
+    def page_live_videos_reactions(self, page_id, live_videos_fields=None, reactions_fields=None, live_videos_args=None, reactions_args=None):
+        return self.two_edge(page_id, self.page_live_videos, self.live_video_reactions, live_videos_fields, reactions_fields, live_videos_args, reactions_args)
 
-    def page_albums_photos_sharedposts(self):
-        pass
+    def page_live_videos_comments(self, page_id, live_videos_fields=None, comments_fields=None, live_videos_args=None, comments_args=None):
+        return self.two_edge(page_id, self.page_live_videos, self.live_video_comments, live_videos_fields, comments_fields, live_videos_args, comments_args)
 
-    def page_albums_photos_sponsor_tags(self):
-        pass
+    def page_live_videos_errors(self, page_id, live_videos_fields=None, errors_fields=None, live_videos_args=None, errors_args=None):
+        return self.two_edge(page_id, self.page_live_videos, self.live_video_errors, live_videos_fields, errors_fields, live_videos_args, errors_args)
 
-    def page_albums_photos_tags(self):
-        pass
+    def page_live_videos_blocked_users(self, page_id, live_videos_fields=None, blocked_users_fields=None, live_videos_args=None, blocked_users_args=None):
+        return self.two_edge(page_id, self.page_live_videos, self.live_video_blocked_users, live_videos_fields, blocked_users_fields, live_videos_args, blocked_users_args)
 
-    def page_albums_sharedposts(self):
-        pass
+    def page_videos(self, page_id, fields=None, **kwargs):
+        return self.one_edge(page_id, "videos", fields, **kwargs)
 
-    def page_albums_likes(self):
-        pass
+    def page_videos_auto_generated_captions(self, page_id, videos_fields=None, auto_generated_captions_fields=None, videos_args=None, auto_generated_captions_args=None):
+        return self.two_edge(page_id, self.page_videos, self.video_auto_generated_captions, videos_fields, auto_generated_captions_fields, videos_args, auto_generated_captions_args)
 
-    def page_albums_reactions(self):
-        pass
+    def page_videos_captions(self, page_id, videos_fields=None, captions_fields=None, videos_args=None, captions_args=None):
+        return self.two_edge(page_id, self.page_videos, self.video_captions, videos_fields, captions_fields, videos_args, captions_args)
 
-    def page_albums_comments(self):
-        pass
+    def page_videos_comments(self, page_id, videos_fields=None, comments_fields=None, videos_args=None, comments_args=None):
+        return self.two_edge(page_id, self.page_videos, self.video_comments, videos_fields, comments_fields, videos_args, comments_args)
 
-    def page_photos(self):
-        pass
+    def page_videos_crosspost_shared_pages(self, page_id, videos_fields=None, crosspost_shared_pages_fields=None, videos_args=None, crosspost_shared_pages_args=None):
+        return self.two_edge(page_id, self.page_videos, self.video_crosspost_shared_pages, videos_fields, crosspost_shared_pages_fields, videos_args, crosspost_shared_pages_args)
 
-    def page_photos_likes(self):
-        pass
+    def page_videos_likes(self, page_id, videos_fields=None, likes_fields=None, videos_args=None, likes_args=None):
+        return self.two_edge(page_id, self.page_videos, self.video_likes, videos_fields, likes_fields, videos_args, likes_args)
 
-    def page_photos_reactions(self):
-        pass
+    def page_videos_reactions(self, page_id, videos_fields=None, reactions_fields=None, videos_args=None, reactions_args=None):
+        return self.two_edge(page_id, self.page_videos, self.video_reactions, videos_fields, reactions_fields, videos_args, reactions_args)
 
-    def page_photos_comments(self):
-        pass
+    def page_videos_sharedposts(self, page_id, videos_fields=None, sharedposts_fields=None, videos_args=None, sharedposts_args=None):
+        return self.two_edge(page_id, self.page_videos, self.video_sharedposts, videos_fields, sharedposts_fields, videos_args, sharedposts_args)
 
-    def page_photos_sharedposts(self):
-        pass
+    def page_videos_sponsor_tags(self, page_id, videos_fields=None, sponsor_tags_fields=None, videos_args=None, sponsor_tags_args=None):
+        return self.two_edge(page_id, self.page_videos, self.video_sponsor_tags, videos_fields, sponsor_tags_fields, videos_args, sponsor_tags_args)
 
-    def page_photos_sponsor_tags(self):
-        pass
+    def page_videos_tags(self, page_id, videos_fields=None, tags_fields=None, videos_args=None, tags_args=None):
+        return self.two_edge(page_id, self.page_videos, self.video_tags, videos_fields, tags_fields, videos_args, tags_args)
 
-    def page_photos_tags(self):
-        pass
+    def page_videos_thumbnails(self, page_id, videos_fields=None, thumbnails_fields=None, videos_args=None, thumbnails_args=None):
+        return self.two_edge(page_id, self.page_videos, self.video_thumbnails, videos_fields, thumbnails_fields, videos_args, thumbnails_args)
 
-    def page_live_videos(self):
-        pass
+    def page_videos_insights(self, page_id, videos_fields=None, insights_fields=None, videos_args=None, insights_args=None):
+        return self.two_edge(page_id, self.page_videos, self.video_insights, videos_fields, insights_fields, videos_args, insights_args)
 
-    def page_live_videos_likes(self):
-        pass
-
-    def page_live_videos_reactions(self):
-        pass
-
-    def page_live_videos_comments(self):
-        pass
-
-    def page_live_videos_errors(self):
-        pass
-
-    def page_live_videos_blocked_users(self):
-        pass
-
-    def page_videos(self):
-        pass
-
-    def page_videos_auto_generated_captions(self):
-        pass
-
-    def page_videos_captions(self):
-        pass
-
-    def page_videos_comments(self):
-        pass
-
-    def page_videos_crosspost_shared_pages(self):
-        pass
-
-    def page_videos_likes(self):
-        pass
-
-    def page_videos_reactions(self):
-        pass
-
-    def page_videos_sharedposts(self):
-        pass
-
-    def page_videos_sponsor_tags(self):
-        pass
-
-    def page_videos_tags(self):
-        pass
-
-    def page_videos_thumbnails(self):
-        pass
-
-    def page_videos_insights(self):
-        pass
-
-    def page_picture(self):
-        pass
+    def page_picture(self, page_id, fields=None, **kwargs):
+        return self.one_edge(page_id, "picture", fields, **kwargs)
 
     def group(self, group_id, fields=None, **kwargs):
         return iter([])
 
-    def group_admins(self):
-        pass
+    def group_admins(self, group_id, fields=None, **kwargs):
+        return self.one_edge(group_id, "admins", fields, **kwargs)
 
-    def group_albums(self):
-        pass
+    def group_albums(self, group_id, fields=None, **kwargs):
+        return self.one_edge(group_id, "albums", fields, **kwargs)
 
-    def group_albums_picture(self):
-        pass
+    def group_albums_picture(self, group_id, albums_fields=None, picture_fields=None, albums_args=None, picture_args=None):
+        return self.two_edge(group_id, self.group_albums, self.album_picture, albums_fields, picture_fields, albums_args, picture_args)
 
-    def group_albums_photos(self):
-        pass
+    def group_albums_photos(self, group_id, albums_fields=None, photos_fields=None, albums_args=None, photos_args=None):
+        return self.two_edge(group_id, self.group_albums, self.album_photos, albums_fields, photos_fields, albums_args, photos_args)
 
-    def group_albums_photos_likes(self):
-        pass
+    def group_albums_photos_likes(self, group_id, albums_fields=None, photos_fields=None, likes_fields=None, albums_args=None, photos_args=None, likes_args=None):
+        return self.three_edge(group_id, self.group_albums_photos, self.photos_likes, albums_fields, photos_fields, likes_fields, albums_args, photos_args, likes_args)
 
-    def group_albums_photos_reactions(self):
-        pass
+    def group_albums_photos_reactions(self, group_id, albums_fields=None, photos_fields=None, reactions_fields=None, albums_args=None, photos_args=None, reactions_args=None):
+        return self.three_edge(group_id, self.group_albums_photos, self.photos_reactions, albums_fields, photos_fields, reactions_fields, albums_args, photos_args, reactions_args)
 
-    def group_albums_photos_comments(self):
-        pass
+    def group_albums_photos_comments(self, group_id, albums_fields=None, photos_fields=None, comments_fields=None, albums_args=None, photos_args=None, comments_args=None):
+        return self.three_edge(group_id, self.group_albums_photos, self.photos_comments, albums_fields, photos_fields, comments_fields, albums_args, photos_args, comments_args)
 
-    def group_albums_photos_sharedposts(self):
-        pass
+    def group_albums_photos_sharedposts(self, group_id, albums_fields=None, photos_fields=None, sharedposts_fields=None, albums_args=None, photos_args=None, sharedposts_args=None):
+        return self.three_edge(group_id, self.group_albums_photos, self.photos_sharedposts, albums_fields, photos_fields, sharedposts_fields, albums_args, photos_args, sharedposts_args)
 
-    def group_albums_photos_sponsor_tags(self):
-        pass
+    def group_albums_photos_sponsor_tags(self, group_id, albums_fields=None, photos_fields=None, sponsor_tags_fields=None, albums_args=None, photos_args=None, sponsor_tags_args=None):
+        return self.three_edge(group_id, self.group_albums_photos, self.photos_sponsor_tags, albums_fields, photos_fields, sponsor_tags_fields, albums_args, photos_args, sponsor_tags_args)
 
-    def group_albums_photos_tags(self):
-        pass
+    def group_albums_photos_tags(self, group_id, albums_fields=None, photos_fields=None, tags_fields=None, albums_args=None, photos_args=None, tags_args=None):
+        return self.three_edge(group_id, self.group_albums_photos, self.photos_tags, albums_fields, photos_fields, tags_fields, albums_args, photos_args, tags_args)
 
-    def group_albums_sharedposts(self):
-        pass
+    def group_albums_sharedposts(self, group_id, albums_fields=None, sharedposts_fields=None, albums_args=None, sharedposts_args=None):
+        return self.two_edge(group_id, self.group_albums, self.album_sharedposts, albums_fields, sharedposts_fields, albums_args, sharedposts_args)
 
-    def group_albums_likes(self):
-        pass
+    def group_albums_likes(self, group_id, albums_fields=None, likes_fields=None, albums_args=None, likes_args=None):
+        return self.two_edge(group_id, self.group_albums, self.album_likes, albums_fields, likes_fields, albums_args, likes_args)
 
-    def group_albums_reactions(self):
-        pass
+    def group_albums_reactions(self, group_id, albums_fields=None, reactions_fields=None, albums_args=None, reactions_args=None):
+        return self.two_edge(group_id, self.group_albums, self.album_reactions, albums_fields, reactions_fields, albums_args, reactions_args)
 
-    def group_albums_comments(self):
-        pass
+    def group_albums_comments(self, group_id, albums_fields=None, comments_fields=None, albums_args=None, comments_args=None):
+        return self.two_edge(group_id, self.group_albums, self.album_comments, albums_fields, comments_fields, albums_args, comments_args)
 
-    def group_docs(self):
-        pass
+    def group_docs(self, group_id, fields=None, **kwargs):
+        return self.one_edge(group_id, "docs", fields, **kwargs)
 
-    def group_events_admins(self):
-        pass
+    def group_events(self, group_id, fields=None, **kwargs):
+        return self.one_edge(group_id, "events", fields, **kwargs)
 
-    def group_events_attending(self):
-        pass
+    def group_events_admins(self, group_id, events_fields=None, admins_fields=None, events_args=None, admins_args=None):
+        return self.two_edge(group_id, self.group_events, self.event_admins, events_fields, admins_fields, events_args, admins_args)
 
-    def group_events_comments(self):
-        pass
+    def group_events_attending(self, group_id, events_fields=None, attending_fields=None, events_args=None, attending_args=None):
+        return self.two_edge(group_id, self.group_events, self.event_attending, events_fields, attending_fields, events_args, attending_args)
 
-    def group_events_declined(self):
-        pass
+    def group_events_comments(self, group_id, events_fields=None, comments_fields=None, events_args=None, comments_args=None):
+        return self.two_edge(group_id, self.group_events, self.event_comments, events_fields, comments_fields, events_args, comments_args)
 
-    def group_events_feed(self):
-        pass
+    def group_events_declined(self, group_id, events_fields=None, declined_fields=None, events_args=None, declined_args=None):
+        return self.two_edge(group_id, self.group_events, self.event_declined, events_fields, declined_fields, events_args, declined_args)
 
-    def group_events_feed_likes(self):
-        pass
+    def group_events_feed(self, group_id, events_fields=None, feed_fields=None, events_args=None, feed_args=None):
+        return self.two_edge(group_id, self.group_events, self.event_feed, events_fields, feed_fields, events_args, feed_args)
 
-    def group_events_feed_reactions(self):
-        pass
+    def group_events_feed_likes(self, group_id, events_fields=None, feed_fields=None, likes_fields=None, events_args=None, feed_args=None, likes_args=None):
+        return self.three_edge(group_id, self.group_events_feed, self.post_likes, events_fields, feed_fields, likes_fields, events_args, feed_args, likes_args)
 
-    def group_events_feed_comments(self):
-        pass
+    def group_events_feed_reactions(self, group_id, events_fields=None, feed_fields=None, reactions_fields=None, events_args=None, feed_args=None, reactions_args=None):
+        return self.three_edge(group_id, self.group_events_feed, self.post_reactions, events_fields, feed_fields, reactions_fields, events_args, feed_args, reactions_args)
 
-    def group_events_feed_sharedposts(self):
-        pass
+    def group_events_feed_comments(self, group_id, events_fields=None, feed_fields=None, comments_fields=None, events_args=None, feed_args=None, comments_args=None):
+        return self.three_edge(group_id, self.group_events_feed, self.post_comments, events_fields, feed_fields, comments_fields, events_args, feed_args, comments_args)
 
-    def group_events_feed_attachments(self):
-        pass
+    def group_events_feed_sharedposts(self, group_id, events_fields=None, feed_fields=None, sharedposts_fields=None, events_args=None, feed_args=None, sharedposts_args=None):
+        return self.three_edge(group_id, self.group_events_feed, self.post_sharedposts, events_fields, feed_fields, sharedposts_fields, events_args, feed_args, sharedposts_args)
 
-    def group_events_interested(self):
-        pass
+    def group_events_feed_attachments(self, group_id, events_fields=None, feed_fields=None, attachments_fields=None, events_args=None, feed_args=None, attachments_args=None):
+        return self.three_edge(group_id, self.group_events_feed, self.post_attachments, events_fields, feed_fields, attachments_fields, events_args, feed_args, attachments_args)
 
-    def group_events_live_videos(self):
-        pass
+    def group_events_interested(self, group_id, events_fields=None, interested_fields=None, events_args=None, interested_args=None):
+        return self.two_edge(group_id, self.group_events, self.event_interested, events_fields, interested_fields, events_args, interested_args)
 
-    def group_events_live_videos_likes(self):
-        pass
+    def group_events_live_videos(self, group_id, events_fields=None, live_videos_fields=None, events_args=None, live_videos_args=None):
+        return self.two_edge(group_id, self.group_events, self.event_live_videos, events_fields, live_videos_fields, events_args, live_videos_args)
 
-    def group_events_live_videos_reactions(self):
-        pass
+    def group_events_live_videos_likes(self, group_id, events_fields=None, live_videos_fields=None, likes_fields=None, events_args=None, live_videos_args=None, likes_args=None):
+        return self.three_edge(group_id, self.group_events_live_videos, self.live_video_likes, events_fields, live_videos_fields, likes_fields, events_args, live_videos_args, likes_args)
 
-    def group_events_live_videos_comments(self):
-        pass
+    def group_events_live_videos_reactions(self, group_id, events_fields=None, live_videos_fields=None, reactions_fields=None, events_args=None, live_videos_args=None, reactions_args=None):
+        return self.three_edge(group_id, self.group_events_live_videos, self.live_video_reactions, events_fields, live_videos_fields, reactions_fields, events_args, live_videos_args, reactions_args)
 
-    def group_events_live_videos_errors(self):
-        pass
+    def group_events_live_videos_comments(self, group_id, events_fields=None, live_videos_fields=None, comments_fields=None, events_args=None, live_videos_args=None, comments_args=None):
+        return self.three_edge(group_id, self.group_events_live_videos, self.live_video_comments, events_fields, live_videos_fields, comments_fields, events_args, live_videos_args, comments_args)
 
-    def group_events_live_videos_blocked_users(self):
-        pass
+    def group_events_live_videos_errors(self, group_id, events_fields=None, live_videos_fields=None, errors_fields=None, events_args=None, live_videos_args=None, errors_args=None):
+        return self.three_edge(group_id, self.group_events_live_videos, self.live_video_errors, events_fields, live_videos_fields, errors_fields, events_args, live_videos_args, errors_args)
 
-    def group_events_maybe(self):
-        pass
+    def group_events_live_videos_blocked_users(self, group_id, events_fields=None, live_videos_fields=None, blocked_users_fields=None, events_args=None, live_videos_args=None, blocked_users_args=None):
+        return self.three_edge(group_id, self.group_events_live_videos, self.live_video_blocked_users, events_fields, live_videos_fields, blocked_users_fields, events_args, live_videos_args, blocked_users_args)
 
-    def group_events_noreply(self):
-        pass
+    def group_events_maybe(self, group_id, events_fields=None, maybe_fields=None, events_args=None, maybe_args=None):
+        return self.two_edge(group_id, self.group_events, self.event_maybe, events_fields, maybe_fields, events_args, maybe_args)
 
-    def group_events_photos(self):
-        pass
+    def group_events_noreply(self, group_id, events_fields=None, noreply_fields=None, events_args=None, noreply_args=None):
+        return self.two_edge(group_id, self.group_events, self.event_noreply, events_fields, noreply_fields, events_args, noreply_args)
 
-    def group_events_photos_likes(self):
-        pass
+    def group_events_photos(self, group_id, events_fields=None, photos_fields=None, events_args=None, photos_args=None):
+        return self.two_edge(group_id, self.group_events, self.event_photos, events_fields, photos_fields, events_args, photos_args)
 
-    def group_events_photos_reactions(self):
-        pass
+    def group_events_photos_likes(self,, group_id, events_fields=None, photos_fields=None, likes_fields=None, events_args=None, photos_args=None, likes_args=None):
+        return self.three_edge(group_id, self.group_events_photos, self.photo_likes, events_fields, photos_fields, likes_fields, events_args, photos_args, likes_args)
 
-    def group_events_photos_comments(self):
-        pass
+    def group_events_photos_reactions(self,, group_id, events_fields=None, photos_fields=None, reactions_fields=None, events_args=None, photos_args=None, reactions_args=None):
+        return self.three_edge(group_id, self.group_events_photos, self.photo_reactions, events_fields, photos_fields, reactions_fields, events_args, photos_args, reactions_args)
 
-    def group_events_photos_sharedposts(self):
-        pass
+    def group_events_photos_comments(self,, group_id, events_fields=None, photos_fields=None, comments_fields=None, events_args=None, photos_args=None, comments_args=None):
+        return self.three_edge(group_id, self.group_events_photos, self.photo_comments, events_fields, photos_fields, comments_fields, events_args, photos_args, comments_args)
 
-    def group_events_photos_sponsor_tags(self):
-        pass
+    def group_events_photos_sharedposts(self,, group_id, events_fields=None, photos_fields=None, sharedposts_fields=None, events_args=None, photos_args=None, sharedposts_args=None):
+        return self.three_edge(group_id, self.group_events_photos, self.photo_sharedposts, events_fields, photos_fields, sharedposts_fields, events_args, photos_args, sharedposts_args)
 
-    def group_events_photos_tags(self):
-        pass
+    def group_events_photos_sponsor_tags(self,, group_id, events_fields=None, photos_fields=None, sponsor_tags_fields=None, events_args=None, photos_args=None, sponsor_tags_args=None):
+        return self.three_edge(group_id, self.group_events_photos, self.photo_sponsor_tags, events_fields, photos_fields, sponsor_tags_fields, events_args, photos_args, sponsor_tags_args)
 
-    def group_events_picture(self):
-        pass
+    def group_events_photos_tags(self,, group_id, events_fields=None, photos_fields=None, tags_fields=None, events_args=None, photos_args=None, tags_args=None):
+        return self.three_edge(group_id, self.group_events_photos, self.photo_tags, events_fields, photos_fields, tags_fields, events_args, photos_args, tags_args)
 
-    def group_events_roles(self):
-        pass
+    def group_events_picture(self, group_id, events_fields=None, picture_fields=None, events_args=None, picture_args=None):
+        return self.two_edge(group_id, self.group_events, self.event_picture, events_fields, picture_fields, events_args, picture_args)
 
-    def group_events_videos(self):
-        pass
+    def group_events_roles(self, group_id, events_fields=None, roles_fields=None, events_args=None, roles_args=None):
+        return self.two_edge(group_id, self.group_events, self.event_roles, events_fields, roles_fields, events_args, roles_args)
 
-    def group_events_videos_likes(self):
-        pass
+    def group_feed(self, group_id, fields=None, **kwargs):
+        return self.one_edge(group_id, "feed", fields, **kwargs)
 
-    def group_events_videos_reactions(self):
-        pass
+    def group_feed_likes(self, group_id, feed_fields=None, likes_fields=None, feed_args=None, likes_args=None):
+        return self.two_edge(group_id, self.group_feed, self.post_likes, feed_fields, likes_fields, feed_args, likes_args)
 
-    def group_events_videos_comments(self):
-        pass
+    def group_feed_reactions(self, group_id, feed_fields=None, reactions_fields=None, feed_args=None, reactions_args=None):
+        return self.two_edge(group_id, self.group_feed, self.post_reactions, feed_fields, reactions_fields, feed_args, reactions_args)
 
-    def group_events_videos_sharedposts(self):
-        pass
+    def group_feed_comments(self, group_id, feed_fields=None, comments_fields=None, feed_args=None, comments_args=None):
+        return self.two_edge(group_id, self.group_feed, self.post_comments, feed_fields, comments_fields, feed_args, comments_args)
 
-    def group_events_videos(self):
-        pass
+    def group_feed_sharedposts(self, group_id, feed_fields=None, sharedposts_fields=None, feed_args=None, sharedposts_args=None):
+        return self.two_edge(group_id, self.group_feed, self.post_sharedposts, feed_fields, sharedposts_fields, feed_args, sharedposts_args)
 
-    def group_events_videos_auto_generated_captions(self):
-        pass
+    def group_feed_attachments(self, group_id, feed_fields=None, attachments_fields=None, feed_args=None, attachments_args=None):
+        return self.two_edge(group_id, self.group_feed, self.post_attachments, feed_fields, attachments_fields, feed_args, attachments_args)
 
-    def group_events_videos_captions(self):
-        pass
+    def group_files(self, group_id, fields=None, **kwargs):
+        return self.one_edge(group_id, "files", fields, **kwargs)
 
-    def group_events_videos_comments(self):
-        pass
+    def group_live_videos(self, group_id, fields=None, **kwargs):
+        return self.one_edge(group_id, "live_videos", fields, **kwargs)
 
-    def group_events_videos_crosspost_shared_pages(self):
-        pass
+    def group_live_videos_likes(self, group_id, live_videos_fields=None, likes_fields=None, live_videos_args=None, likes_args=None):
+        return self.two_edge(group_id, self.group_live_videos, self.live_video_likes, live_videos_fields, likes_fields, live_videos_args, likes_args)
 
-    def group_events_videos_likes(self):
-        pass
+    def group_live_videos_reactions(self, group_id, live_videos_fields=None, reactions_fields=None, live_videos_args=None, reactions_args=None):
+        return self.two_edge(group_id, self.group_live_videos, self.live_video_reactions, live_videos_fields, reactions_fields, live_videos_args, reactions_args)
 
-    def group_events_videos_reactions(self):
-        pass
+    def group_live_videos_comments(self, group_id, live_videos_fields=None, comments_fields=None, live_videos_args=None, comments_args=None):
+        return self.two_edge(group_id, self.group_live_videos, self.live_video_comments, live_videos_fields, comments_fields, live_videos_args, comments_args)
 
-    def group_events_videos_sharedposts(self):
-        pass
+    def group_live_videos_errors(self, group_id, live_videos_fields=None, errors_fields=None, live_videos_args=None, errors_args=None):
+        return self.two_edge(group_id, self.group_live_videos, self.live_video_errors, live_videos_fields, errors_fields, live_videos_args, errors_args)
 
-    def group_events_videos_sponsor_tags(self):
-        pass
+    def group_live_videos_blocked_users(self, group_id, live_videos_fields=None, blocked_users_fields=None, live_videos_args=None, blocked_users_args=None):
+        return self.two_edge(group_id, self.group_live_videos, self.live_video_blocked_users, live_videos_fields, blocked_users_fields, live_videos_args, blocked_users_args)
 
-    def group_events_videos_tags(self):
-        pass
+    def group_members(self, group_id, fields=None, **kwargs):
+        return self.one_edge(group_id, "members", fields, **kwargs)
 
-    def group_events_videos_thumbnails(self):
-        pass
+    def group_photos(self, group_id, fields=None, **kwargs):
+        return self.one_edge(group_id, "photos", fields, **kwargs)
 
-    def group_events_videos_insights(self):
-        pass
+    def group_photos_likes(self, group_id, photos_fields=None, likes_fields=None, photos_args=None, likes_args=None):
+        return self.two_edge(group_id, self.group_photos, self.photo_likes, photos_fields, likes_fields, photos_args, likes_args)
 
-    def group_feed(self):
-        pass
+    def group_photos_reactions(self, group_id, photos_fields=None, reactions_fields=None, photos_args=None, reactions_args=None):
+        return self.two_edge(group_id, self.group_photos, self.photo_reactions, photos_fields, reactions_fields, photos_args, reactions_args)
 
-    def group_feed_likes(self):
-        pass
+    def group_photos_comments(self, group_id, photos_fields=None, comments_fields=None, photos_args=None, comments_args=None):
+        return self.two_edge(group_id, self.group_photos, self.photo_comments, photos_fields, comments_fields, photos_args, comments_args)
 
-    def group_feed_reactions(self):
-        pass
+    def group_photos_sharedposts(self, group_id, photos_fields=None, sharedposts_fields=None, photos_args=None, sharedposts_args=None):
+        return self.two_edge(group_id, self.group_photos, self.photo_sharedposts, photos_fields, sharedposts_fields, photos_args, sharedposts_args)
 
-    def group_feed_comments(self):
-        pass
+    def group_photos_sponsor_tags(self, group_id, photos_fields=None, sponsor_tags_fields=None, photos_args=None, sponsor_tags_args=None):
+        return self.two_edge(group_id, self.group_photos, self.photo_sponsor_tags, photos_fields, sponsor_tags_fields, photos_args, sponsor_tags_args)
 
-    def group_feed_sharedposts(self):
-        pass
+    def group_photos_tags(self, group_id, photos_fields=None, tags_fields=None, photos_args=None, tags_args=None):
+        return self.two_edge(group_id, self.group_photos, self.photo_tags, photos_fields, tags_fields, photos_args, tags_args)
 
-    def group_feed_attachments(self):
-        pass
+    def group_videos(self, group_id, fields=None, **kwargs):
+        return self.one_edge(group_id, "videos", fields, **kwargs)
 
-    def group_files(self):
-        pass
-
-    def group_live_videos(self):
-        pass
-
-    def group_live_videos_likes(self):
-        pass
-
-    def group_live_videos_reactions(self):
-        pass
-
-    def group_live_videos_comments(self):
-        pass
-
-    def group_live_videos_errors(self):
-        pass
-
-    def group_live_videos_blocked_users(self):
-        pass
-
-    def group_members(self):
-        pass
-
-    def group_photos(self):
-        pass
-
-    def group_photos_likes(self):
-        pass
-
-    def group_photos_reactions(self):
-        pass
-
-    def group_photos_comments(self):
-        pass
-
-    def group_photos_sharedposts(self):
-        pass
-
-    def group_photos_sponsor_tags(self):
-        pass
-
-    def group_photos_tags(self):
-        pass
-
-    def group_videos(self, video_id, fields=None, **kwargs):
-        return self.one_edge(video_id, "videos", fields, **kwargs)
-
-    def group_videos_auto_generated_captions(self, video_id, videos_fields=None,
+    def group_videos_auto_generated_captions(self, group_id, videos_fields=None,
                                              auto_generated_captions_fields=None,
                                              videos_args=None,
                                              auto_generated_captions_args=None):
-        return self.two_edge(video_id, self.group_videos,
-                             self.videos_auto_generated_captions, videos_fields,
+        return self.two_edge(group_id, self.group_videos,
+                             self.video_auto_generated_captions, videos_fields,
                              auto_generated_captions_fields, videos_args,
                              auto_generated_captions_args)
 
-    def group_videos_captions(self, video_id, videos_fields=None,
+    def group_videos_captions(self, group_id, videos_fields=None,
                               captions_fields=None, videos_args=None,
                               captions_args=None):
-        return self.two_edge(video_id, self.group_videos, self.videos_captions,
+        return self.two_edge(group_id, self.group_videos, self.video_captions,
                              videos_fields, captions_fields, videos_args,
                              captions_args)
 
-    def group_videos_comments(self, video_id, videos_fields=None,
+    def group_videos_comments(self, group_id, videos_fields=None,
                               comments_fields=None, videos_args=None,
                               comments_args=None):
-        return self.two_edge(video_id, self.group_videos, self.videos_comments,
+        return self.two_edge(group_id, self.group_videos, self.video_comments,
                              videos_fields, comments_fields, videos_args,
                              comments_args)
 
-    def group_videos_crosspost_shared_pages(self, video_id, videos_fields=None,
+    def group_videos_crosspost_shared_pages(self, group_id, videos_fields=None,
                                             crosspost_shared_pages_fields=None,
                                             videos_args=None,
                                             crosspost_shared_pages_args=None):
-        return self.two_edge(video_id, self.group_videos,
-                             self.videos_crosspost_shared_pages, videos_fields,
+        return self.two_edge(group_id, self.group_videos,
+                             self.video_crosspost_shared_pages, videos_fields,
                              crosspost_shared_pages_fields, videos_args,
                              crosspost_shared_pages_args)
 
-    def group_videos_likes(self, video_id, videos_fields=None,
+    def group_videos_likes(self, group_id, videos_fields=None,
                            likes_fields=None, videos_args=None,
                            likes_args=None):
-        return self.two_edge(video_id, self.group_videos, self.videos_likes,
+        return self.two_edge(group_id, self.group_videos, self.video_likes,
                              videos_fields, likes_fields, videos_args,
                              likes_args)
 
-    def group_videos_reactions(self, video_id, videos_fields=None,
+    def group_videos_reactions(self, group_id, videos_fields=None,
                                reactions_fields=None, videos_args=None,
                                reactions_args=None):
-        return self.two_edge(video_id, self.group_videos, self.videos_reactions,
+        return self.two_edge(group_id, self.group_videos, self.video_reactions,
                              videos_fields, reactions_fields, videos_args,
                              reactions_args)
 
-    def group_videos_sharedposts(self, video_id, videos_fields=None,
+    def group_videos_sharedposts(self, group_id, videos_fields=None,
                                  sharedposts_fields=None, videos_args=None,
                                  sharedposts_args=None):
-        return self.two_edge(video_id, self.group_videos,
-                             self.videos_sharedposts, videos_fields,
+        return self.two_edge(group_id, self.group_videos,
+                             self.video_sharedposts, videos_fields,
                              sharedposts_fields, videos_args, sharedposts_args)
 
-    def group_videos_sponsor_tags(self, video_id, videos_fields=None,
+    def group_videos_sponsor_tags(self, group_id, videos_fields=None,
                                   sponsor_tags_fields=None, videos_args=None,
                                   sponsor_tags_args=None):
-        return self.two_edge(video_id, self.group_videos,
-                             self.videos_sponsor_tags, videos_fields,
+        return self.two_edge(group_id, self.group_videos,
+                             self.video_sponsor_tags, videos_fields,
                              sponsor_tags_fields, videos_args,
                              sponsor_tags_args)
 
-    def group_videos_tags(self, video_id, videos_fields=None, tags_fields=None,
+    def group_videos_tags(self, group_id, videos_fields=None, tags_fields=None,
                           videos_args=None, tags_args=None):
-        return self.two_edge(video_id, self.group_videos, self.videos_tags,
+        return self.two_edge(group_id, self.group_videos, self.video_tags,
                              videos_fields, tags_fields, videos_args, tags_args)
 
-    def group_videos_thumbnails(self, video_id, videos_fields=None,
+    def group_videos_thumbnails(self, group_id, videos_fields=None,
                                 thumbnails_fields=None, videos_args=None,
                                 thumbnails_args=None):
-        return self.two_edge(video_id, self.group_videos,
-                             self.videos_thumbnails, videos_fields,
+        return self.two_edge(group_id, self.group_videos,
+                             self.video_thumbnails, videos_fields,
                              thumbnails_fields, videos_args, thumbnails_args)
 
-    def group_videos_insights(self, video_id, videos_fields=None,
+    def group_videos_insights(self, group_id, videos_fields=None,
                               insights_fields=None, videos_args=None,
                               insights_args=None):
-        return self.two_edge(video_id, self.group_videos, self.videos_insights,
+        return self.two_edge(group_id, self.group_videos, self.video_insights,
                              videos_fields, insights_fields, videos_args,
                              insights_args)
 
@@ -956,86 +860,6 @@ class Facebook(Source):
     def event_roles(self, event_id, fields=None, **kwargs):
         return self.one_edge(event_id, "roles", fields, **kwargs)
 
-    def event_videos(self, event_id, fields=None, **kwargs):
-        return self.one_edge(event_id, "videos", fields, **kwargs)
-
-    def event_videos_auto_generated_captions(self, event_id, event_fields=None,
-                                             auto_generated_caption_fields=None,
-                                             event_args=None,
-                                             auto_generated_caption_args=None):
-        return self.two_edge(event_id, self.event_videos,
-                             self.video_auto_generated_captions, event_fields,
-                             auto_generated_caption_fields, event_args,
-                             auto_generated_caption_args)
-
-    def event_videos_captions(self, event_id, event_fields=None,
-                              caption_fields=None, event_args=None,
-                              caption_args=None):
-        return self.two_edge(event_id, self.event_videos, self.video_captions,
-                             event_fields, caption_fields, event_args,
-                             caption_args)
-
-    def event_videos_comments(self, event_id, event_fields=None,
-                              comment_fields=None, event_args=None,
-                              comment_args=None):
-        return self.two_edge(event_id, self.event_videos, self.video_comments,
-                             event_fields, comment_fields, event_args,
-                             comment_args)
-
-    def event_videos_crosspost_shared_pages(self, event_id, event_fields=None,
-                                            crosspost_shared_page_fields=None,
-                                            event_args=None,
-                                            crosspost_shared_page_args=None):
-        return self.two_edge(event_id, self.event_videos,
-                             self.video_crosspost_shared_pages, event_fields,
-                             crosspost_shared_page_fields, event_args,
-                             crosspost_shared_page_args)
-
-    def event_videos_likes(self, event_id, event_fields=None, like_fields=None,
-                           event_args=None, like_args=None):
-        return self.two_edge(event_id, self.event_videos, self.video_likes,
-                             event_fields, like_fields, event_args, like_args)
-
-    def event_videos_reactions(self, event_id, event_fields=None,
-                               reaction_fields=None, event_args=None,
-                               reaction_args=None):
-        return self.two_edge(event_id, self.event_videos, self.video_reactions,
-                             event_fields, reaction_fields, event_args,
-                             reaction_args)
-
-    def event_videos_sharedposts(self, event_id, event_fields=None,
-                                 sharedpost_fields=None, event_args=None,
-                                 sharedpost_args=None):
-        return self.two_edge(event_id, self.event_videos,
-                             self.video_sharedposts, event_fields,
-                             sharedpost_fields, event_args, sharedpost_args)
-
-    def event_videos_sponsor_tags(self, event_id, event_fields=None,
-                                  sponsor_tag_fields=None, event_args=None,
-                                  sponsor_tag_args=None):
-        return self.two_edge(event_id, self.event_videos,
-                             self.video_sponsor_tags, event_fields,
-                             sponsor_tag_fields, event_args, sponsor_tag_args)
-
-    def event_videos_tags(self, event_id, event_fields=None, tag_fields=None,
-                          event_args=None, tag_args=None):
-        return self.two_edge(event_id, self.event_videos, self.video_tags,
-                             event_fields, tag_fields, event_args, tag_args)
-
-    def event_videos_thumbnails(self, event_id, event_fields=None,
-                                thumbnail_fields=None, event_args=None,
-                                thumbnail_args=None):
-        return self.two_edge(event_id, self.event_videos, self.video_thumbnails,
-                             event_fields, thumbnail_fields, event_args,
-                             thumbnail_args)
-
-    def event_videos_insights(self, event_id, event_fields=None,
-                              insight_fields=None, event_args=None,
-                              insight_args=None):
-        return self.two_edge(event_id, self.event_videos, self.video_insights,
-                             event_fields, insight_fields, event_args,
-                             insight_args)
-
     def post(self, post_id, fields=None, **kwargs):
         return self.no_edge(post_id, fields, **kwargs)
 
@@ -1183,7 +1007,8 @@ class Facebook(Source):
         return self.one_edge(live_video_id, "blocked_users", fields, **kwargs)
 
     class FacebookIter(Iter):
-        def __init__(self, api_key, node, edge, fields=None, **kwargs):
+        def __init__(self, api_key, node, edge, fields=None,
+                     reverse_order=False, **kwargs):
             super().__init__()
             self.api = FacebookApi(api_key)
 
@@ -1191,6 +1016,10 @@ class Facebook(Source):
             self.edge = edge
             self.fields = fields
             self.params = kwargs
+
+            # Reverse paging order if in reverse mode
+            self.next = 'previous' if reverse_order else 'next'
+            self.after = 'before' if reverse_order else 'after'
 
         def get_data(self):
             self.page_count += 1
@@ -1207,33 +1036,15 @@ class Facebook(Source):
                     raise StopIteration
 
                 if paging.get('next'):
-                    self.params = parse_qs(urlparse(paging['next'])[4])
+                    # Parse the next url and extract the params
+                    self.params = parse_qs(urlparse(paging[self.next])[4])
                 else:
                     if paging.get('cursors'):
-                        self.params['after'] = paging['cursors']['after']
+                        # Replace the after paramater
+                        self.params[self.after] = paging['cursors'][self.after]
                     else:
                         raise StopIteration
 
             except ApiError as e:
                 raise IterError(e, vars(self))
 
-fbk = Facebook(environ['facebook_api_key'])
-fields = ["from", "type", "message", "link", "actions", "place", "tags", "created_time",
-          "object_attachment", "targeting", "feed_targeting", "published",
-          "scheduled_publish_time", "backdated_time",
-          "backdated_time_granularity", "child_attachments",
-          "multi_share_optimized", "multi_share_end_card",
-          "reactions.type(LIKE).limit(0).summary(total_count).as(reactions_like)",
-          "reactions.type(LOVE).limit(0).summary(total_count).as(reactions_love)",
-          "reactions.type(HAHA).limit(0).summary(total_count).as(reactions_haha)",
-          "reactions.type(WOW).limit(0).summary(total_count).as(reactions_wow)",
-          "reactions.type(SAD).limit(0).summary(total_count).as(reactions_sad)",
-          "reactions.type(ANGRY).limit(0).summary(total_count).as(reactions_angry)",
-          "likes.limit(0).summary(total_count)",
-          "comments.limit(0).summary(total_count)",
-          "shares.limit(0).summary(total_count)"]
-pages = ["SmirnoffAustralia","JohnnieWalkerAustralia","BacardiAustralia","absolutAU","JagermeisterAustralia","JimBeamAustralia","Jameson.Australia","eljimadoraustralia","JacobsCreekAustralia","Rekorderlig.Cider","wildturkeyau","BundabergRum","canadianclubAUS","PureBlonde","JackDanielsAustralia","BaileysAustralia","AmericanHoneyAustralia","CarltonDryAustralia","Tooheys","XXXXGOLD","VB","CaptainMorganAustralia","DrinkMidori","CarltonDraught","xxxxsummerbrightlager","WolfBlassWinesAus","magnersaustralia","strongbowaustralia","Coopers","littlecreaturesbrewing","yellowglen","CoronaExtraAustralia","vodkacruiser","stoneandwoodbrewing","jamessquire","BudweiserAustralia","GreatNorthernBrewingCompany","YakAles","heineken","SolBeerAustralia","hahn","BulleitAus","GreyGooseAU","aperolspritz.au"]
-
-for page in pages:
-    feed = list(fbk.page_feed(page, fields=fields, limit=100))
-    to_csv(feed, filename=f"{page}.csv")

@@ -371,12 +371,14 @@ class Facebook(API):
         super().__init__()
 
         self.key = api_key
-        self.url = "https://graph.facebook.com/v2.9"
-        self.request_rate = 2
+        self.url = "https://graph.facebook.com/v"
+        self.version = "2.9"
+        self.request_rate = 1
         self.last_request = time()
 
     def api_call(self, edge, parameters, return_results=True):
-        req = self.get("%s/%s" % (self.url, edge), params=parameters)
+        req = self.get("%s%s/%s" % (self.url, self.version, edge),
+                       params=parameters)
 
         time_diff = time() - self.last_request
         if time_diff < self.request_rate:
