@@ -1,5 +1,6 @@
 build/
 dist/
+tests/test.py
 socialreaper.egg-info/
 socreates.py
 .idea

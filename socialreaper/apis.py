@@ -5,7 +5,7 @@ import requests
 import requests.auth
 from requests_oauthlib import OAuth1
 
-from exceptions import *
+from .exceptions import *
 
 
 class API:

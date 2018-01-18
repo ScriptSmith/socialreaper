@@ -1,5 +1,5 @@
-from apis import Facebook as FacebookApi
-from exceptions import ApiError, FatalApiError
+from .apis import Facebook as FacebookApi
+from .exceptions import ApiError, FatalApiError
 from urllib.parse import urlparse, parse_qs
 
 
@@ -534,22 +534,22 @@ class Facebook(Source):
     def group_events_photos(self, group_id, events_fields=None, photos_fields=None, events_args=None, photos_args=None):
         return self.two_edge(group_id, self.group_events, self.event_photos, events_fields, photos_fields, events_args, photos_args)
 
-    def group_events_photos_likes(self,, group_id, events_fields=None, photos_fields=None, likes_fields=None, events_args=None, photos_args=None, likes_args=None):
+    def group_events_photos_likes(self, group_id, events_fields=None, photos_fields=None, likes_fields=None, events_args=None, photos_args=None, likes_args=None):
         return self.three_edge(group_id, self.group_events_photos, self.photo_likes, events_fields, photos_fields, likes_fields, events_args, photos_args, likes_args)
 
-    def group_events_photos_reactions(self,, group_id, events_fields=None, photos_fields=None, reactions_fields=None, events_args=None, photos_args=None, reactions_args=None):
+    def group_events_photos_reactions(self, group_id, events_fields=None, photos_fields=None, reactions_fields=None, events_args=None, photos_args=None, reactions_args=None):
         return self.three_edge(group_id, self.group_events_photos, self.photo_reactions, events_fields, photos_fields, reactions_fields, events_args, photos_args, reactions_args)
 
-    def group_events_photos_comments(self,, group_id, events_fields=None, photos_fields=None, comments_fields=None, events_args=None, photos_args=None, comments_args=None):
+    def group_events_photos_comments(self, group_id, events_fields=None, photos_fields=None, comments_fields=None, events_args=None, photos_args=None, comments_args=None):
         return self.three_edge(group_id, self.group_events_photos, self.photo_comments, events_fields, photos_fields, comments_fields, events_args, photos_args, comments_args)
 
-    def group_events_photos_sharedposts(self,, group_id, events_fields=None, photos_fields=None, sharedposts_fields=None, events_args=None, photos_args=None, sharedposts_args=None):
+    def group_events_photos_sharedposts(self, group_id, events_fields=None, photos_fields=None, sharedposts_fields=None, events_args=None, photos_args=None, sharedposts_args=None):
         return self.three_edge(group_id, self.group_events_photos, self.photo_sharedposts, events_fields, photos_fields, sharedposts_fields, events_args, photos_args, sharedposts_args)
 
-    def group_events_photos_sponsor_tags(self,, group_id, events_fields=None, photos_fields=None, sponsor_tags_fields=None, events_args=None, photos_args=None, sponsor_tags_args=None):
+    def group_events_photos_sponsor_tags(self, group_id, events_fields=None, photos_fields=None, sponsor_tags_fields=None, events_args=None, photos_args=None, sponsor_tags_args=None):
         return self.three_edge(group_id, self.group_events_photos, self.photo_sponsor_tags, events_fields, photos_fields, sponsor_tags_fields, events_args, photos_args, sponsor_tags_args)
 
-    def group_events_photos_tags(self,, group_id, events_fields=None, photos_fields=None, tags_fields=None, events_args=None, photos_args=None, tags_args=None):
+    def group_events_photos_tags(self, group_id, events_fields=None, photos_fields=None, tags_fields=None, events_args=None, photos_args=None, tags_args=None):
         return self.three_edge(group_id, self.group_events_photos, self.photo_tags, events_fields, photos_fields, tags_fields, events_args, photos_args, tags_args)
 
     def group_events_picture(self, group_id, events_fields=None, picture_fields=None, events_args=None, picture_args=None):
@@ -1047,4 +1047,3 @@ class Facebook(Source):
 
             except ApiError as e:
                 raise IterError(e, vars(self))
-
