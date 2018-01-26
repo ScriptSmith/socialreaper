@@ -1,8 +1,10 @@
+import json
 import sys
 import xml.etree.ElementTree as ET
 from xml.etree.ElementTree import tostring
 
 max_depth = 3
+
 
 def get_nodes():
     with open('facebook_nodes', 'r') as f:
@@ -32,6 +34,7 @@ def get_nodes():
 
         return nodes
 
+
 def expand_nodes(nodes):
     for key, value in nodes.items():
         for node in value.keys():
@@ -39,6 +42,12 @@ def expand_nodes(nodes):
                 node_name = value[node][1:-1]
                 nodes[key][node] = nodes[node_name]
     return nodes
+
+
+def get_fields():
+    with open('facebook_fields.json', 'r') as f:
+        return json.load(f)
+
 
 def _counter(d):
     # how many keys do we have?
@@ -49,6 +58,7 @@ def _counter(d):
         if isinstance(v, dict):
             for x in _counter(v):
                 yield x
+
 
 def count_faster(d):
     return sum(_counter(d))
@@ -66,10 +76,6 @@ def build_functions(nodes, parent=None, depth=0):
 
         function_name = node if not parent else "{}_{}".format(parent['name'], node)
 
-        # function_args = "{}_fields=None, {}_args=None".format(node, node)
-        # if parent:
-        #     function_args = "{}, {}".format(parent['args'], function_args)
-
         function_args = "fields=None, **kwargs"
         function_definition = f"def {function_name}(self, {function_node}_id, {function_args}):"
 
@@ -79,7 +85,7 @@ def build_functions(nodes, parent=None, depth=0):
             function_type = f"self.FacebookIter(self.api_key, {function_node}_id, '{node}', fields=fields, **kwargs)"
         else:
             function_type = \
-                f"self.iter_iter(self.{parent['name']}({function_node}_id), 'id', self.{nodes['node_name']}_{node}, kwargs)"
+                f"self.iter_iter(self.{parent['name']}({function_node}_id), 'id', self.{nodes['node_name']}_{node}, fields=fields, **kwargs)"
 
         function_full = f"\t{function_definition}\n\t\treturn {function_type}\n\n"
 
@@ -95,26 +101,32 @@ def build_functions(nodes, parent=None, depth=0):
 
     return functions
 
-def build_nodes(nodes, root, depth=0):
-    if not nodes or depth > 2:
+
+def build_nodes(nodes, root, parent_id=None, depth=0):
+    root_children = ET.SubElement(root, 'children')
+    parent_node_function = root.find('function')
+    if not nodes or depth > max_depth:
         return
     for key, value in nodes.items():
         if key == 'node_name':
             continue
-        node = ET.SubElement(root, 'node')
+
+        node = ET.SubElement(root_children, 'node')
 
         node_name = ET.SubElement(node, 'name')
         node_name.text = key.title()
 
         node_function = ET.SubElement(node, 'function')
-        node_function.text = "blabla"
+
+        node_function.text = f"{parent_node_function.text}_{key}" if parent_node_function != None else key
 
         node_inputs = ET.SubElement(node, 'inputs')
 
         node_input_id = ET.SubElement(node_inputs, 'input')
         node_input_id.attrib['required'] = "true"
         node_input_id_name = ET.SubElement(node_input_id, 'name')
-        node_input_id_name.text = f"{key.title()} id"
+        id_text = parent_id if parent_id else key.title()
+        node_input_id_name.text = f"{id_text} id"
         node_input_id_type = ET.SubElement(node_input_id, 'type')
         node_input_id_type.text = "text"
 
@@ -123,6 +135,14 @@ def build_nodes(nodes, root, depth=0):
         node_input_fields_name.text = "Fields"
         node_input_fields_type = ET.SubElement(node_input_fields, 'type')
         node_input_fields_type.text = "list"
+        node_input_fields_elems = ET.SubElement(node_input_fields, 'elems')
+
+        if value:
+            node_fields = fields.get(value['node_name'])
+            if node_fields:
+                for field in node_fields:
+                    elem = ET.SubElement(node_input_fields_elems, 'elem')
+                    elem.text = field
 
         node_input_args = ET.SubElement(node_inputs, 'input')
         node_input_args_name = ET.SubElement(node_input_args, 'name')
@@ -135,23 +155,48 @@ def build_nodes(nodes, root, depth=0):
         node_input_args_column_val = ET.SubElement(node_input_args_columns, 'column')
         node_input_args_column_val.text = "Value"
 
-        node_children = ET.SubElement(node, 'children')
+        node_input_args_setters = ET.SubElement(node_input_args, 'setters')
+        node_input_args_setter_counter = ET.SubElement(node_input_args_setters, 'setter')
+        node_input_args_setter_counter_name = ET.SubElement(node_input_args_setter_counter, 'name')
+        node_input_args_setter_counter_name.text = f"{key.title()} count"
+        node_input_args_setter_counter_argument = ET.SubElement(node_input_args_setter_counter, 'argument')
+        node_input_args_setter_counter_argument.text = "count"
+        node_input_args_setter_counter_value = ET.SubElement(node_input_args_setter_counter, 'value')
+        node_input_args_setter_counter_value.text = "500"
+        node_input_args_setter_counter_type = ET.SubElement(node_input_args_setter_counter, 'type')
+        node_input_args_setter_counter_type.text = "counter"
 
-        build_nodes(value, node_children, depth + 1)
-        # node_children = ET.SubElement(node, 'children')
+        if depth > 1:
+            node_input_args_setter_parent = ET.SubElement(node_input_args_setters, 'setter')
+            node_input_args_setter_parent_name = ET.SubElement(node_input_args_setter_parent, 'name')
+            node_input_args_setter_parent_name.text = "Include parent id"
+            node_input_args_setter_parent_argument = ET.SubElement(node_input_args_setter_parent, 'argument')
+            node_input_args_setter_parent_argument.text = "include_parents"
+            node_input_args_setter_parent_value = ET.SubElement(node_input_args_setter_parent, 'value')
+            node_input_args_setter_parent_value.text = "True"
+            node_input_args_setter_parent_type = ET.SubElement(node_input_args_setter_parent, 'type')
+            node_input_args_setter_parent_type.text = "checkbox"
+
+        build_nodes(value, node, id_text, depth + 1)
     return root
 
 
 sys.setrecursionlimit(1500)
+
 nodes = get_nodes()
 expand_nodes(nodes)
-root = ET.Element("children")
+
+fields = get_fields()
+
+root = ET.Element("source")
+root_name = ET.SubElement(root, 'name')
+root_name.text = "Facebook"
 children = build_nodes(nodes, root)
+
 with open('out.xml', 'wb') as f:
     f.write(tostring(root))
 
 functions = build_functions(nodes)
-
 
 with open('output.py', 'w') as f:
     class_definition = "class FacebookFunctions:\n"

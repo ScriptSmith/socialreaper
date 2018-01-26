@@ -27,6 +27,12 @@ class Iter:
         # Index of data
         self.i = 0
 
+        # Total data downloaded
+        self.total = 0
+
+        # Max data to gather, 0 for unlimited
+        self.max = 0
+
         # Paging count, for restarting progress
         self.page_count = 0
 
@@ -38,8 +44,13 @@ class Iter:
         if self.i < len(self.data):
             result = self.data[self.i]
             self.i += 1
+            self.total += 1
 
-            return result
+            # Return next data if max is less than or equal to total
+            if self.max and self.total > self.max:
+                raise StopIteration
+            else:
+                return result
 
         else:
             try:
@@ -116,7 +127,7 @@ class IterIter:
 
         self.include_parents = False
         if inner_args.get('include_parents'):
-            self.include_parents = inner_args.pop('include_parents')
+            self.include_parents = bool(inner_args.pop('include_parents'))
 
         # Does the outer iter need a step
         self.outer_jump = True
@@ -167,7 +178,7 @@ class Facebook(Source, FacebookFunctions):
             return False, e
 
     def iter_iter(self, *args, **kwargs):
-        return IterIter(*args, **kwargs)
+        return IterIter(*args, kwargs)
 
     def no_edge(self, node, fields, **kwargs):
         return iter([])
@@ -206,6 +217,8 @@ class Facebook(Source, FacebookFunctions):
             self.node = node
             self.edge = edge
             self.fields = fields
+            if kwargs.get('count'):
+                self.max = int(kwargs.pop('count'))
             self.params = kwargs
 
             # Reverse paging order if in reverse mode
