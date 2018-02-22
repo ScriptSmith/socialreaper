@@ -176,13 +176,13 @@ class Youtube(API):
                 parameters[key] = value
         return self.api_call('search', parameters)
 
-    def videos(self, video_ids, count=50, page='', params=None):
+    def videos(self, video_id, count=50, page='', params=None):
         parts = ["contentDetails", "id", "liveStreamingDetails",
                  "localizations", "player", "recordingDetails", "snippet",
                  "statistics", "status", "topicDetails"]
         parameters = {
             "part": ",".join(parts),
-            "id": ",".join(video_ids),
+            "id": video_id,
             "maxResults": count,
             "pageToken": page,
             "key": self.key
@@ -339,7 +339,7 @@ class Reddit(API):
         return self.api_call('user/%s/%s.json' % (user, result_type),
                              parameters)
 
-    def thread_comments(self, thread_id, subreddit, count=1000, order="top",
+    def thread_comments(self, thread, subreddit, count=1000, order="top",
                         params=None):
 
         parameters = {"limit": count,
@@ -349,7 +349,7 @@ class Reddit(API):
         if params:
             for key, value in params.items():
                 parameters[key] = value
-        return self.api_call('r/%s/comments/%s.json' % (subreddit, thread_id),
+        return self.api_call('r/%s/comments/%s.json' % (subreddit, thread),
                              parameters)
 
     def more_children(self, children, link_id, sort="new",
@@ -485,13 +485,13 @@ class Facebook(API):
 
 
 class Twitter(API):
-    def __init__(self, app_key, app_secret, oauth_token, oauth_token_secret):
+    def __init__(self, api_key, api_secret, access_token, access_token_secret):
         super().__init__()
 
-        self.app_key = app_key
-        self.app_secret = app_secret
-        self.oauth_token = oauth_token
-        self.oauth_token_secret = oauth_token_secret
+        self.app_key = api_key
+        self.app_secret = api_secret
+        self.oauth_token = access_token
+        self.oauth_token_secret = access_token_secret
 
         self.url = "https://api.twitter.com/1.1"
         self.request_rate = 5

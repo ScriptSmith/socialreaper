@@ -97,7 +97,7 @@ def to_csv(data, field_names=None, filename='data.csv',
 
     # Write the file
     with open(filename, write_type, encoding='utf-8') as f:
-        writer = csv.DictWriter(f, fieldnames=field_names)
+        writer = csv.DictWriter(f, fieldnames=field_names, lineterminator='\n')
         if not append or write_headers:
             writer.writeheader()
 

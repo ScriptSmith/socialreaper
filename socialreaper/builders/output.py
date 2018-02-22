@@ -1,6 +1,6 @@
 class FacebookFunctions:
 	def page(self, page_id, fields=None, **kwargs):
-		return iter()
+		return self.SingleIter(self.api_key, page_id, fields=fields, **kwargs)
 
 	def page_admin_notes(self, page_id, fields=None, **kwargs):
 		return self.FacebookIter(self.api_key, page_id, 'admin_notes', fields=fields, **kwargs)
@@ -15195,7 +15195,7 @@ class FacebookFunctions:
 		return self.iter_iter(self.page_statuses(page_id), 'id', self.status_sharedposts, fields=fields, **kwargs)
 
 	def post(self, post_id, fields=None, **kwargs):
-		return iter()
+		return self.SingleIter(self.api_key, post_id, fields=fields, **kwargs)
 
 	def post_attachments(self, post_id, fields=None, **kwargs):
 		return self.FacebookIter(self.api_key, post_id, 'attachments', fields=fields, **kwargs)
@@ -15285,7 +15285,7 @@ class FacebookFunctions:
 		return self.iter_iter(self.post_sharedposts_sharedposts(post_id), 'id', self.post_sharedposts, fields=fields, **kwargs)
 
 	def comment(self, comment_id, fields=None, **kwargs):
-		return iter()
+		return self.SingleIter(self.api_key, comment_id, fields=fields, **kwargs)
 
 	def comment_comments(self, comment_id, fields=None, **kwargs):
 		return self.FacebookIter(self.api_key, comment_id, 'comments', fields=fields, **kwargs)
@@ -15300,7 +15300,7 @@ class FacebookFunctions:
 		return self.FacebookIter(self.api_key, comment_id, 'private_replies', fields=fields, **kwargs)
 
 	def album(self, album_id, fields=None, **kwargs):
-		return iter()
+		return self.SingleIter(self.api_key, album_id, fields=fields, **kwargs)
 
 	def album_picture(self, album_id, fields=None, **kwargs):
 		return self.FacebookIter(self.api_key, album_id, 'picture', fields=fields, **kwargs)
@@ -15678,7 +15678,7 @@ class FacebookFunctions:
 		return self.iter_iter(self.album_comments(album_id), 'id', self.comment_private_replies, fields=fields, **kwargs)
 
 	def photo(self, photo_id, fields=None, **kwargs):
-		return iter()
+		return self.SingleIter(self.api_key, photo_id, fields=fields, **kwargs)
 
 	def photo_insights(self, photo_id, fields=None, **kwargs):
 		return self.FacebookIter(self.api_key, photo_id, 'insights', fields=fields, **kwargs)
@@ -17739,7 +17739,7 @@ class FacebookFunctions:
 		return self.iter_iter(self.photo_comments(photo_id), 'id', self.comment_private_replies, fields=fields, **kwargs)
 
 	def video(self, video_id, fields=None, **kwargs):
-		return iter()
+		return self.SingleIter(self.api_key, video_id, fields=fields, **kwargs)
 
 	def video_auto_generated_captions(self, video_id, fields=None, **kwargs):
 		return self.FacebookIter(self.api_key, video_id, 'auto_generated_captions', fields=fields, **kwargs)
@@ -19812,7 +19812,7 @@ class FacebookFunctions:
 		return self.FacebookIter(self.api_key, video_id, 'video_insights', fields=fields, **kwargs)
 
 	def live_video(self, live_video_id, fields=None, **kwargs):
-		return iter()
+		return self.SingleIter(self.api_key, live_video_id, fields=fields, **kwargs)
 
 	def live_video_blocked_users(self, live_video_id, fields=None, **kwargs):
 		return self.FacebookIter(self.api_key, live_video_id, 'blocked_users', fields=fields, **kwargs)
@@ -19842,7 +19842,7 @@ class FacebookFunctions:
 		return self.FacebookIter(self.api_key, live_video_id, 'reactions', fields=fields, **kwargs)
 
 	def user(self, user_id, fields=None, **kwargs):
-		return iter()
+		return self.SingleIter(self.api_key, user_id, fields=fields, **kwargs)
 
 	def user_accounts(self, user_id, fields=None, **kwargs):
 		return self.FacebookIter(self.api_key, user_id, 'accounts', fields=fields, **kwargs)
@@ -36090,7 +36090,7 @@ class FacebookFunctions:
 		return self.iter_iter(self.user_subscribedto_subscribedto(user_id), 'id', self.user_subscribedto, fields=fields, **kwargs)
 
 	def status(self, status_id, fields=None, **kwargs):
-		return iter()
+		return self.SingleIter(self.api_key, status_id, fields=fields, **kwargs)
 
 	def status_likes(self, status_id, fields=None, **kwargs):
 		return self.FacebookIter(self.api_key, status_id, 'likes', fields=fields, **kwargs)
@@ -36117,7 +36117,7 @@ class FacebookFunctions:
 		return self.FacebookIter(self.api_key, status_id, 'sharedposts', fields=fields, **kwargs)
 
 	def event(self, event_id, fields=None, **kwargs):
-		return iter()
+		return self.SingleIter(self.api_key, event_id, fields=fields, **kwargs)
 
 	def event_admins(self, event_id, fields=None, **kwargs):
 		return self.FacebookIter(self.api_key, event_id, 'admins', fields=fields, **kwargs)
@@ -49845,7 +49845,7 @@ class FacebookFunctions:
 		return self.iter_iter(self.event_feed_sharedposts(event_id), 'id', self.post_sharedposts, fields=fields, **kwargs)
 
 	def group(self, group_id, fields=None, **kwargs):
-		return iter()
+		return self.SingleIter(self.api_key, group_id, fields=fields, **kwargs)
 
 	def group_admins(self, group_id, fields=None, **kwargs):
 		return self.FacebookIter(self.api_key, group_id, 'admins', fields=fields, **kwargs)

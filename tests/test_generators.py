@@ -1,7 +1,6 @@
 from unittest import TestCase
 from os import environ
 from itertools import combinations
-from socialreaper import ApiError
 
 
 class Generator(TestCase):
@@ -415,7 +414,7 @@ class TestReddit(Generator):
         self.check_dict_keys(threads, ['thread', 'comments'])
 
     def test_thread_comments(self):
-        comments = self.rdt.thread_comments("z1c9z", "IamA")
+        comments = self.rdt.thread("z1c9z", "IamA")
         comments = list(comments)
 
         comments_data = [comment["data"] for comment in comments]
@@ -423,29 +422,29 @@ class TestReddit(Generator):
                                              "body"])
 
     def test_thread_comments_count(self):
-        comments = self.rdt.thread_comments("z1c9z", "IamA", count=857)
+        comments = self.rdt.thread("z1c9z", "IamA", count=857)
         comments = list(comments)
 
         self.assertEqual(len(comments), 857)
 
     def test_thread_comments_order(self):
-        top = self.rdt.thread_comments("z1c9z", "IamA", order="top")
+        top = self.rdt.thread("z1c9z", "IamA", order="top")
         top = list(top)
 
-        new = self.rdt.thread_comments("z1c9z", "IamA", order="new")
+        new = self.rdt.thread("z1c9z", "IamA", order="new")
         new = list(new)
 
-        best = self.rdt.thread_comments("z1c9z", "IamA", order="best")
+        best = self.rdt.thread("z1c9z", "IamA", order="best")
         best = list(best)
 
-        controversial = self.rdt.thread_comments("z1c9z", "IamA",
-                                                 order="controversial")
+        controversial = self.rdt.thread("z1c9z", "IamA",
+                                        order="controversial")
         controversial = list(controversial)
 
-        old = self.rdt.thread_comments("z1c9z", "IamA", order="old")
+        old = self.rdt.thread("z1c9z", "IamA", order="old")
         old = list(old)
 
-        qa = self.rdt.thread_comments("z1c9z", "IamA", order="q&a")
+        qa = self.rdt.thread("z1c9z", "IamA", order="q&a")
         qa = list(qa)
 
         for pair in combinations([top, new, best, controversial, old, qa], 2):
@@ -472,8 +471,8 @@ class TestReddit(Generator):
 
 class TestYoutube(Generator):
     def setUp(self):
-        from socialreaper import Youtube
-        self.ytb = Youtube(environ['youtube_api_key'])
+        from socialreaper import YouTube
+        self.ytb = YouTube(environ['youtube_api_key'])
 
     def test_search(self):
         videos = self.ytb.search("music", count=50)

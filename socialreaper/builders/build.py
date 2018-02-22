@@ -80,7 +80,7 @@ def build_functions(nodes, parent=None, depth=0):
         function_definition = f"def {function_name}(self, {function_node}_id, {function_args}):"
 
         if depth == 0:
-            function_type = "iter()"
+            function_type = f"self.SingleIter(self.api_key, {function_node}_id, fields=fields, **kwargs)"
         elif depth == 1:
             function_type = f"self.FacebookIter(self.api_key, {function_node}_id, '{node}', fields=fields, **kwargs)"
         else:
@@ -128,7 +128,7 @@ def build_nodes(nodes, root, parent_id=None, depth=0):
         id_text = parent_id if parent_id else key.title()
         node_input_id_name.text = f"{id_text} id"
         node_input_id_type = ET.SubElement(node_input_id, 'type')
-        node_input_id_type.text = "text"
+        node_input_id_type.text = "primary"
 
         node_input_fields = ET.SubElement(node_inputs, 'input')
         node_input_fields_name = ET.SubElement(node_input_fields, 'name')
@@ -191,6 +191,12 @@ fields = get_fields()
 root = ET.Element("source")
 root_name = ET.SubElement(root, 'name')
 root_name.text = "Facebook"
+keys = ET.SubElement(root, 'keys')
+key = ET.SubElement(keys, 'key')
+key_name = ET.SubElement(key, 'name')
+key_name.text = "Access token"
+key_value = ET.SubElement(key, 'value')
+key_value.text = "access_token"
 children = build_nodes(nodes, root)
 
 with open('out.xml', 'wb') as f:
