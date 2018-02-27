@@ -80,9 +80,9 @@ def build_functions(nodes, parent=None, depth=0):
         function_definition = f"def {function_name}(self, {function_node}_id, {function_args}):"
 
         if depth == 0:
-            function_type = f"self.SingleIter(self.api_key, {function_node}_id, fields=fields, **kwargs)"
+            function_type = f"self.SingleIter(self.api.node_edge, {function_node}_id, fields=fields, **kwargs)"
         elif depth == 1:
-            function_type = f"self.FacebookIter(self.api_key, {function_node}_id, '{node}', fields=fields, **kwargs)"
+            function_type = f"self.FacebookIter(self.api.node_edge, {function_node}_id, '{node}', fields=fields, **kwargs)"
         else:
             function_type = \
                 f"self.iter_iter(self.{parent['name']}({function_node}_id), 'id', self.{nodes['node_name']}_{node}, fields=fields, **kwargs)"

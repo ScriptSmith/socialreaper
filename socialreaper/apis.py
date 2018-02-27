@@ -1,5 +1,6 @@
 from os import environ
 from time import time, sleep
+from pprint import pformat
 
 import requests
 import requests.auth
@@ -19,6 +20,9 @@ class API:
         self.common_errors = (requests.exceptions.ConnectionError,
                               requests.exceptions.Timeout,
                               requests.exceptions.HTTPError)
+
+    def __str__(self):
+        return pformat(vars(self))
 
     def log_error(self, e):
         """
@@ -269,9 +273,9 @@ class Reddit(API):
 
         rj = response.json()
 
-        self.headers = {"Authorization": "bearer %s" % rj['access_token'],
+        self.headers = {"Authorization": "bearer %s" % rj.get('access_token'),
                         "User-Agent": self.user_agent}
-        self.token_expiry = time() + rj['expires_in']
+        self.token_expiry = time() + rj.get('expires_in', 0)
 
     def api_call(self, edge, parameters, return_results=True):
 

@@ -1,12 +1,12 @@
 class FacebookFunctions:
 	def page(self, page_id, fields=None, **kwargs):
-		return self.SingleIter(self.api_key, page_id, fields=fields, **kwargs)
+		return self.SingleIter(self.api.node_edge, page_id, fields=fields, **kwargs)
 
 	def page_admin_notes(self, page_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, page_id, 'admin_notes', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, page_id, 'admin_notes', fields=fields, **kwargs)
 
 	def page_albums(self, page_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, page_id, 'albums', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, page_id, 'albums', fields=fields, **kwargs)
 
 	def page_albums_picture(self, page_id, fields=None, **kwargs):
 		return self.iter_iter(self.page_albums(page_id), 'id', self.album_picture, fields=fields, **kwargs)
@@ -81,34 +81,34 @@ class FacebookFunctions:
 		return self.iter_iter(self.page_albums_comments(page_id), 'id', self.comment_private_replies, fields=fields, **kwargs)
 
 	def page_assigned_users(self, page_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, page_id, 'assigned_users', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, page_id, 'assigned_users', fields=fields, **kwargs)
 
 	def page_audio_copyrights(self, page_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, page_id, 'audio_copyrights', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, page_id, 'audio_copyrights', fields=fields, **kwargs)
 
 	def page_bc_sponsored_posts(self, page_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, page_id, 'bc_sponsored_posts', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, page_id, 'bc_sponsored_posts', fields=fields, **kwargs)
 
 	def page_blocked(self, page_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, page_id, 'blocked', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, page_id, 'blocked', fields=fields, **kwargs)
 
 	def page_broadcast_messages(self, page_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, page_id, 'broadcast_messages', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, page_id, 'broadcast_messages', fields=fields, **kwargs)
 
 	def page_business_activities(self, page_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, page_id, 'business_activities', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, page_id, 'business_activities', fields=fields, **kwargs)
 
 	def page_call_to_actions(self, page_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, page_id, 'call_to_actions', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, page_id, 'call_to_actions', fields=fields, **kwargs)
 
 	def page_canvas_elements(self, page_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, page_id, 'canvas_elements', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, page_id, 'canvas_elements', fields=fields, **kwargs)
 
 	def page_canvases(self, page_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, page_id, 'canvases', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, page_id, 'canvases', fields=fields, **kwargs)
 
 	def page_checkin_posts(self, page_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, page_id, 'checkin_posts', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, page_id, 'checkin_posts', fields=fields, **kwargs)
 
 	def page_checkin_posts_attachments(self, page_id, fields=None, **kwargs):
 		return self.iter_iter(self.page_checkin_posts(page_id), 'id', self.post_attachments, fields=fields, **kwargs)
@@ -165,13 +165,13 @@ class FacebookFunctions:
 		return self.iter_iter(self.page_checkin_posts_sharedposts(page_id), 'id', self.post_sharedposts, fields=fields, **kwargs)
 
 	def page_claimed_urls(self, page_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, page_id, 'claimed_urls', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, page_id, 'claimed_urls', fields=fields, **kwargs)
 
 	def page_conversations(self, page_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, page_id, 'conversations', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, page_id, 'conversations', fields=fields, **kwargs)
 
 	def page_crosspost_pending_approval_pages(self, page_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, page_id, 'crosspost_pending_approval_pages', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, page_id, 'crosspost_pending_approval_pages', fields=fields, **kwargs)
 
 	def page_crosspost_pending_approval_pages_admin_notes(self, page_id, fields=None, **kwargs):
 		return self.iter_iter(self.page_crosspost_pending_approval_pages(page_id), 'id', self.page_admin_notes, fields=fields, **kwargs)
@@ -2145,7 +2145,7 @@ class FacebookFunctions:
 		return self.iter_iter(self.page_crosspost_pending_approval_pages_statuses(page_id), 'id', self.status_sharedposts, fields=fields, **kwargs)
 
 	def page_crosspost_whitelisted_pages(self, page_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, page_id, 'crosspost_whitelisted_pages', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, page_id, 'crosspost_whitelisted_pages', fields=fields, **kwargs)
 
 	def page_crosspost_whitelisted_pages_admin_notes(self, page_id, fields=None, **kwargs):
 		return self.iter_iter(self.page_crosspost_whitelisted_pages(page_id), 'id', self.page_admin_notes, fields=fields, **kwargs)
@@ -4119,10 +4119,10 @@ class FacebookFunctions:
 		return self.iter_iter(self.page_crosspost_whitelisted_pages_statuses(page_id), 'id', self.status_sharedposts, fields=fields, **kwargs)
 
 	def page_curated_collections(self, page_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, page_id, 'curated_collections', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, page_id, 'curated_collections', fields=fields, **kwargs)
 
 	def page_events(self, page_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, page_id, 'events', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, page_id, 'events', fields=fields, **kwargs)
 
 	def page_events_admins(self, page_id, fields=None, **kwargs):
 		return self.iter_iter(self.page_events(page_id), 'id', self.event_admins, fields=fields, **kwargs)
@@ -5694,7 +5694,7 @@ class FacebookFunctions:
 		return self.iter_iter(self.page_events_feed(page_id), 'id', self.post_sharedposts, fields=fields, **kwargs)
 
 	def page_featured_videos_collection(self, page_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, page_id, 'featured_videos_collection', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, page_id, 'featured_videos_collection', fields=fields, **kwargs)
 
 	def page_featured_videos_collection_auto_generated_captions(self, page_id, fields=None, **kwargs):
 		return self.iter_iter(self.page_featured_videos_collection(page_id), 'id', self.video_auto_generated_captions, fields=fields, **kwargs)
@@ -6000,7 +6000,7 @@ class FacebookFunctions:
 		return self.iter_iter(self.page_featured_videos_collection(page_id), 'id', self.video_video_insights, fields=fields, **kwargs)
 
 	def page_feed(self, page_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, page_id, 'feed', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, page_id, 'feed', fields=fields, **kwargs)
 
 	def page_feed_attachments(self, page_id, fields=None, **kwargs):
 		return self.iter_iter(self.page_feed(page_id), 'id', self.post_attachments, fields=fields, **kwargs)
@@ -6057,7 +6057,7 @@ class FacebookFunctions:
 		return self.iter_iter(self.page_feed_sharedposts(page_id), 'id', self.post_sharedposts, fields=fields, **kwargs)
 
 	def page_global_brand_children(self, page_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, page_id, 'global_brand_children', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, page_id, 'global_brand_children', fields=fields, **kwargs)
 
 	def page_global_brand_children_admin_notes(self, page_id, fields=None, **kwargs):
 		return self.iter_iter(self.page_global_brand_children(page_id), 'id', self.page_admin_notes, fields=fields, **kwargs)
@@ -8031,40 +8031,40 @@ class FacebookFunctions:
 		return self.iter_iter(self.page_global_brand_children_statuses(page_id), 'id', self.status_sharedposts, fields=fields, **kwargs)
 
 	def page_insights(self, page_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, page_id, 'insights', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, page_id, 'insights', fields=fields, **kwargs)
 
 	def page_instant_articles(self, page_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, page_id, 'instant_articles', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, page_id, 'instant_articles', fields=fields, **kwargs)
 
 	def page_instant_articles_insights(self, page_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, page_id, 'instant_articles_insights', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, page_id, 'instant_articles_insights', fields=fields, **kwargs)
 
 	def page_labels(self, page_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, page_id, 'labels', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, page_id, 'labels', fields=fields, **kwargs)
 
 	def page_leadgen_conditional_questions_group(self, page_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, page_id, 'leadgen_conditional_questions_group', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, page_id, 'leadgen_conditional_questions_group', fields=fields, **kwargs)
 
 	def page_leadgen_context_cards(self, page_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, page_id, 'leadgen_context_cards', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, page_id, 'leadgen_context_cards', fields=fields, **kwargs)
 
 	def page_leadgen_draft_forms(self, page_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, page_id, 'leadgen_draft_forms', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, page_id, 'leadgen_draft_forms', fields=fields, **kwargs)
 
 	def page_leadgen_forms(self, page_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, page_id, 'leadgen_forms', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, page_id, 'leadgen_forms', fields=fields, **kwargs)
 
 	def page_leadgen_legal_content(self, page_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, page_id, 'leadgen_legal_content', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, page_id, 'leadgen_legal_content', fields=fields, **kwargs)
 
 	def page_leadgen_qualifiers(self, page_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, page_id, 'leadgen_qualifiers', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, page_id, 'leadgen_qualifiers', fields=fields, **kwargs)
 
 	def page_leadgen_whitelisted_users(self, page_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, page_id, 'leadgen_whitelisted_users', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, page_id, 'leadgen_whitelisted_users', fields=fields, **kwargs)
 
 	def page_likes(self, page_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, page_id, 'likes', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, page_id, 'likes', fields=fields, **kwargs)
 
 	def page_likes_admin_notes(self, page_id, fields=None, **kwargs):
 		return self.iter_iter(self.page_likes(page_id), 'id', self.page_admin_notes, fields=fields, **kwargs)
@@ -10038,10 +10038,10 @@ class FacebookFunctions:
 		return self.iter_iter(self.page_likes_statuses(page_id), 'id', self.status_sharedposts, fields=fields, **kwargs)
 
 	def page_live_encoders(self, page_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, page_id, 'live_encoders', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, page_id, 'live_encoders', fields=fields, **kwargs)
 
 	def page_live_videos(self, page_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, page_id, 'live_videos', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, page_id, 'live_videos', fields=fields, **kwargs)
 
 	def page_live_videos_blocked_users(self, page_id, fields=None, **kwargs):
 		return self.iter_iter(self.page_live_videos(page_id), 'id', self.live_video_blocked_users, fields=fields, **kwargs)
@@ -10071,7 +10071,7 @@ class FacebookFunctions:
 		return self.iter_iter(self.page_live_videos(page_id), 'id', self.live_video_reactions, fields=fields, **kwargs)
 
 	def page_locations(self, page_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, page_id, 'locations', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, page_id, 'locations', fields=fields, **kwargs)
 
 	def page_locations_admin_notes(self, page_id, fields=None, **kwargs):
 		return self.iter_iter(self.page_locations(page_id), 'id', self.page_admin_notes, fields=fields, **kwargs)
@@ -12045,25 +12045,25 @@ class FacebookFunctions:
 		return self.iter_iter(self.page_locations_statuses(page_id), 'id', self.status_sharedposts, fields=fields, **kwargs)
 
 	def page_media_fingerprints(self, page_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, page_id, 'media_fingerprints', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, page_id, 'media_fingerprints', fields=fields, **kwargs)
 
 	def page_messenger_profile(self, page_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, page_id, 'messenger_profile', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, page_id, 'messenger_profile', fields=fields, **kwargs)
 
 	def page_milestones(self, page_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, page_id, 'milestones', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, page_id, 'milestones', fields=fields, **kwargs)
 
 	def page_nativeoffers(self, page_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, page_id, 'nativeoffers', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, page_id, 'nativeoffers', fields=fields, **kwargs)
 
 	def page_offers_v3(self, page_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, page_id, 'offers_v3', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, page_id, 'offers_v3', fields=fields, **kwargs)
 
 	def page_pending_users(self, page_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, page_id, 'pending_users', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, page_id, 'pending_users', fields=fields, **kwargs)
 
 	def page_photos(self, page_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, page_id, 'photos', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, page_id, 'photos', fields=fields, **kwargs)
 
 	def page_photos_insights(self, page_id, fields=None, **kwargs):
 		return self.iter_iter(self.page_photos(page_id), 'id', self.photo_insights, fields=fields, **kwargs)
@@ -12357,13 +12357,13 @@ class FacebookFunctions:
 		return self.iter_iter(self.page_photos_comments(page_id), 'id', self.comment_private_replies, fields=fields, **kwargs)
 
 	def page_picture(self, page_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, page_id, 'picture', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, page_id, 'picture', fields=fields, **kwargs)
 
 	def page_place_topics(self, page_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, page_id, 'place_topics', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, page_id, 'place_topics', fields=fields, **kwargs)
 
 	def page_posts(self, page_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, page_id, 'posts', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, page_id, 'posts', fields=fields, **kwargs)
 
 	def page_posts_attachments(self, page_id, fields=None, **kwargs):
 		return self.iter_iter(self.page_posts(page_id), 'id', self.post_attachments, fields=fields, **kwargs)
@@ -12420,22 +12420,22 @@ class FacebookFunctions:
 		return self.iter_iter(self.page_posts_sharedposts(page_id), 'id', self.post_sharedposts, fields=fields, **kwargs)
 
 	def page_product_catalogs(self, page_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, page_id, 'product_catalogs', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, page_id, 'product_catalogs', fields=fields, **kwargs)
 
 	def page_promotable_posts(self, page_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, page_id, 'promotable_posts', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, page_id, 'promotable_posts', fields=fields, **kwargs)
 
 	def page_published_posts(self, page_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, page_id, 'published_posts', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, page_id, 'published_posts', fields=fields, **kwargs)
 
 	def page_ratings(self, page_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, page_id, 'ratings', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, page_id, 'ratings', fields=fields, **kwargs)
 
 	def page_restaurant_orders(self, page_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, page_id, 'restaurant_orders', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, page_id, 'restaurant_orders', fields=fields, **kwargs)
 
 	def page_roles(self, page_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, page_id, 'roles', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, page_id, 'roles', fields=fields, **kwargs)
 
 	def page_roles_accounts(self, page_id, fields=None, **kwargs):
 		return self.iter_iter(self.page_roles(page_id), 'id', self.user_accounts, fields=fields, **kwargs)
@@ -14295,13 +14295,13 @@ class FacebookFunctions:
 		return self.iter_iter(self.page_roles_subscribedto(page_id), 'id', self.user_subscribedto, fields=fields, **kwargs)
 
 	def page_saved_filters(self, page_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, page_id, 'saved_filters', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, page_id, 'saved_filters', fields=fields, **kwargs)
 
 	def page_saved_message_responses(self, page_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, page_id, 'saved_message_responses', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, page_id, 'saved_message_responses', fields=fields, **kwargs)
 
 	def page_scheduled_posts(self, page_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, page_id, 'scheduled_posts', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, page_id, 'scheduled_posts', fields=fields, **kwargs)
 
 	def page_scheduled_posts_attachments(self, page_id, fields=None, **kwargs):
 		return self.iter_iter(self.page_scheduled_posts(page_id), 'id', self.post_attachments, fields=fields, **kwargs)
@@ -14358,28 +14358,28 @@ class FacebookFunctions:
 		return self.iter_iter(self.page_scheduled_posts_sharedposts(page_id), 'id', self.post_sharedposts, fields=fields, **kwargs)
 
 	def page_screennames(self, page_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, page_id, 'screennames', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, page_id, 'screennames', fields=fields, **kwargs)
 
 	def page_seasons(self, page_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, page_id, 'seasons', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, page_id, 'seasons', fields=fields, **kwargs)
 
 	def page_secondary_receivers(self, page_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, page_id, 'secondary_receivers', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, page_id, 'secondary_receivers', fields=fields, **kwargs)
 
 	def page_settings(self, page_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, page_id, 'settings', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, page_id, 'settings', fields=fields, **kwargs)
 
 	def page_show_playlists(self, page_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, page_id, 'show_playlists', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, page_id, 'show_playlists', fields=fields, **kwargs)
 
 	def page_subscribed_apps(self, page_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, page_id, 'subscribed_apps', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, page_id, 'subscribed_apps', fields=fields, **kwargs)
 
 	def page_tabs(self, page_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, page_id, 'tabs', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, page_id, 'tabs', fields=fields, **kwargs)
 
 	def page_tagged(self, page_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, page_id, 'tagged', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, page_id, 'tagged', fields=fields, **kwargs)
 
 	def page_tagged_attachments(self, page_id, fields=None, **kwargs):
 		return self.iter_iter(self.page_tagged(page_id), 'id', self.post_attachments, fields=fields, **kwargs)
@@ -14436,16 +14436,16 @@ class FacebookFunctions:
 		return self.iter_iter(self.page_tagged_sharedposts(page_id), 'id', self.post_sharedposts, fields=fields, **kwargs)
 
 	def page_thread_settings(self, page_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, page_id, 'thread_settings', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, page_id, 'thread_settings', fields=fields, **kwargs)
 
 	def page_threads(self, page_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, page_id, 'threads', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, page_id, 'threads', fields=fields, **kwargs)
 
 	def page_tours(self, page_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, page_id, 'tours', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, page_id, 'tours', fields=fields, **kwargs)
 
 	def page_video_broadcasts(self, page_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, page_id, 'video_broadcasts', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, page_id, 'video_broadcasts', fields=fields, **kwargs)
 
 	def page_video_broadcasts_blocked_users(self, page_id, fields=None, **kwargs):
 		return self.iter_iter(self.page_video_broadcasts(page_id), 'id', self.live_video_blocked_users, fields=fields, **kwargs)
@@ -14475,19 +14475,19 @@ class FacebookFunctions:
 		return self.iter_iter(self.page_video_broadcasts(page_id), 'id', self.live_video_reactions, fields=fields, **kwargs)
 
 	def page_video_copyright_rules(self, page_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, page_id, 'video_copyright_rules', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, page_id, 'video_copyright_rules', fields=fields, **kwargs)
 
 	def page_video_copyrights(self, page_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, page_id, 'video_copyrights', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, page_id, 'video_copyrights', fields=fields, **kwargs)
 
 	def page_video_lists(self, page_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, page_id, 'video_lists', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, page_id, 'video_lists', fields=fields, **kwargs)
 
 	def page_video_media_copyrights(self, page_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, page_id, 'video_media_copyrights', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, page_id, 'video_media_copyrights', fields=fields, **kwargs)
 
 	def page_videos(self, page_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, page_id, 'videos', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, page_id, 'videos', fields=fields, **kwargs)
 
 	def page_videos_auto_generated_captions(self, page_id, fields=None, **kwargs):
 		return self.iter_iter(self.page_videos(page_id), 'id', self.video_auto_generated_captions, fields=fields, **kwargs)
@@ -14793,7 +14793,7 @@ class FacebookFunctions:
 		return self.iter_iter(self.page_videos(page_id), 'id', self.video_video_insights, fields=fields, **kwargs)
 
 	def page_videos_you_can_use(self, page_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, page_id, 'videos_you_can_use', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, page_id, 'videos_you_can_use', fields=fields, **kwargs)
 
 	def page_videos_you_can_use_auto_generated_captions(self, page_id, fields=None, **kwargs):
 		return self.iter_iter(self.page_videos_you_can_use(page_id), 'id', self.video_auto_generated_captions, fields=fields, **kwargs)
@@ -15099,7 +15099,7 @@ class FacebookFunctions:
 		return self.iter_iter(self.page_videos_you_can_use(page_id), 'id', self.video_video_insights, fields=fields, **kwargs)
 
 	def page_visitor_posts(self, page_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, page_id, 'visitor_posts', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, page_id, 'visitor_posts', fields=fields, **kwargs)
 
 	def page_visitor_posts_attachments(self, page_id, fields=None, **kwargs):
 		return self.iter_iter(self.page_visitor_posts(page_id), 'id', self.post_attachments, fields=fields, **kwargs)
@@ -15156,19 +15156,19 @@ class FacebookFunctions:
 		return self.iter_iter(self.page_visitor_posts_sharedposts(page_id), 'id', self.post_sharedposts, fields=fields, **kwargs)
 
 	def page_workflows(self, page_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, page_id, 'workflows', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, page_id, 'workflows', fields=fields, **kwargs)
 
 	def page_notes(self, page_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, page_id, 'notes', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, page_id, 'notes', fields=fields, **kwargs)
 
 	def page_notifications(self, page_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, page_id, 'notifications', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, page_id, 'notifications', fields=fields, **kwargs)
 
 	def page_questions(self, page_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, page_id, 'questions', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, page_id, 'questions', fields=fields, **kwargs)
 
 	def page_statuses(self, page_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, page_id, 'statuses', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, page_id, 'statuses', fields=fields, **kwargs)
 
 	def page_statuses_likes(self, page_id, fields=None, **kwargs):
 		return self.iter_iter(self.page_statuses(page_id), 'id', self.status_likes, fields=fields, **kwargs)
@@ -15195,13 +15195,13 @@ class FacebookFunctions:
 		return self.iter_iter(self.page_statuses(page_id), 'id', self.status_sharedposts, fields=fields, **kwargs)
 
 	def post(self, post_id, fields=None, **kwargs):
-		return self.SingleIter(self.api_key, post_id, fields=fields, **kwargs)
+		return self.SingleIter(self.api.node_edge, post_id, fields=fields, **kwargs)
 
 	def post_attachments(self, post_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, post_id, 'attachments', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, post_id, 'attachments', fields=fields, **kwargs)
 
 	def post_comments(self, post_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, post_id, 'comments', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, post_id, 'comments', fields=fields, **kwargs)
 
 	def post_comments_comments(self, post_id, fields=None, **kwargs):
 		return self.iter_iter(self.post_comments(post_id), 'id', self.comment_comments, fields=fields, **kwargs)
@@ -15216,19 +15216,19 @@ class FacebookFunctions:
 		return self.iter_iter(self.post_comments(post_id), 'id', self.comment_private_replies, fields=fields, **kwargs)
 
 	def post_insights(self, post_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, post_id, 'insights', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, post_id, 'insights', fields=fields, **kwargs)
 
 	def post_likes(self, post_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, post_id, 'likes', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, post_id, 'likes', fields=fields, **kwargs)
 
 	def post_private_replies(self, post_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, post_id, 'private_replies', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, post_id, 'private_replies', fields=fields, **kwargs)
 
 	def post_reactions(self, post_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, post_id, 'reactions', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, post_id, 'reactions', fields=fields, **kwargs)
 
 	def post_sharedposts(self, post_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, post_id, 'sharedposts', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, post_id, 'sharedposts', fields=fields, **kwargs)
 
 	def post_sharedposts_attachments(self, post_id, fields=None, **kwargs):
 		return self.iter_iter(self.post_sharedposts(post_id), 'id', self.post_attachments, fields=fields, **kwargs)
@@ -15285,28 +15285,28 @@ class FacebookFunctions:
 		return self.iter_iter(self.post_sharedposts_sharedposts(post_id), 'id', self.post_sharedposts, fields=fields, **kwargs)
 
 	def comment(self, comment_id, fields=None, **kwargs):
-		return self.SingleIter(self.api_key, comment_id, fields=fields, **kwargs)
+		return self.SingleIter(self.api.node_edge, comment_id, fields=fields, **kwargs)
 
 	def comment_comments(self, comment_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, comment_id, 'comments', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, comment_id, 'comments', fields=fields, **kwargs)
 
 	def comment_likes(self, comment_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, comment_id, 'likes', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, comment_id, 'likes', fields=fields, **kwargs)
 
 	def comment_reactions(self, comment_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, comment_id, 'reactions', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, comment_id, 'reactions', fields=fields, **kwargs)
 
 	def comment_private_replies(self, comment_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, comment_id, 'private_replies', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, comment_id, 'private_replies', fields=fields, **kwargs)
 
 	def album(self, album_id, fields=None, **kwargs):
-		return self.SingleIter(self.api_key, album_id, fields=fields, **kwargs)
+		return self.SingleIter(self.api.node_edge, album_id, fields=fields, **kwargs)
 
 	def album_picture(self, album_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, album_id, 'picture', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, album_id, 'picture', fields=fields, **kwargs)
 
 	def album_photos(self, album_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, album_id, 'photos', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, album_id, 'photos', fields=fields, **kwargs)
 
 	def album_photos_insights(self, album_id, fields=None, **kwargs):
 		return self.iter_iter(self.album_photos(album_id), 'id', self.photo_insights, fields=fields, **kwargs)
@@ -15600,7 +15600,7 @@ class FacebookFunctions:
 		return self.iter_iter(self.album_photos_comments(album_id), 'id', self.comment_private_replies, fields=fields, **kwargs)
 
 	def album_sharedposts(self, album_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, album_id, 'sharedposts', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, album_id, 'sharedposts', fields=fields, **kwargs)
 
 	def album_sharedposts_attachments(self, album_id, fields=None, **kwargs):
 		return self.iter_iter(self.album_sharedposts(album_id), 'id', self.post_attachments, fields=fields, **kwargs)
@@ -15657,13 +15657,13 @@ class FacebookFunctions:
 		return self.iter_iter(self.album_sharedposts_sharedposts(album_id), 'id', self.post_sharedposts, fields=fields, **kwargs)
 
 	def album_likes(self, album_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, album_id, 'likes', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, album_id, 'likes', fields=fields, **kwargs)
 
 	def album_reactions(self, album_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, album_id, 'reactions', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, album_id, 'reactions', fields=fields, **kwargs)
 
 	def album_comments(self, album_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, album_id, 'comments', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, album_id, 'comments', fields=fields, **kwargs)
 
 	def album_comments_comments(self, album_id, fields=None, **kwargs):
 		return self.iter_iter(self.album_comments(album_id), 'id', self.comment_comments, fields=fields, **kwargs)
@@ -15678,19 +15678,19 @@ class FacebookFunctions:
 		return self.iter_iter(self.album_comments(album_id), 'id', self.comment_private_replies, fields=fields, **kwargs)
 
 	def photo(self, photo_id, fields=None, **kwargs):
-		return self.SingleIter(self.api_key, photo_id, fields=fields, **kwargs)
+		return self.SingleIter(self.api.node_edge, photo_id, fields=fields, **kwargs)
 
 	def photo_insights(self, photo_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, photo_id, 'insights', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, photo_id, 'insights', fields=fields, **kwargs)
 
 	def photo_likes(self, photo_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, photo_id, 'likes', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, photo_id, 'likes', fields=fields, **kwargs)
 
 	def photo_reactions(self, photo_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, photo_id, 'reactions', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, photo_id, 'reactions', fields=fields, **kwargs)
 
 	def photo_sharedposts(self, photo_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, photo_id, 'sharedposts', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, photo_id, 'sharedposts', fields=fields, **kwargs)
 
 	def photo_sharedposts_attachments(self, photo_id, fields=None, **kwargs):
 		return self.iter_iter(self.photo_sharedposts(photo_id), 'id', self.post_attachments, fields=fields, **kwargs)
@@ -15747,7 +15747,7 @@ class FacebookFunctions:
 		return self.iter_iter(self.photo_sharedposts_sharedposts(photo_id), 'id', self.post_sharedposts, fields=fields, **kwargs)
 
 	def photo_sponsor_tags(self, photo_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, photo_id, 'sponsor_tags', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, photo_id, 'sponsor_tags', fields=fields, **kwargs)
 
 	def photo_sponsor_tags_admin_notes(self, photo_id, fields=None, **kwargs):
 		return self.iter_iter(self.photo_sponsor_tags(photo_id), 'id', self.page_admin_notes, fields=fields, **kwargs)
@@ -17721,10 +17721,10 @@ class FacebookFunctions:
 		return self.iter_iter(self.photo_sponsor_tags_statuses(photo_id), 'id', self.status_sharedposts, fields=fields, **kwargs)
 
 	def photo_tags(self, photo_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, photo_id, 'tags', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, photo_id, 'tags', fields=fields, **kwargs)
 
 	def photo_comments(self, photo_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, photo_id, 'comments', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, photo_id, 'comments', fields=fields, **kwargs)
 
 	def photo_comments_comments(self, photo_id, fields=None, **kwargs):
 		return self.iter_iter(self.photo_comments(photo_id), 'id', self.comment_comments, fields=fields, **kwargs)
@@ -17739,16 +17739,16 @@ class FacebookFunctions:
 		return self.iter_iter(self.photo_comments(photo_id), 'id', self.comment_private_replies, fields=fields, **kwargs)
 
 	def video(self, video_id, fields=None, **kwargs):
-		return self.SingleIter(self.api_key, video_id, fields=fields, **kwargs)
+		return self.SingleIter(self.api.node_edge, video_id, fields=fields, **kwargs)
 
 	def video_auto_generated_captions(self, video_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, video_id, 'auto_generated_captions', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, video_id, 'auto_generated_captions', fields=fields, **kwargs)
 
 	def video_captions(self, video_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, video_id, 'captions', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, video_id, 'captions', fields=fields, **kwargs)
 
 	def video_comments(self, video_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, video_id, 'comments', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, video_id, 'comments', fields=fields, **kwargs)
 
 	def video_comments_comments(self, video_id, fields=None, **kwargs):
 		return self.iter_iter(self.video_comments(video_id), 'id', self.comment_comments, fields=fields, **kwargs)
@@ -17763,7 +17763,7 @@ class FacebookFunctions:
 		return self.iter_iter(self.video_comments(video_id), 'id', self.comment_private_replies, fields=fields, **kwargs)
 
 	def video_crosspost_shared_pages(self, video_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, video_id, 'crosspost_shared_pages', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, video_id, 'crosspost_shared_pages', fields=fields, **kwargs)
 
 	def video_crosspost_shared_pages_admin_notes(self, video_id, fields=None, **kwargs):
 		return self.iter_iter(self.video_crosspost_shared_pages(video_id), 'id', self.page_admin_notes, fields=fields, **kwargs)
@@ -19737,13 +19737,13 @@ class FacebookFunctions:
 		return self.iter_iter(self.video_crosspost_shared_pages_statuses(video_id), 'id', self.status_sharedposts, fields=fields, **kwargs)
 
 	def video_likes(self, video_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, video_id, 'likes', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, video_id, 'likes', fields=fields, **kwargs)
 
 	def video_reactions(self, video_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, video_id, 'reactions', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, video_id, 'reactions', fields=fields, **kwargs)
 
 	def video_sharedposts(self, video_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, video_id, 'sharedposts', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, video_id, 'sharedposts', fields=fields, **kwargs)
 
 	def video_sharedposts_attachments(self, video_id, fields=None, **kwargs):
 		return self.iter_iter(self.video_sharedposts(video_id), 'id', self.post_attachments, fields=fields, **kwargs)
@@ -19800,25 +19800,25 @@ class FacebookFunctions:
 		return self.iter_iter(self.video_sharedposts_sharedposts(video_id), 'id', self.post_sharedposts, fields=fields, **kwargs)
 
 	def video_sponsor_tags(self, video_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, video_id, 'sponsor_tags', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, video_id, 'sponsor_tags', fields=fields, **kwargs)
 
 	def video_tags(self, video_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, video_id, 'tags', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, video_id, 'tags', fields=fields, **kwargs)
 
 	def video_thumbnails(self, video_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, video_id, 'thumbnails', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, video_id, 'thumbnails', fields=fields, **kwargs)
 
 	def video_video_insights(self, video_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, video_id, 'video_insights', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, video_id, 'video_insights', fields=fields, **kwargs)
 
 	def live_video(self, live_video_id, fields=None, **kwargs):
-		return self.SingleIter(self.api_key, live_video_id, fields=fields, **kwargs)
+		return self.SingleIter(self.api.node_edge, live_video_id, fields=fields, **kwargs)
 
 	def live_video_blocked_users(self, live_video_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, live_video_id, 'blocked_users', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, live_video_id, 'blocked_users', fields=fields, **kwargs)
 
 	def live_video_comments(self, live_video_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, live_video_id, 'comments', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, live_video_id, 'comments', fields=fields, **kwargs)
 
 	def live_video_comments_comments(self, live_video_id, fields=None, **kwargs):
 		return self.iter_iter(self.live_video_comments(live_video_id), 'id', self.comment_comments, fields=fields, **kwargs)
@@ -19833,37 +19833,37 @@ class FacebookFunctions:
 		return self.iter_iter(self.live_video_comments(live_video_id), 'id', self.comment_private_replies, fields=fields, **kwargs)
 
 	def live_video_errors(self, live_video_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, live_video_id, 'errors', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, live_video_id, 'errors', fields=fields, **kwargs)
 
 	def live_video_likes(self, live_video_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, live_video_id, 'likes', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, live_video_id, 'likes', fields=fields, **kwargs)
 
 	def live_video_reactions(self, live_video_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, live_video_id, 'reactions', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, live_video_id, 'reactions', fields=fields, **kwargs)
 
 	def user(self, user_id, fields=None, **kwargs):
-		return self.SingleIter(self.api_key, user_id, fields=fields, **kwargs)
+		return self.SingleIter(self.api.node_edge, user_id, fields=fields, **kwargs)
 
 	def user_accounts(self, user_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, user_id, 'accounts', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, user_id, 'accounts', fields=fields, **kwargs)
 
 	def user_achievements(self, user_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, user_id, 'achievements', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, user_id, 'achievements', fields=fields, **kwargs)
 
 	def user_ad_studies(self, user_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, user_id, 'ad_studies', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, user_id, 'ad_studies', fields=fields, **kwargs)
 
 	def user_adaccounts(self, user_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, user_id, 'adaccounts', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, user_id, 'adaccounts', fields=fields, **kwargs)
 
 	def user_adcontracts(self, user_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, user_id, 'adcontracts', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, user_id, 'adcontracts', fields=fields, **kwargs)
 
 	def user_adnetworkanalytics(self, user_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, user_id, 'adnetworkanalytics', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, user_id, 'adnetworkanalytics', fields=fields, **kwargs)
 
 	def user_albums(self, user_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, user_id, 'albums', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, user_id, 'albums', fields=fields, **kwargs)
 
 	def user_albums_picture(self, user_id, fields=None, **kwargs):
 		return self.iter_iter(self.user_albums(user_id), 'id', self.album_picture, fields=fields, **kwargs)
@@ -19938,49 +19938,49 @@ class FacebookFunctions:
 		return self.iter_iter(self.user_albums_comments(user_id), 'id', self.comment_private_replies, fields=fields, **kwargs)
 
 	def user_apprequestformerrecipients(self, user_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, user_id, 'apprequestformerrecipients', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, user_id, 'apprequestformerrecipients', fields=fields, **kwargs)
 
 	def user_apprequests(self, user_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, user_id, 'apprequests', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, user_id, 'apprequests', fields=fields, **kwargs)
 
 	def user_asset3ds(self, user_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, user_id, 'asset3ds', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, user_id, 'asset3ds', fields=fields, **kwargs)
 
 	def user_assigned_ad_accounts(self, user_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, user_id, 'assigned_ad_accounts', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, user_id, 'assigned_ad_accounts', fields=fields, **kwargs)
 
 	def user_assigned_monetization_properties(self, user_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, user_id, 'assigned_monetization_properties', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, user_id, 'assigned_monetization_properties', fields=fields, **kwargs)
 
 	def user_assigned_pages(self, user_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, user_id, 'assigned_pages', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, user_id, 'assigned_pages', fields=fields, **kwargs)
 
 	def user_assigned_product_catalogs(self, user_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, user_id, 'assigned_product_catalogs', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, user_id, 'assigned_product_catalogs', fields=fields, **kwargs)
 
 	def user_books(self, user_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, user_id, 'books', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, user_id, 'books', fields=fields, **kwargs)
 
 	def user_business_activities(self, user_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, user_id, 'business_activities', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, user_id, 'business_activities', fields=fields, **kwargs)
 
 	def user_business_users(self, user_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, user_id, 'business_users', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, user_id, 'business_users', fields=fields, **kwargs)
 
 	def user_businesses(self, user_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, user_id, 'businesses', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, user_id, 'businesses', fields=fields, **kwargs)
 
 	def user_conversations(self, user_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, user_id, 'conversations', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, user_id, 'conversations', fields=fields, **kwargs)
 
 	def user_curated_collections(self, user_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, user_id, 'curated_collections', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, user_id, 'curated_collections', fields=fields, **kwargs)
 
 	def user_domains(self, user_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, user_id, 'domains', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, user_id, 'domains', fields=fields, **kwargs)
 
 	def user_events(self, user_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, user_id, 'events', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, user_id, 'events', fields=fields, **kwargs)
 
 	def user_events_admins(self, user_id, fields=None, **kwargs):
 		return self.iter_iter(self.user_events(user_id), 'id', self.event_admins, fields=fields, **kwargs)
@@ -21552,7 +21552,7 @@ class FacebookFunctions:
 		return self.iter_iter(self.user_events_feed(user_id), 'id', self.post_sharedposts, fields=fields, **kwargs)
 
 	def user_family(self, user_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, user_id, 'family', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, user_id, 'family', fields=fields, **kwargs)
 
 	def user_family_accounts(self, user_id, fields=None, **kwargs):
 		return self.iter_iter(self.user_family(user_id), 'id', self.user_accounts, fields=fields, **kwargs)
@@ -23412,13 +23412,13 @@ class FacebookFunctions:
 		return self.iter_iter(self.user_family_subscribedto(user_id), 'id', self.user_subscribedto, fields=fields, **kwargs)
 
 	def user_favorite_requests(self, user_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, user_id, 'favorite_requests', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, user_id, 'favorite_requests', fields=fields, **kwargs)
 
 	def user_friendlists(self, user_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, user_id, 'friendlists', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, user_id, 'friendlists', fields=fields, **kwargs)
 
 	def user_friends(self, user_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, user_id, 'friends', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, user_id, 'friends', fields=fields, **kwargs)
 
 	def user_friends_accounts(self, user_id, fields=None, **kwargs):
 		return self.iter_iter(self.user_friends(user_id), 'id', self.user_accounts, fields=fields, **kwargs)
@@ -25278,10 +25278,10 @@ class FacebookFunctions:
 		return self.iter_iter(self.user_friends_subscribedto(user_id), 'id', self.user_subscribedto, fields=fields, **kwargs)
 
 	def user_games(self, user_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, user_id, 'games', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, user_id, 'games', fields=fields, **kwargs)
 
 	def user_groups(self, user_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, user_id, 'groups', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, user_id, 'groups', fields=fields, **kwargs)
 
 	def user_groups_admins(self, user_id, fields=None, **kwargs):
 		return self.iter_iter(self.user_groups(user_id), 'id', self.group_admins, fields=fields, **kwargs)
@@ -25869,22 +25869,22 @@ class FacebookFunctions:
 		return self.iter_iter(self.user_groups_videos(user_id), 'id', self.video_video_insights, fields=fields, **kwargs)
 
 	def user_ids_for_apps(self, user_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, user_id, 'ids_for_apps', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, user_id, 'ids_for_apps', fields=fields, **kwargs)
 
 	def user_ids_for_business(self, user_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, user_id, 'ids_for_business', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, user_id, 'ids_for_business', fields=fields, **kwargs)
 
 	def user_ids_for_pages(self, user_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, user_id, 'ids_for_pages', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, user_id, 'ids_for_pages', fields=fields, **kwargs)
 
 	def user_invitable_friends(self, user_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, user_id, 'invitable_friends', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, user_id, 'invitable_friends', fields=fields, **kwargs)
 
 	def user_leadgen_forms(self, user_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, user_id, 'leadgen_forms', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, user_id, 'leadgen_forms', fields=fields, **kwargs)
 
 	def user_likes(self, user_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, user_id, 'likes', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, user_id, 'likes', fields=fields, **kwargs)
 
 	def user_likes_admin_notes(self, user_id, fields=None, **kwargs):
 		return self.iter_iter(self.user_likes(user_id), 'id', self.page_admin_notes, fields=fields, **kwargs)
@@ -27858,10 +27858,10 @@ class FacebookFunctions:
 		return self.iter_iter(self.user_likes_statuses(user_id), 'id', self.status_sharedposts, fields=fields, **kwargs)
 
 	def user_live_encoders(self, user_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, user_id, 'live_encoders', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, user_id, 'live_encoders', fields=fields, **kwargs)
 
 	def user_live_videos(self, user_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, user_id, 'live_videos', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, user_id, 'live_videos', fields=fields, **kwargs)
 
 	def user_live_videos_blocked_users(self, user_id, fields=None, **kwargs):
 		return self.iter_iter(self.user_live_videos(user_id), 'id', self.live_video_blocked_users, fields=fields, **kwargs)
@@ -27891,22 +27891,22 @@ class FacebookFunctions:
 		return self.iter_iter(self.user_live_videos(user_id), 'id', self.live_video_reactions, fields=fields, **kwargs)
 
 	def user_movies(self, user_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, user_id, 'movies', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, user_id, 'movies', fields=fields, **kwargs)
 
 	def user_music(self, user_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, user_id, 'music', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, user_id, 'music', fields=fields, **kwargs)
 
 	def user_objects(self, user_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, user_id, 'objects', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, user_id, 'objects', fields=fields, **kwargs)
 
 	def user_permissions(self, user_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, user_id, 'permissions', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, user_id, 'permissions', fields=fields, **kwargs)
 
 	def user_personal_ad_accounts(self, user_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, user_id, 'personal_ad_accounts', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, user_id, 'personal_ad_accounts', fields=fields, **kwargs)
 
 	def user_photos(self, user_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, user_id, 'photos', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, user_id, 'photos', fields=fields, **kwargs)
 
 	def user_photos_insights(self, user_id, fields=None, **kwargs):
 		return self.iter_iter(self.user_photos(user_id), 'id', self.photo_insights, fields=fields, **kwargs)
@@ -28200,28 +28200,28 @@ class FacebookFunctions:
 		return self.iter_iter(self.user_photos_comments(user_id), 'id', self.comment_private_replies, fields=fields, **kwargs)
 
 	def user_picture(self, user_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, user_id, 'picture', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, user_id, 'picture', fields=fields, **kwargs)
 
 	def user_promotable_domains(self, user_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, user_id, 'promotable_domains', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, user_id, 'promotable_domains', fields=fields, **kwargs)
 
 	def user_promotable_events(self, user_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, user_id, 'promotable_events', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, user_id, 'promotable_events', fields=fields, **kwargs)
 
 	def user_request_history(self, user_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, user_id, 'request_history', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, user_id, 'request_history', fields=fields, **kwargs)
 
 	def user_rich_media_documents(self, user_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, user_id, 'rich_media_documents', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, user_id, 'rich_media_documents', fields=fields, **kwargs)
 
 	def user_session_keys(self, user_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, user_id, 'session_keys', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, user_id, 'session_keys', fields=fields, **kwargs)
 
 	def user_stream_filters(self, user_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, user_id, 'stream_filters', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, user_id, 'stream_filters', fields=fields, **kwargs)
 
 	def user_taggable_friends(self, user_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, user_id, 'taggable_friends', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, user_id, 'taggable_friends', fields=fields, **kwargs)
 
 	def user_taggable_friends_accounts(self, user_id, fields=None, **kwargs):
 		return self.iter_iter(self.user_taggable_friends(user_id), 'id', self.user_accounts, fields=fields, **kwargs)
@@ -30081,16 +30081,16 @@ class FacebookFunctions:
 		return self.iter_iter(self.user_taggable_friends_subscribedto(user_id), 'id', self.user_subscribedto, fields=fields, **kwargs)
 
 	def user_tagged_places(self, user_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, user_id, 'tagged_places', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, user_id, 'tagged_places', fields=fields, **kwargs)
 
 	def user_television(self, user_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, user_id, 'television', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, user_id, 'television', fields=fields, **kwargs)
 
 	def user_threads(self, user_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, user_id, 'threads', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, user_id, 'threads', fields=fields, **kwargs)
 
 	def user_video_broadcasts(self, user_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, user_id, 'video_broadcasts', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, user_id, 'video_broadcasts', fields=fields, **kwargs)
 
 	def user_video_broadcasts_blocked_users(self, user_id, fields=None, **kwargs):
 		return self.iter_iter(self.user_video_broadcasts(user_id), 'id', self.live_video_blocked_users, fields=fields, **kwargs)
@@ -30120,7 +30120,7 @@ class FacebookFunctions:
 		return self.iter_iter(self.user_video_broadcasts(user_id), 'id', self.live_video_reactions, fields=fields, **kwargs)
 
 	def user_videos(self, user_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, user_id, 'videos', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, user_id, 'videos', fields=fields, **kwargs)
 
 	def user_videos_auto_generated_captions(self, user_id, fields=None, **kwargs):
 		return self.iter_iter(self.user_videos(user_id), 'id', self.video_auto_generated_captions, fields=fields, **kwargs)
@@ -30426,10 +30426,10 @@ class FacebookFunctions:
 		return self.iter_iter(self.user_videos(user_id), 'id', self.video_video_insights, fields=fields, **kwargs)
 
 	def user_checkins(self, user_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, user_id, 'checkins', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, user_id, 'checkins', fields=fields, **kwargs)
 
 	def user_feed(self, user_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, user_id, 'feed', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, user_id, 'feed', fields=fields, **kwargs)
 
 	def user_feed_attachments(self, user_id, fields=None, **kwargs):
 		return self.iter_iter(self.user_feed(user_id), 'id', self.post_attachments, fields=fields, **kwargs)
@@ -30486,19 +30486,19 @@ class FacebookFunctions:
 		return self.iter_iter(self.user_feed_sharedposts(user_id), 'id', self.post_sharedposts, fields=fields, **kwargs)
 
 	def user_friendrequests(self, user_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, user_id, 'friendrequests', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, user_id, 'friendrequests', fields=fields, **kwargs)
 
 	def user_home(self, user_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, user_id, 'home', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, user_id, 'home', fields=fields, **kwargs)
 
 	def user_inbox(self, user_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, user_id, 'inbox', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, user_id, 'inbox', fields=fields, **kwargs)
 
 	def user_locations(self, user_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, user_id, 'locations', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, user_id, 'locations', fields=fields, **kwargs)
 
 	def user_mutualfriends(self, user_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, user_id, 'mutualfriends', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, user_id, 'mutualfriends', fields=fields, **kwargs)
 
 	def user_mutualfriends_accounts(self, user_id, fields=None, **kwargs):
 		return self.iter_iter(self.user_mutualfriends(user_id), 'id', self.user_accounts, fields=fields, **kwargs)
@@ -32358,19 +32358,19 @@ class FacebookFunctions:
 		return self.iter_iter(self.user_mutualfriends_subscribedto(user_id), 'id', self.user_subscribedto, fields=fields, **kwargs)
 
 	def user_notifications(self, user_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, user_id, 'notifications', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, user_id, 'notifications', fields=fields, **kwargs)
 
 	def user_outbox(self, user_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, user_id, 'outbox', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, user_id, 'outbox', fields=fields, **kwargs)
 
 	def user_questions(self, user_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, user_id, 'questions', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, user_id, 'questions', fields=fields, **kwargs)
 
 	def user_scores(self, user_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, user_id, 'scores', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, user_id, 'scores', fields=fields, **kwargs)
 
 	def user_subscribers(self, user_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, user_id, 'subscribers', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, user_id, 'subscribers', fields=fields, **kwargs)
 
 	def user_subscribers_accounts(self, user_id, fields=None, **kwargs):
 		return self.iter_iter(self.user_subscribers(user_id), 'id', self.user_accounts, fields=fields, **kwargs)
@@ -34230,7 +34230,7 @@ class FacebookFunctions:
 		return self.iter_iter(self.user_subscribers_subscribedto(user_id), 'id', self.user_subscribedto, fields=fields, **kwargs)
 
 	def user_subscribedto(self, user_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, user_id, 'subscribedto', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, user_id, 'subscribedto', fields=fields, **kwargs)
 
 	def user_subscribedto_accounts(self, user_id, fields=None, **kwargs):
 		return self.iter_iter(self.user_subscribedto(user_id), 'id', self.user_accounts, fields=fields, **kwargs)
@@ -36090,16 +36090,16 @@ class FacebookFunctions:
 		return self.iter_iter(self.user_subscribedto_subscribedto(user_id), 'id', self.user_subscribedto, fields=fields, **kwargs)
 
 	def status(self, status_id, fields=None, **kwargs):
-		return self.SingleIter(self.api_key, status_id, fields=fields, **kwargs)
+		return self.SingleIter(self.api.node_edge, status_id, fields=fields, **kwargs)
 
 	def status_likes(self, status_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, status_id, 'likes', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, status_id, 'likes', fields=fields, **kwargs)
 
 	def status_reactions(self, status_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, status_id, 'reactions', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, status_id, 'reactions', fields=fields, **kwargs)
 
 	def status_comments(self, status_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, status_id, 'comments', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, status_id, 'comments', fields=fields, **kwargs)
 
 	def status_comments_comments(self, status_id, fields=None, **kwargs):
 		return self.iter_iter(self.status_comments(status_id), 'id', self.comment_comments, fields=fields, **kwargs)
@@ -36114,13 +36114,13 @@ class FacebookFunctions:
 		return self.iter_iter(self.status_comments(status_id), 'id', self.comment_private_replies, fields=fields, **kwargs)
 
 	def status_sharedposts(self, status_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, status_id, 'sharedposts', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, status_id, 'sharedposts', fields=fields, **kwargs)
 
 	def event(self, event_id, fields=None, **kwargs):
-		return self.SingleIter(self.api_key, event_id, fields=fields, **kwargs)
+		return self.SingleIter(self.api.node_edge, event_id, fields=fields, **kwargs)
 
 	def event_admins(self, event_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, event_id, 'admins', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, event_id, 'admins', fields=fields, **kwargs)
 
 	def event_admins_accounts(self, event_id, fields=None, **kwargs):
 		return self.iter_iter(self.event_admins(event_id), 'id', self.user_accounts, fields=fields, **kwargs)
@@ -37980,7 +37980,7 @@ class FacebookFunctions:
 		return self.iter_iter(self.event_admins_subscribedto(event_id), 'id', self.user_subscribedto, fields=fields, **kwargs)
 
 	def event_attending(self, event_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, event_id, 'attending', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, event_id, 'attending', fields=fields, **kwargs)
 
 	def event_attending_accounts(self, event_id, fields=None, **kwargs):
 		return self.iter_iter(self.event_attending(event_id), 'id', self.user_accounts, fields=fields, **kwargs)
@@ -39840,7 +39840,7 @@ class FacebookFunctions:
 		return self.iter_iter(self.event_attending_subscribedto(event_id), 'id', self.user_subscribedto, fields=fields, **kwargs)
 
 	def event_comments(self, event_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, event_id, 'comments', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, event_id, 'comments', fields=fields, **kwargs)
 
 	def event_comments_comments(self, event_id, fields=None, **kwargs):
 		return self.iter_iter(self.event_comments(event_id), 'id', self.comment_comments, fields=fields, **kwargs)
@@ -39855,7 +39855,7 @@ class FacebookFunctions:
 		return self.iter_iter(self.event_comments(event_id), 'id', self.comment_private_replies, fields=fields, **kwargs)
 
 	def event_declined(self, event_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, event_id, 'declined', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, event_id, 'declined', fields=fields, **kwargs)
 
 	def event_declined_accounts(self, event_id, fields=None, **kwargs):
 		return self.iter_iter(self.event_declined(event_id), 'id', self.user_accounts, fields=fields, **kwargs)
@@ -41715,7 +41715,7 @@ class FacebookFunctions:
 		return self.iter_iter(self.event_declined_subscribedto(event_id), 'id', self.user_subscribedto, fields=fields, **kwargs)
 
 	def event_interested(self, event_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, event_id, 'interested', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, event_id, 'interested', fields=fields, **kwargs)
 
 	def event_interested_accounts(self, event_id, fields=None, **kwargs):
 		return self.iter_iter(self.event_interested(event_id), 'id', self.user_accounts, fields=fields, **kwargs)
@@ -43575,7 +43575,7 @@ class FacebookFunctions:
 		return self.iter_iter(self.event_interested_subscribedto(event_id), 'id', self.user_subscribedto, fields=fields, **kwargs)
 
 	def event_live_videos(self, event_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, event_id, 'live_videos', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, event_id, 'live_videos', fields=fields, **kwargs)
 
 	def event_live_videos_blocked_users(self, event_id, fields=None, **kwargs):
 		return self.iter_iter(self.event_live_videos(event_id), 'id', self.live_video_blocked_users, fields=fields, **kwargs)
@@ -43605,7 +43605,7 @@ class FacebookFunctions:
 		return self.iter_iter(self.event_live_videos(event_id), 'id', self.live_video_reactions, fields=fields, **kwargs)
 
 	def event_maybe(self, event_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, event_id, 'maybe', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, event_id, 'maybe', fields=fields, **kwargs)
 
 	def event_maybe_accounts(self, event_id, fields=None, **kwargs):
 		return self.iter_iter(self.event_maybe(event_id), 'id', self.user_accounts, fields=fields, **kwargs)
@@ -45465,7 +45465,7 @@ class FacebookFunctions:
 		return self.iter_iter(self.event_maybe_subscribedto(event_id), 'id', self.user_subscribedto, fields=fields, **kwargs)
 
 	def event_noreply(self, event_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, event_id, 'noreply', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, event_id, 'noreply', fields=fields, **kwargs)
 
 	def event_noreply_accounts(self, event_id, fields=None, **kwargs):
 		return self.iter_iter(self.event_noreply(event_id), 'id', self.user_accounts, fields=fields, **kwargs)
@@ -47325,7 +47325,7 @@ class FacebookFunctions:
 		return self.iter_iter(self.event_noreply_subscribedto(event_id), 'id', self.user_subscribedto, fields=fields, **kwargs)
 
 	def event_photos(self, event_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, event_id, 'photos', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, event_id, 'photos', fields=fields, **kwargs)
 
 	def event_photos_insights(self, event_id, fields=None, **kwargs):
 		return self.iter_iter(self.event_photos(event_id), 'id', self.photo_insights, fields=fields, **kwargs)
@@ -47619,10 +47619,10 @@ class FacebookFunctions:
 		return self.iter_iter(self.event_photos_comments(event_id), 'id', self.comment_private_replies, fields=fields, **kwargs)
 
 	def event_picture(self, event_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, event_id, 'picture', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, event_id, 'picture', fields=fields, **kwargs)
 
 	def event_roles(self, event_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, event_id, 'roles', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, event_id, 'roles', fields=fields, **kwargs)
 
 	def event_roles_accounts(self, event_id, fields=None, **kwargs):
 		return self.iter_iter(self.event_roles(event_id), 'id', self.user_accounts, fields=fields, **kwargs)
@@ -49482,7 +49482,7 @@ class FacebookFunctions:
 		return self.iter_iter(self.event_roles_subscribedto(event_id), 'id', self.user_subscribedto, fields=fields, **kwargs)
 
 	def event_videos(self, event_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, event_id, 'videos', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, event_id, 'videos', fields=fields, **kwargs)
 
 	def event_videos_auto_generated_captions(self, event_id, fields=None, **kwargs):
 		return self.iter_iter(self.event_videos(event_id), 'id', self.video_auto_generated_captions, fields=fields, **kwargs)
@@ -49788,7 +49788,7 @@ class FacebookFunctions:
 		return self.iter_iter(self.event_videos(event_id), 'id', self.video_video_insights, fields=fields, **kwargs)
 
 	def event_feed(self, event_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, event_id, 'feed', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, event_id, 'feed', fields=fields, **kwargs)
 
 	def event_feed_attachments(self, event_id, fields=None, **kwargs):
 		return self.iter_iter(self.event_feed(event_id), 'id', self.post_attachments, fields=fields, **kwargs)
@@ -49845,10 +49845,10 @@ class FacebookFunctions:
 		return self.iter_iter(self.event_feed_sharedposts(event_id), 'id', self.post_sharedposts, fields=fields, **kwargs)
 
 	def group(self, group_id, fields=None, **kwargs):
-		return self.SingleIter(self.api_key, group_id, fields=fields, **kwargs)
+		return self.SingleIter(self.api.node_edge, group_id, fields=fields, **kwargs)
 
 	def group_admins(self, group_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, group_id, 'admins', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, group_id, 'admins', fields=fields, **kwargs)
 
 	def group_admins_accounts(self, group_id, fields=None, **kwargs):
 		return self.iter_iter(self.group_admins(group_id), 'id', self.user_accounts, fields=fields, **kwargs)
@@ -51708,7 +51708,7 @@ class FacebookFunctions:
 		return self.iter_iter(self.group_admins_subscribedto(group_id), 'id', self.user_subscribedto, fields=fields, **kwargs)
 
 	def group_albums(self, group_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, group_id, 'albums', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, group_id, 'albums', fields=fields, **kwargs)
 
 	def group_albums_picture(self, group_id, fields=None, **kwargs):
 		return self.iter_iter(self.group_albums(group_id), 'id', self.album_picture, fields=fields, **kwargs)
@@ -51783,10 +51783,10 @@ class FacebookFunctions:
 		return self.iter_iter(self.group_albums_comments(group_id), 'id', self.comment_private_replies, fields=fields, **kwargs)
 
 	def group_docs(self, group_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, group_id, 'docs', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, group_id, 'docs', fields=fields, **kwargs)
 
 	def group_events(self, group_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, group_id, 'events', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, group_id, 'events', fields=fields, **kwargs)
 
 	def group_events_admins(self, group_id, fields=None, **kwargs):
 		return self.iter_iter(self.group_events(group_id), 'id', self.event_admins, fields=fields, **kwargs)
@@ -53358,7 +53358,7 @@ class FacebookFunctions:
 		return self.iter_iter(self.group_events_feed(group_id), 'id', self.post_sharedposts, fields=fields, **kwargs)
 
 	def group_feed(self, group_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, group_id, 'feed', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, group_id, 'feed', fields=fields, **kwargs)
 
 	def group_feed_attachments(self, group_id, fields=None, **kwargs):
 		return self.iter_iter(self.group_feed(group_id), 'id', self.post_attachments, fields=fields, **kwargs)
@@ -53415,10 +53415,10 @@ class FacebookFunctions:
 		return self.iter_iter(self.group_feed_sharedposts(group_id), 'id', self.post_sharedposts, fields=fields, **kwargs)
 
 	def group_files(self, group_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, group_id, 'files', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, group_id, 'files', fields=fields, **kwargs)
 
 	def group_live_videos(self, group_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, group_id, 'live_videos', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, group_id, 'live_videos', fields=fields, **kwargs)
 
 	def group_live_videos_blocked_users(self, group_id, fields=None, **kwargs):
 		return self.iter_iter(self.group_live_videos(group_id), 'id', self.live_video_blocked_users, fields=fields, **kwargs)
@@ -53448,7 +53448,7 @@ class FacebookFunctions:
 		return self.iter_iter(self.group_live_videos(group_id), 'id', self.live_video_reactions, fields=fields, **kwargs)
 
 	def group_members(self, group_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, group_id, 'members', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, group_id, 'members', fields=fields, **kwargs)
 
 	def group_members_accounts(self, group_id, fields=None, **kwargs):
 		return self.iter_iter(self.group_members(group_id), 'id', self.user_accounts, fields=fields, **kwargs)
@@ -55308,7 +55308,7 @@ class FacebookFunctions:
 		return self.iter_iter(self.group_members_subscribedto(group_id), 'id', self.user_subscribedto, fields=fields, **kwargs)
 
 	def group_photos(self, group_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, group_id, 'photos', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, group_id, 'photos', fields=fields, **kwargs)
 
 	def group_photos_insights(self, group_id, fields=None, **kwargs):
 		return self.iter_iter(self.group_photos(group_id), 'id', self.photo_insights, fields=fields, **kwargs)
@@ -55602,7 +55602,7 @@ class FacebookFunctions:
 		return self.iter_iter(self.group_photos_comments(group_id), 'id', self.comment_private_replies, fields=fields, **kwargs)
 
 	def group_videos(self, group_id, fields=None, **kwargs):
-		return self.FacebookIter(self.api_key, group_id, 'videos', fields=fields, **kwargs)
+		return self.FacebookIter(self.api.node_edge, group_id, 'videos', fields=fields, **kwargs)
 
 	def group_videos_auto_generated_captions(self, group_id, fields=None, **kwargs):
 		return self.iter_iter(self.group_videos(group_id), 'id', self.video_auto_generated_captions, fields=fields, **kwargs)

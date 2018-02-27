@@ -1,4 +1,5 @@
 from urllib.parse import parse_qs, urlparse
+from pprint import pformat
 
 from .apis import Facebook as FacebookApi, Twitter as TwitterApi, Reddit as RedditApi, Youtube as YoutubeApi
 from .builders import FacebookFunctions
@@ -67,6 +68,9 @@ class Iter:
                 raise StopIteration
             self.i = 0
             return self.__next__()
+
+    def __str__(self):
+        return pformat(vars(self))
 
     def page_jump(self, count):
         """
@@ -174,7 +178,7 @@ class Facebook(Source, FacebookFunctions):
     def __init__(self, access_token):
         super().__init__()
         self.api_key = access_token
-        self.dummy_api = FacebookApi(access_token)
+        self.api = FacebookApi(access_token)
 
         # Make use of nested queries, limiting scraping time
         self.nested_queries = False
@@ -191,38 +195,11 @@ class Facebook(Source, FacebookFunctions):
     def iter_iter(self, *args, **kwargs):
         return IterIter(*args, kwargs)
 
-    def no_edge(self, node, fields, **kwargs):
-        return iter([])
-        # return self.FacebookIter(self.api_key, node, "", fields, **kwargs)
-
-    def one_edge(self, node, edge, fields, **kwargs):
-        return self.SingleIter(self.api_key, node, edge, fields, **kwargs)
-
-    def two_edge(self, node, outer_func, inner_func, first_fields,
-                 second_fields, first_args, second_args):
-
-        first_args = merge(first_args, first_fields)
-        second_args = merge(second_args, second_fields)
-        return IterIter(outer_func(node, **first_args), "id",
-                        inner_func,
-                        second_args)
-
-    def three_edge(self, node, outer_func, inner_func, first_fields,
-                   second_fields, third_fields, first_args, second_args,
-                   third_args):
-
-        first_args = merge(first_args, first_fields)
-        second_args = merge(second_args, second_fields)
-        third_args = merge(third_args, third_fields)
-        return IterIter(
-            outer_func(node, None, None, first_args,
-                       second_args), "id", inner_func, third_args)
-
     class FacebookIter(Iter):
-        def __init__(self, api_key, node, edge, fields=None,
+        def __init__(self, function, node, edge, fields=None,
                      reverse_order=False, **kwargs):
             super().__init__()
-            self.api = FacebookApi(api_key)
+            self.function = function
 
             self.node = node
             self.edge = edge
@@ -239,7 +216,7 @@ class Facebook(Source, FacebookFunctions):
             self.page_count += 1
 
             try:
-                self.response = self.api.node_edge(
+                self.response = self.function(
                     self.node, self.edge, fields=self.fields,
                     params=self.params)
                 self.data = self.response['data']
@@ -263,11 +240,11 @@ class Facebook(Source, FacebookFunctions):
                 raise IterError(e, vars(self))
 
     class SingleIter(Iter):
-        def __init__(self, api_key, node, fields=None,
+        def __init__(self, function, node, fields=None,
                      reverse_order=False, **kwargs):
             super().__init__()
 
-            self.api = FacebookApi(api_key)
+            self.function = function
 
             self.node = node
             self.fields = fields
@@ -279,7 +256,7 @@ class Facebook(Source, FacebookFunctions):
             if self.response:
                 raise StopIteration
             try:
-                self.response = self.api.node_edge(
+                self.response = self.function(
                     self.node, "", fields=self.fields,
                     params=self.params)
 
@@ -297,7 +274,7 @@ class Twitter(Source):
         self.oauth_token = access_token
         self.oauth_token_secret = access_token_secret
 
-        self.dummy_api = TwitterApi(api_key, api_secret, access_token, access_token_secret)
+        self.api = TwitterApi(api_key, api_secret, access_token, access_token_secret)
 
     class TwitterIter(Iter):
         def __init__(self, function, query, **kwargs):
@@ -357,10 +334,10 @@ class Twitter(Source):
             return self.response
 
     def search(self, query, **kwargs):
-        return self.SearchIter(self.dummy_api.search, query, **kwargs)
+        return self.SearchIter(self.api.search, query, **kwargs)
 
     def user(self, query, **kwargs):
-        return self.UserIter(self.dummy_api.user, query, **kwargs)
+        return self.UserIter(self.api.user, query, **kwargs)
 
 
 class Reddit(Source):
@@ -370,7 +347,7 @@ class Reddit(Source):
         self.application_id = application_id
         self.application_secret = application_secret
 
-        self.dummy_api = RedditApi(application_id, application_secret)
+        self.api = RedditApi(application_id, application_secret)
 
     class RedditIter(Iter):
         def __init__(self, function, **kwargs):
@@ -481,6 +458,7 @@ class Reddit(Source):
             super().__init__()
 
             self.api = api
+            self.function = self.api.thread_comments
             self.subreddit = subreddit
             self.thread = thread
             self.params = kwargs
@@ -540,7 +518,7 @@ class Reddit(Source):
 
             if self.level == 0:
                 try:
-                    self.response = self.api.thread_comments(self.thread, self.subreddit, **self.params)
+                    self.response = self.function(self.thread, self.subreddit, **self.params)
                     self.data = self.response[1]['data']['children']
                 except ApiError as e:
                     raise IterError(e, vars(self))
@@ -569,7 +547,7 @@ class Reddit(Source):
             raise StopIteration
 
     def search(self, query, **kwargs):
-        return self.SearchIter(self.dummy_api.search, query, **kwargs)
+        return self.SearchIter(self.api.search, query, **kwargs)
 
     def search_user(self, query, **kwargs):
         return IterIter(self.search(query), 'data.author', self.user, kwargs)
@@ -578,7 +556,7 @@ class Reddit(Source):
         return IterIter(self.search(query), 'data.id', self.thread_comments, kwargs)
 
     def subreddit(self, subreddit, **kwargs):
-        return self.SubredditIter(self.dummy_api.subreddit, subreddit, **kwargs)
+        return self.SubredditIter(self.api.subreddit, subreddit, **kwargs)
 
     def subreddit_user(self, subreddit, **kwargs):
         return IterIter(self.subreddit(subreddit), 'data.author', self.user, kwargs)
@@ -587,13 +565,13 @@ class Reddit(Source):
         return IterIter(self.subreddit(subreddit), 'data.id', self.thread_comments, kwargs)
 
     def user(self, user, **kwargs):
-        return self.UserIter(self.dummy_api.user, user, **kwargs)
+        return self.UserIter(self.api.user, user, **kwargs)
 
     def thread(self, thread, subreddit, **kwargs):
-        return self.ThreadIter(self.dummy_api.thread_comments, thread, subreddit, **kwargs)
+        return self.ThreadIter(self.api.thread_comments, thread, subreddit, **kwargs)
 
     def thread_comments(self, thread, subreddit, **kwargs):
-        return self.ThreadCommentsIter(self.dummy_api, subreddit, thread, **kwargs)
+        return self.ThreadCommentsIter(self.api, subreddit, thread, **kwargs)
 
     def thread_comments_user(self, subreddit, thread, **kwargs):
         return IterIter(self.thread_comments(subreddit, thread), 'data.author', self.user, kwargs)
@@ -605,7 +583,7 @@ class YouTube(Source):
 
         self.api_key = api_key
 
-        self.dummy_api = YoutubeApi(api_key)
+        self.api = YoutubeApi(api_key)
 
     class YouTubeIter(Iter):
         def __init__(self, function, query, **kwargs):
@@ -659,19 +637,19 @@ class YouTube(Source):
             self.params['page'] = self.response.get('nextPageToken')
 
     def search(self, query, **kwargs):
-        return self.YouTubeSearchIter(self.dummy_api.search, query, **kwargs)
+        return self.YouTubeSearchIter(self.api.search, query, **kwargs)
 
     def search_comments(self, query, **kwargs):
         return IterIter(self.search(query), 'id.videoId', self.video_comments, kwargs)
 
     def channel(self, channel, **kwargs):
-        return self.YouTubeSearchIter(self.dummy_api.search, None, channel_id=channel, **kwargs)
+        return self.YouTubeSearchIter(self.api.search, None, channel_id=channel, **kwargs)
 
     def channel_comments(self, channel, **kwargs):
         return IterIter(self.search(channel), 'id.videoId', self.video_comments, kwargs)
 
     def video(self, video, **kwargs):
-        return self.YoutubeVideoIter(self.dummy_api.videos, video, **kwargs)
+        return self.YoutubeVideoIter(self.api.videos, video, **kwargs)
 
     def video_comments(self, video_id, **kwargs):
-        return self.YoutubeVideoCommentsIter(self.dummy_api.video_comments, video_id, **kwargs)
+        return self.YoutubeVideoCommentsIter(self.api.video_comments, video_id, **kwargs)
