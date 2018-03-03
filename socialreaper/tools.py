@@ -49,6 +49,76 @@ def fill_gaps(list_dicts):
     return list(field_names), list_dicts
 
 
+class CSV:
+    def __init__(self, data, file_name='data.csv', write_headers=True,
+                 append=False, key_column=None, flat=True):
+        self.data = data
+        self.file_name = file_name
+        self.write_headers = write_headers
+        self.append = append
+        self.key_column = key_column
+        self.flat = flat
+
+        if self.flat:
+            self.data = [flatten(datum) for datum in self.data]
+
+        if self.key_column:
+            for datum in self.data:
+                datum['primary_key'] = self.key_column
+
+        self.field_names, self.data = fill_gaps(self.data)
+
+        self.write()
+
+    def read_fields(self):
+        if path.isfile(self.file_name):
+            with open(self.file_name, 'r', encoding='utf-8') as f:
+                reader = csv.DictReader(f)
+                return reader.fieldnames
+        else:
+            return None
+
+    def read_old(self):
+        if not path.isfile(self.file_name):
+            return
+
+        with open(self.file_name, 'r', encoding='utf-8') as f:
+            reader = csv.DictReader(f)
+
+            data = []
+            for row in reader:
+                data.append(dict(row))
+
+            data.extend(self.data)
+            self.data = data
+
+        self.field_names, self.data = fill_gaps(self.data)
+
+    def write(self):
+        self.field_names, self.data = fill_gaps(self.data)
+        file_mode = 'w'
+
+        if self.append:
+            field_names = self.read_fields()
+            if not field_names:
+                file_mode = 'w'
+            elif set(field_names) != set(self.field_names):
+                self.read_old()
+                file_mode = 'w'
+            else:
+                self.field_names = field_names
+                file_mode = 'a'
+
+        with open(self.file_name, file_mode, encoding='utf-8') as f:
+            writer = csv.DictWriter(f, fieldnames=self.field_names,
+                                    lineterminator='\n')
+
+            if file_mode == 'w' and self.write_headers:
+                writer.writeheader()
+
+            writer.writerows(self.data)
+
+
 def to_csv(data, field_names=None, filename='data.csv',
            overwrite=True,
            write_headers=True, append=False, flat=True,

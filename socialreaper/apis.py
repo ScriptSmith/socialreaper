@@ -34,6 +34,8 @@ class API:
 
         if not environ.get('CI'):
             self.log_function(e)
+            if hasattr(e, 'response'):
+                self.log_function(e.response.text)
 
     def _sleep(self, seconds):
         """

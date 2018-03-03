@@ -156,15 +156,22 @@ def build_nodes(nodes, root, parent_id=None, depth=0):
         node_input_args_column_val.text = "Value"
 
         node_input_args_setters = ET.SubElement(node_input_args, 'setters')
-        node_input_args_setter_counter = ET.SubElement(node_input_args_setters, 'setter')
-        node_input_args_setter_counter_name = ET.SubElement(node_input_args_setter_counter, 'name')
-        node_input_args_setter_counter_name.text = f"{key.title()} count"
-        node_input_args_setter_counter_argument = ET.SubElement(node_input_args_setter_counter, 'argument')
-        node_input_args_setter_counter_argument.text = "count"
-        node_input_args_setter_counter_value = ET.SubElement(node_input_args_setter_counter, 'value')
-        node_input_args_setter_counter_value.text = "500"
-        node_input_args_setter_counter_type = ET.SubElement(node_input_args_setter_counter, 'type')
-        node_input_args_setter_counter_type.text = "counter"
+
+        if depth > 0:
+            node_input_args_setter_counter = ET.SubElement(
+                node_input_args_setters, 'setter')
+            node_input_args_setter_counter_name = ET.SubElement(
+                node_input_args_setter_counter, 'name')
+            node_input_args_setter_counter_name.text = f"{key.title()} count"
+            node_input_args_setter_counter_argument = ET.SubElement(
+                node_input_args_setter_counter, 'argument')
+            node_input_args_setter_counter_argument.text = "count"
+            node_input_args_setter_counter_value = ET.SubElement(
+                node_input_args_setter_counter, 'value')
+            node_input_args_setter_counter_value.text = "500"
+            node_input_args_setter_counter_type = ET.SubElement(
+                node_input_args_setter_counter, 'type')
+            node_input_args_setter_counter_type.text = "counter"
 
         if depth > 1:
             node_input_args_setter_parent = ET.SubElement(node_input_args_setters, 'setter')

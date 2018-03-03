@@ -13,7 +13,7 @@ class IterError(Exception):
         self.vars = variables
 
     def __str__(self):
-        return "An API error has occurred:  " + str(self.error)
+        return str(self.error)
 
 
 class Iter:
