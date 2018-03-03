@@ -1,7 +1,8 @@
 from urllib.parse import parse_qs, urlparse
 from pprint import pformat
 
-from .apis import Facebook as FacebookApi, Twitter as TwitterApi, Reddit as RedditApi, Youtube as YoutubeApi
+from .apis import Facebook as FacebookApi, Twitter as TwitterApi, \
+    Reddit as RedditApi, Youtube as YoutubeApi, Tumblr as TumblrApi
 from .builders import FacebookFunctions
 from .exceptions import ApiError
 from .tools import flatten
@@ -274,7 +275,8 @@ class Twitter(Source):
         self.oauth_token = access_token
         self.oauth_token_secret = access_token_secret
 
-        self.api = TwitterApi(api_key, api_secret, access_token, access_token_secret)
+        self.api = TwitterApi(api_key, api_secret, access_token,
+                              access_token_secret)
 
     class TwitterIter(Iter):
         def __init__(self, function, query, **kwargs):
@@ -313,7 +315,8 @@ class Twitter(Source):
             if metadata:
                 next_results = metadata.get('next_results')
                 if next_results:
-                    self.params['max_id'] = parse_qs(next_results[1:]).get('max_id')[0]
+                    self.params['max_id'] = \
+                        parse_qs(next_results[1:]).get('max_id')[0]
                 else:
                     raise StopIteration
 
@@ -518,7 +521,8 @@ class Reddit(Source):
 
             if self.level == 0:
                 try:
-                    self.response = self.function(self.thread, self.subreddit, **self.params)
+                    self.response = self.function(self.thread, self.subreddit,
+                                                  **self.params)
                     self.data = self.response[1]['data']['children']
                 except ApiError as e:
                     raise IterError(e, vars(self))
@@ -538,10 +542,12 @@ class Reddit(Source):
                     chunk = self.more[self.more_i:self.more_i + self.chunk_size]
                     self.more_i += self.chunk_size
 
-                    self.response = self.api.more_children(chunk, "t3_" + self.thread)
+                    self.response = self.api.more_children(chunk,
+                                                           "t3_" + self.thread)
                     more_data = self.response['json']['data']['things']
 
-                    self.data = self._classify_comment(more_data, include_top=True)
+                    self.data = self._classify_comment(more_data,
+                                                       include_top=True)
                     return
 
             raise StopIteration
@@ -553,28 +559,33 @@ class Reddit(Source):
         return IterIter(self.search(query), 'data.author', self.user, kwargs)
 
     def search_thread_comments(self, query, **kwargs):
-        return IterIter(self.search(query), 'data.id', self.thread_comments, kwargs)
+        return IterIter(self.search(query), 'data.id', self.thread_comments,
+                        kwargs)
 
     def subreddit(self, subreddit, **kwargs):
         return self.SubredditIter(self.api.subreddit, subreddit, **kwargs)
 
     def subreddit_user(self, subreddit, **kwargs):
-        return IterIter(self.subreddit(subreddit), 'data.author', self.user, kwargs)
+        return IterIter(self.subreddit(subreddit), 'data.author', self.user,
+                        kwargs)
 
     def subreddit_thread_comments(self, subreddit, **kwargs):
-        return IterIter(self.subreddit(subreddit), 'data.id', self.thread_comments, kwargs)
+        return IterIter(self.subreddit(subreddit), 'data.id',
+                        self.thread_comments, kwargs)
 
     def user(self, user, **kwargs):
         return self.UserIter(self.api.user, user, **kwargs)
 
     def thread(self, thread, subreddit, **kwargs):
-        return self.ThreadIter(self.api.thread_comments, thread, subreddit, **kwargs)
+        return self.ThreadIter(self.api.thread_comments, thread, subreddit,
+                               **kwargs)
 
     def thread_comments(self, thread, subreddit, **kwargs):
         return self.ThreadCommentsIter(self.api, subreddit, thread, **kwargs)
 
     def thread_comments_user(self, subreddit, thread, **kwargs):
-        return IterIter(self.thread_comments(subreddit, thread), 'data.author', self.user, kwargs)
+        return IterIter(self.thread_comments(subreddit, thread), 'data.author',
+                        self.user, kwargs)
 
 
 class YouTube(Source):
@@ -640,16 +651,97 @@ class YouTube(Source):
         return self.YouTubeSearchIter(self.api.search, query, **kwargs)
 
     def search_comments(self, query, **kwargs):
-        return IterIter(self.search(query), 'id.videoId', self.video_comments, kwargs)
+        return IterIter(self.search(query), 'id.videoId', self.video_comments,
+                        kwargs)
 
     def channel(self, channel, **kwargs):
-        return self.YouTubeSearchIter(self.api.search, None, channel_id=channel, **kwargs)
+        return self.YouTubeSearchIter(self.api.search, None, channel_id=channel,
+                                      **kwargs)
 
     def channel_comments(self, channel, **kwargs):
-        return IterIter(self.search(channel), 'id.videoId', self.video_comments, kwargs)
+        return IterIter(self.search(channel), 'id.videoId', self.video_comments,
+                        kwargs)
 
     def video(self, video, **kwargs):
         return self.YoutubeVideoIter(self.api.videos, video, **kwargs)
 
     def video_comments(self, video_id, **kwargs):
-        return self.YoutubeVideoCommentsIter(self.api.video_comments, video_id, **kwargs)
+        return self.YoutubeVideoCommentsIter(self.api.video_comments, video_id,
+                                             **kwargs)
+
+
+class Tumblr(Source):
+    def __init__(self, api_key):
+        self.api_key = api_key
+        self.api = TumblrApi(api_key)
+
+    class TumblrIter(Iter):
+        def __init__(self, function, query, **kwargs):
+            super().__init__()
+
+            self.function = function
+
+            if kwargs.get('count'):
+                self.max = int(kwargs.pop('count'))
+
+            self.params = kwargs
+            self.query = query
+
+        def _read_response(self):
+            pass
+
+        def _get_after(self):
+            pass
+
+        def get_data(self):
+            self.page_count += 1
+
+            self._get_after()
+
+            try:
+                self.response = self.function(self.query, **self.params)
+                self.data = self._read_response()
+            except ApiError as e:
+                raise IterError(e, vars(self))
+
+    class TumblrBlogIter(TumblrIter):
+        def _read_response(self):
+            if self.page_count == 1:
+                return [self.response['response'].get('blog')]
+            else:
+                raise StopIteration
+
+    class TumblrPostsIter(TumblrIter):
+        def _read_response(self):
+            posts = self.response['response']['posts']
+            if len(posts) > 0:
+                return posts
+            else:
+                raise StopIteration
+
+        def _get_after(self):
+            if self.page_count > 1:
+                self.params['offset'] += len(self.data)
+            else:
+                self.params['offset'] = 0
+
+    class TumblrTagIter(TumblrIter):
+        def _read_response(self):
+            posts = self.response['response']
+            if len(posts) > 0:
+                return posts
+            else:
+                raise StopIteration
+
+        def _get_after(self):
+            if len(self.data) > 0:
+                self.params['before'] = self.data[-1]['timestamp']
+
+    def blog_info(self, blog, **kwargs):
+        return self.TumblrBlogIter(self.api.blog, blog, **kwargs)
+
+    def blog_posts(self, blog, **kwargs):
+        return self.TumblrPostsIter(self.api.blog_posts, blog, **kwargs)
+
+    def tag_posts(self, tag, **kwargs):
+        return self.TumblrTagIter(self.api.tag, tag, **kwargs)

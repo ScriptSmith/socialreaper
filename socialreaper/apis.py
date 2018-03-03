@@ -267,9 +267,10 @@ class Reddit(API):
         headers = {"User-Agent": self.user_agent}
 
         try:
-            response = requests.post("https://www.reddit.com/api/v1/access_token",
-                                     auth=client_auth, data=post_data,
-                                     headers=headers)
+            response = requests.post(
+                "https://www.reddit.com/api/v1/access_token",
+                auth=client_auth, data=post_data,
+                headers=headers)
         except requests.exceptions.RequestException as e:
             raise ApiError(e)
 
@@ -488,6 +489,68 @@ class Facebook(API):
             for key, value in params.items():
                 parameters[key] = value
         return self.api_call('%s/comments' % post_id, parameters)
+
+
+class Tumblr(API):
+    def __init__(self, api_key):
+        super().__init__()
+
+        self.api_key = api_key
+
+        self.url = "https://api.tumblr.com/v2"
+        self.request_rate = 2
+        self.last_request = time()
+
+    def api_call(self, edge, parameters, return_results=True):
+        parameters['api_key'] = self.api_key
+        req = self.get("%s/%s" % (self.url, edge), params=parameters)
+
+        time_diff = time() - self.last_request
+        if time_diff < self.request_rate:
+            sleep(time_diff)
+
+        self.last_request = time()
+
+        if return_results:
+            return req.json()
+
+    def blog(self, blog, limit=20, offset=0, params=None):
+        parameters = {
+            "limit": limit,
+            "offset": offset
+        }
+
+        if params:
+            for key, value in params.items():
+                parameters[key] = value
+
+        return self.api_call("blog/%s/info" % blog, parameters)
+
+    def blog_posts(self, blog, type="text", limit=20, offset=0, params=None):
+        parameters = {
+            "limit": limit,
+            "offset": offset
+        }
+
+        if params:
+            for key, value in params.items():
+                parameters[key] = value
+
+        return self.api_call("blog/%s/posts/%s" % (blog, type), parameters)
+
+    def tag(self, tag, limit=20, before=None, filter=None, params=None):
+        parameters = {
+            "tag": tag,
+            "limit": limit,
+            "before": before,
+            "filter": filter
+        }
+
+        if params:
+            for key, value in params.items():
+                parameters[key] = value
+
+        return self.api_call("tagged", parameters)
 
 
 class Twitter(API):
