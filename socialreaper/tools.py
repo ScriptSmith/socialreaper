@@ -51,13 +51,14 @@ def fill_gaps(list_dicts):
 
 class CSV:
     def __init__(self, data, file_name='data.csv', write_headers=True,
-                 append=False, key_column=None, flat=True):
+                 append=False, key_column=None, flat=True, encoding='utf-8'):
         self.data = data
         self.file_name = file_name
         self.write_headers = write_headers
         self.append = append
         self.key_column = key_column
         self.flat = flat
+        self.encoding = encoding
 
         if self.flat:
             self.data = [flatten(datum) for datum in self.data]
@@ -109,7 +110,7 @@ class CSV:
                 self.field_names = field_names
                 file_mode = 'a'
 
-        with open(self.file_name, file_mode, encoding='utf-8') as f:
+        with open(self.file_name, file_mode, encoding=self.encoding, errors='ignore') as f:
             writer = csv.DictWriter(f, fieldnames=self.field_names,
                                     lineterminator='\n')
 
