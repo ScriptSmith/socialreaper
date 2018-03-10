@@ -173,7 +173,17 @@
     "to",
     "type",
     "updated_time",
-    "with_tags"
+    "with_tags",
+    "likes.limit(0).summary(true)",
+    "comments.limit(0).summary(true)",
+    "reactions.limit(0).summary(true)",
+    "reactions.type(LIKE).limit(0).summary(true).as(like)",
+    "reactions.type(LOVE).limit(0).summary(true).as(love)",
+    "reactions.type(WOW).limit(0).summary(true).as(wow)",
+    "reactions.type(HAHA).limit(0).summary(true).as(haha)",
+    "reactions.type(SAD).limit(0).summary(true).as(sad)",
+    "reactions.type(ANGRY).limit(0).summary(true).as(angry)",
+    "reactions.type(THANKFUL).limit(0).summary(true).as(thankful)"
   ],
   "comment": [
     "id",
@@ -192,7 +202,17 @@
     "object",
     "parent",
     "private_reply_conversation",
-    "user_likes"
+    "user_likes",
+    "likes.limit(0).summary(true)",
+    "comments.limit(0).summary(true)",
+    "reactions.limit(0).summary(true)",
+    "reactions.type(LIKE).limit(0).summary(true).as(like)",
+    "reactions.type(LOVE).limit(0).summary(true).as(love)",
+    "reactions.type(WOW).limit(0).summary(true).as(wow)",
+    "reactions.type(HAHA).limit(0).summary(true).as(haha)",
+    "reactions.type(SAD).limit(0).summary(true).as(sad)",
+    "reactions.type(ANGRY).limit(0).summary(true).as(angry)",
+    "reactions.type(THANKFUL).limit(0).summary(true).as(thankful)"
   ],
   "album": [
     "id",
