@@ -67,8 +67,6 @@ class CSV:
             for datum in self.data:
                 datum['primary_key'] = self.key_column
 
-        self.field_names, self.data = fill_gaps(self.data)
-
         self.write()
 
     def read_fields(self):
