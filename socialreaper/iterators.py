@@ -2,7 +2,7 @@ from urllib.parse import parse_qs, urlparse
 from pprint import pformat
 
 from .apis import Facebook as FacebookApi, Twitter as TwitterApi, \
-    Reddit as RedditApi, Youtube as YoutubeApi, Tumblr as TumblrApi
+    Reddit as RedditApi, Youtube as YoutubeApi, Tumblr as TumblrApi, Instagram as InstagramApi
 from .builders import FacebookFunctions
 from .exceptions import ApiError
 from .tools import flatten
@@ -627,7 +627,11 @@ class YouTube(Source):
 
     class YouTubeSearchIter(YouTubeIter):
         def _read_response(self):
-            return self.response['items']
+            data = self.response['items']
+            if len(data) > 0:
+                return data
+            else:
+                raise StopIteration
 
         def _get_after(self):
             self.params['page'] = self.response.get('nextPageToken')
@@ -745,3 +749,58 @@ class Tumblr(Source):
 
     def tag_posts(self, tag, **kwargs):
         return self.TumblrTagIter(self.api.tag, tag, **kwargs)
+
+
+class Instagram(Source):
+    def __init__(self, access_token):
+        self.access_token = access_token
+        self.api = InstagramApi(access_token)
+
+    class InstagramIter(Iter):
+        def __init__(self, function, query, **kwargs):
+            super().__init__()
+
+            self.function = function
+
+            if kwargs.get('count'):
+                self.max = int(kwargs.pop('count'))
+
+            self.params = kwargs
+            self.query = query
+
+            self.run = False
+
+        def _read_response(self):
+            data = self.response['data']
+            if len(data) > 0:
+                return data
+            else:
+                raise StopIteration
+
+        def get_data(self):
+            self.page_count += 1
+            if self.run:
+                raise StopIteration
+            else:
+                self.run = True
+
+            try:
+                self.response = self.function(*self.query, **self.params)
+                self.data = self._read_response()
+            except ApiError as e:
+                raise IterError(e, vars(self))
+
+    def user_media(self, user, **kwargs):
+        return self.InstagramIter(self.api.endpoint_node_edge, ('users', user, 'media/recent'), **kwargs)
+
+    def user_liked(self, user, **kwargs):
+        return self.InstagramIter(self.api.endpoint_node_edge, ('users', user, 'media/liked'), **kwargs)
+
+    def user_follows(self, user, **kwargs):
+        return self.InstagramIter(self.api.endpoint_node_edge, ('users', user, 'follows'), **kwargs)
+
+    def user_followed_by(self, user, **kwargs):
+        return self.InstagramIter(self.api.endpoint_node_edge, ('users', user, 'followed-by'), **kwargs)
+
+    def user_requested_by(self, user, **kwargs):
+        return self.InstagramIter(self.api.endpoint_node_edge, ('users', user, 'requested-by'), **kwargs)

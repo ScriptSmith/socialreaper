@@ -176,6 +176,7 @@
     "with_tags",
     "likes.limit(0).summary(true)",
     "comments.limit(0).summary(true)",
+    "sharedposts.limit(0).summary(true)",
     "reactions.limit(0).summary(true)",
     "reactions.type(LIKE).limit(0).summary(true).as(like)",
     "reactions.type(LOVE).limit(0).summary(true).as(love)",

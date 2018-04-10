@@ -1,6 +1,5 @@
 from os import environ
 from time import time, sleep
-from pprint import pformat
 
 import requests
 import requests.auth
@@ -34,7 +33,7 @@ class API:
 
         if not environ.get('CI'):
             self.log_function(e)
-            if hasattr(e, 'response'):
+            if hasattr(e, 'response') and hasattr(e.response, 'text'):
                 self.log_function(e.response.text)
 
     def _sleep(self, seconds):
@@ -47,6 +46,12 @@ class API:
         for _ in range(int(seconds)):
             if not self.force_stop:
                 sleep(1)
+
+    @staticmethod
+    def merge_params(parameters, new):
+        if new:
+            parameters = {**parameters, **new}
+        return parameters
 
     def get(self, *args, **kwargs):
 
@@ -61,7 +66,7 @@ class API:
             self.failed_last = False
             return req
 
-        except self.common_errors as e:
+        except requests.exceptions.RequestException as e:
             self.log_error(e)
             for i in range(1, self.num_retries):
                 sleep_time = self.retry_rate * i
@@ -72,19 +77,13 @@ class API:
                     req.raise_for_status()
                     self.log_function("New request successful")
                     return req
-                except self.common_errors:
+                except requests.exceptions.RequestException:
                     self.log_function("New request failed")
 
             # Allows for the api to ignore one potentially bad request
             if not self.failed_last:
                 self.failed_last = True
                 raise ApiError(e)
-            else:
-                raise FatalApiError(e)
-
-        except requests.exceptions.RequestException as e:
-            if self.ignore_errors:
-                return None
             else:
                 raise FatalApiError(e)
 
@@ -152,9 +151,8 @@ class Youtube(API):
                       "videoType": video_type,
                       "pageToken": page,
                       "key": self.key}
-        if params:
-            for key, value in params.items():
-                parameters[key] = value
+        parameters = self.merge_params(parameters, params)
+
         return self.api_call('search', parameters)
 
     def guess_channel_id(self, username, count=5):
@@ -177,9 +175,8 @@ class Youtube(API):
                       "type": result_type,
                       "pageToken": page,
                       "key": self.key}
-        if params:
-            for key, value in params.items():
-                parameters[key] = value
+        parameters = self.merge_params(parameters, params)
+
         return self.api_call('search', parameters)
 
     def videos(self, video_id, count=50, page='', params=None):
@@ -193,9 +190,8 @@ class Youtube(API):
             "pageToken": page,
             "key": self.key
         }
-        if params:
-            for key, value in params.items():
-                parameters[key] = value
+        parameters = self.merge_params(parameters, params)
+
         return self.api_call('videos', parameters)
 
     def video_comments(self, video_id, count=100, order="time", page='',
@@ -216,9 +212,8 @@ class Youtube(API):
             "pageToken": page,
             "key": self.key
         }
-        if params:
-            for key, value in params.items():
-                parameters[key] = value
+        parameters = self.merge_params(parameters, params)
+
         return self.api_call('commentThreads', parameters)
 
     def channel_comments(self, channel_id, count=100, order="time", page='',
@@ -236,9 +231,8 @@ class Youtube(API):
             "pageToken": page,
             "key": self.key
         }
-        if params:
-            for key, value in params.items():
-                parameters[key] = value
+        parameters = self.merge_params(parameters, params)
+
         return self.api_call('commentThreads', parameters)
 
 
@@ -315,9 +309,8 @@ class Reddit(API):
                       "type": result_type,
                       "t": time_period,
                       "after": page}
-        if params:
-            for key, value in params.items():
-                parameters[key] = value
+        parameters = self.merge_params(parameters, params)
+
         return self.api_call('search.json', parameters)
 
     def subreddit(self, subreddit, count=100, category="new", page='',
@@ -326,9 +319,8 @@ class Reddit(API):
         parameters = {"limit": count,
                       "t": time_period,
                       "after": page}
-        if params:
-            for key, value in params.items():
-                parameters[key] = value
+        parameters = self.merge_params(parameters, params)
+
         return self.api_call('r/%s/%s.json' % (subreddit, category), parameters)
 
     def user(self, user, count=100, order="new", page='',
@@ -340,9 +332,8 @@ class Reddit(API):
                       "type": result_type,
                       "t": time_period,
                       "after": page}
-        if params:
-            for key, value in params.items():
-                parameters[key] = value
+        parameters = self.merge_params(parameters, params)
+
         return self.api_call('user/%s/%s.json' % (user, result_type),
                              parameters)
 
@@ -353,9 +344,8 @@ class Reddit(API):
                       "depth": 50,
                       "showmore": True,
                       "sort": order}
-        if params:
-            for key, value in params.items():
-                parameters[key] = value
+        parameters = self.merge_params(parameters, params)
+
         return self.api_call('r/%s/comments/%s.json' % (subreddit, thread),
                              parameters)
 
@@ -366,9 +356,7 @@ class Reddit(API):
                       "link_id": link_id,
                       "sort": sort
                       }
-        if params:
-            for key, value in params.items():
-                parameters[key] = value
+        parameters = self.merge_params(parameters, params)
 
         return self.api_call('api/morechildren', parameters)
 
@@ -411,9 +399,8 @@ class Facebook(API):
 
         parameters = {"fields": fields,
                       "access_token": self.key}
-        if params:
-            for key, value in params.items():
-                parameters[key] = value
+        parameters = self.merge_params(parameters, params)
+
         return self.api_call('%s/%s' % (node, edge), parameters)
 
     def post(self, post_id, fields=None, params=None):
@@ -430,9 +417,8 @@ class Facebook(API):
 
         parameters = {"fields": fields,
                       "access_token": self.key}
-        if params:
-            for key, value in params.items():
-                parameters[key] = value
+        parameters = self.merge_params(parameters, params)
+
         return self.api_call('%s' % post_id, parameters)
 
     def page_posts(self, page_id, after='', post_type="posts",
@@ -455,9 +441,8 @@ class Facebook(API):
                       "after": after,
                       "fields": fields,
                       "include_hidden": include_hidden}
-        if params:
-            for key, value in params.items():
-                parameters[key] = value
+        parameters = self.merge_params(parameters, params)
+
         return self.api_call('%s/%s' % (page_id, post_type), parameters)
 
     def post_comments(self, post_id, after='', order="chronological",
@@ -485,9 +470,8 @@ class Facebook(API):
                       "order": order,
                       "fields": fields,
                       "filter": filter}
-        if params:
-            for key, value in params.items():
-                parameters[key] = value
+        parameters = self.merge_params(parameters, params)
+
         return self.api_call('%s/comments' % post_id, parameters)
 
 
@@ -519,10 +503,7 @@ class Tumblr(API):
             "limit": limit,
             "offset": offset
         }
-
-        if params:
-            for key, value in params.items():
-                parameters[key] = value
+        parameters = self.merge_params(parameters, params)
 
         return self.api_call("blog/%s/info" % blog, parameters)
 
@@ -531,10 +512,7 @@ class Tumblr(API):
             "limit": limit,
             "offset": offset
         }
-
-        if params:
-            for key, value in params.items():
-                parameters[key] = value
+        parameters = self.merge_params(parameters, params)
 
         return self.api_call("blog/%s/posts/%s" % (blog, type), parameters)
 
@@ -545,10 +523,7 @@ class Tumblr(API):
             "before": before,
             "filter": filter
         }
-
-        if params:
-            for key, value in params.items():
-                parameters[key] = value
+        parameters = self.merge_params(parameters, params)
 
         return self.api_call("tagged", parameters)
 
@@ -591,9 +566,8 @@ class Twitter(API):
                       "max_id": max_id,
                       "result_type": result_type,
                       "include_entities": include_entities}
-        if params:
-            for key, value in params.items():
-                parameters[key] = value
+        parameters = self.merge_params(parameters, params)
+
         return self.api_call("search/tweets.json", parameters)
 
     def user(self, username, count=200, max_id=None, exclude_replies=False,
@@ -603,7 +577,45 @@ class Twitter(API):
                       "max_id": max_id,
                       "exclude_replies": exclude_replies,
                       "include_rts": include_retweets}
-        if params:
-            for key, value in params.items():
-                parameters[key] = value
+        parameters = self.merge_params(parameters, params)
+
         return self.api_call("statuses/user_timeline.json", parameters)
+
+
+class Instagram(API):
+    def __init__(self, access_token):
+        super().__init__()
+
+        self.access_token = access_token
+        self.url = "https://api.instagram.com/v1"
+        self.request_rate = 1
+
+        self.last_request = time()
+
+    def api_call(self, edge, parameters, return_results=True):
+        parameters['access_token'] = self.access_token
+        req = self.get(f"{self.url}/{edge}", params=parameters)
+
+        time_diff = time() - self.last_request
+        if time_diff < self.request_rate:
+            sleep(time_diff)
+
+        self.last_request = time()
+
+        if return_results:
+            return req.json()
+
+    def endpoint_node_edge(self, endpoint, node, edge=None, params=None):
+        parameters = {}
+        parameters = self.merge_params(parameters, params)
+
+        if edge:
+            return self.api_call(f"{endpoint}/{node}/{edge}", parameters)
+        else:
+            return self.api_call(f"{endpoint}/{node}", parameters)
+
+    def user(self, user, params=None):
+        parameters = {}
+        parameters = self.merge_params(parameters, params)
+
+        return self.api_call(f"users/{user}", parameters)

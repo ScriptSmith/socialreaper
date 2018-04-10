@@ -100,15 +100,19 @@ class CSV:
         file_mode = 'w'
 
         if self.append:
-            field_names = self.read_fields()
-            if not field_names:
+            read_field_names = self.read_fields()
+            read_field_names_set = set(read_field_names) if read_field_names else set()
+            field_names_set = set(self.field_names)
+
+            if not read_field_names_set:
                 file_mode = 'w'
-            elif set(field_names) != set(self.field_names):
+            elif field_names_set.issubset(read_field_names_set):
+                self.field_names = read_field_names
+                file_mode = 'a'
+            else:
                 self.read_old()
                 file_mode = 'w'
-            else:
-                self.field_names = field_names
-                file_mode = 'a'
+
 
         with open(self.file_name, file_mode, encoding=self.encoding, errors='ignore') as f:
             writer = csv.DictWriter(f, fieldnames=self.field_names,
