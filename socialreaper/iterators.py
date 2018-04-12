@@ -1,8 +1,9 @@
-from urllib.parse import parse_qs, urlparse
 from pprint import pformat
+from urllib.parse import parse_qs, urlparse
 
 from .apis import Facebook as FacebookApi, Twitter as TwitterApi, \
-    Reddit as RedditApi, Youtube as YoutubeApi, Tumblr as TumblrApi, Instagram as InstagramApi
+    Reddit as RedditApi, Youtube as YoutubeApi, Tumblr as TumblrApi, Instagram as InstagramApi, \
+    Pinterest as PinterestAPI
 from .builders import FacebookFunctions
 from .exceptions import ApiError
 from .tools import flatten
@@ -145,6 +146,10 @@ class IterIter:
         if inner_args.get('include_parents'):
             self.include_parents = bool(inner_args.pop('include_parents'))
 
+        self.skip_inner_errors = False
+        if inner_args.get('skip_inner_errors'):
+            self.skip_inner_errors = bool(inner_args.pop('skip_inner_errors'))
+
         # Does the outer iter need a step
         self.outer_jump = True
 
@@ -173,6 +178,9 @@ class IterIter:
             # If inner iter is over, step outer
             self.outer_jump = True
             return self.__next__()
+        except ApiError as e:
+            if not self.skip_inner_errors:
+                raise e
 
 
 class Facebook(Source, FacebookFunctions):
@@ -804,3 +812,76 @@ class Instagram(Source):
 
     def user_requested_by(self, user, **kwargs):
         return self.InstagramIter(self.api.endpoint_node_edge, ('users', user, 'requested-by'), **kwargs)
+
+
+class Pinterest(Source):
+    def __init__(self, access_token):
+        self.access_token = access_token
+        self.api = PinterestAPI(access_token)
+
+    class PinterestIter(Iter):
+        def __init__(self, function, query, **kwargs):
+            super().__init__()
+
+            self.function = function
+
+            if kwargs.get('count'):
+                self.max = int(kwargs.pop('count'))
+
+            self.params = kwargs
+            self.query = query
+
+            self.run = False
+
+        def _read_response(self):
+            pass
+
+        def _get_after(self):
+            pass
+
+        def get_data(self):
+            self.page_count += 1
+
+            self._get_after()
+
+            try:
+                self.response = self.function(*self.query, **self.params)
+                self.data = self._read_response()
+            except ApiError as e:
+                raise IterError(e, vars(self))
+
+    class PinterestUserIter(PinterestIter):
+        def _read_response(self):
+            data = self.response['data']
+            if isinstance(data, list):
+                return data
+            else:
+                return [data]
+
+        def _get_after(self):
+            if self.page_count == 1:
+                return
+            if self.response.get('page'):
+                cursor = self.response['page'].get('cursor')
+                if cursor:
+                    self.params['cursor'] = cursor
+                    return
+            raise StopIteration
+
+    def user(self, user, fields=None, **kwargs):
+        return self.PinterestUserIter(self.api.read_edge, (f"{user}/", fields), **kwargs)
+
+    def user_boards(self, user, fields=None, **kwargs):
+        return self.PinterestUserIter(self.api.read_edge, (f"{user}/boards/", fields), **kwargs)
+
+    def user_pins(self, user, fields=None, **kwargs):
+        return self.PinterestUserIter(self.api.read_edge, (f"{user}/pins/", fields), **kwargs)
+
+    def board(self, user, board, fields=None, **kwargs):
+        return self.PinterestUserIter(self.api.read_edge, (f"boards/{user}/{board}/", fields), **kwargs)
+
+    def board_pins(self, user, board, fields=None, **kwargs):
+        return self.PinterestUserIter(self.api.read_edge, (f"boards/{user}/{board}/pins/", fields), **kwargs)
+
+    def pin(self, pin, fields=None, **kwargs):
+        return self.PinterestUserIter(self.api.read_edge, (f"pins/{pin}/", fields), **kwargs)

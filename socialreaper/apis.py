@@ -619,3 +619,33 @@ class Instagram(API):
         parameters = self.merge_params(parameters, params)
 
         return self.api_call(f"users/{user}", parameters)
+
+
+class Pinterest(API):
+    def __init__(self, access_token):
+        super().__init__()
+
+        self.access_token = access_token
+        self.url = "https://api.pinterest.com/v1"
+        self.request_rate = 10
+
+        self.last_request = time()
+
+    def api_call(self, edge, parameters, return_results=True):
+        parameters['access_token'] = self.access_token
+        req = self.get(f"{self.url}/{edge}", params=parameters)
+
+        time_diff = time() - self.last_request
+        if time_diff < self.request_rate:
+            sleep(time_diff)
+
+        self.last_request = time()
+
+        if return_results:
+            return req.json()
+
+    def read_edge(self, edge, fields, **params):
+        parameters = {"fields": ",".join(fields) if fields else None}
+        parameters = self.merge_params(parameters, params)
+
+        return self.api_call(edge, parameters)

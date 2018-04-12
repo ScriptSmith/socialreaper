@@ -51,7 +51,8 @@ def fill_gaps(list_dicts):
 
 class CSV:
     def __init__(self, data, file_name='data.csv', write_headers=True,
-                 append=False, key_column=None, flat=True, encoding='utf-8'):
+                 append=False, key_column=None, flat=True, encoding='utf-8',
+                 fill_gaps=True, field_names=None):
         self.data = data
         self.file_name = file_name
         self.write_headers = write_headers
@@ -59,6 +60,8 @@ class CSV:
         self.key_column = key_column
         self.flat = flat
         self.encoding = encoding
+        self.fill_gaps = fill_gaps
+        self.field_names = field_names
 
         if self.flat:
             self.data = [flatten(datum) for datum in self.data]
@@ -66,8 +69,6 @@ class CSV:
         if self.key_column:
             for datum in self.data:
                 datum['primary_key'] = self.key_column
-
-        self.field_names, self.data = fill_gaps(self.data)
 
         self.write()
 
@@ -96,23 +97,20 @@ class CSV:
         self.field_names, self.data = fill_gaps(self.data)
 
     def write(self):
-        self.field_names, self.data = fill_gaps(self.data)
+        if self.fill_gaps:
+            self.field_names, self.data = fill_gaps(self.data)
         file_mode = 'w'
 
         if self.append:
-            read_field_names = self.read_fields()
-            read_field_names_set = set(read_field_names) if read_field_names else set()
-            field_names_set = set(self.field_names)
-
-            if not read_field_names_set:
+            field_names = self.read_fields()
+            if not field_names:
                 file_mode = 'w'
-            elif field_names_set.issubset(read_field_names_set):
-                self.field_names = read_field_names
-                file_mode = 'a'
-            else:
+            elif set(field_names) != set(self.field_names):
                 self.read_old()
                 file_mode = 'w'
-
+            else:
+                self.field_names = field_names
+                file_mode = 'a'
 
         with open(self.file_name, file_mode, encoding=self.encoding, errors='ignore') as f:
             writer = csv.DictWriter(f, fieldnames=self.field_names,
