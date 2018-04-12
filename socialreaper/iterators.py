@@ -178,7 +178,7 @@ class IterIter:
             # If inner iter is over, step outer
             self.outer_jump = True
             return self.__next__()
-        except ApiError as e:
+        except IterError as e:
             if not self.skip_inner_errors:
                 raise e
 
