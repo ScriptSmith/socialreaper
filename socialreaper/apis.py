@@ -558,25 +558,27 @@ class Twitter(API):
             return req.json()
 
     def search(self, query, count=100, max_id='',
-               result_type="mixed", include_entities=True, params=None):
+               result_type="mixed", include_entities=True, tweet_mode='extended', params=None):
 
         count = 100 if count < 100 else count
         parameters = {"q": query,
                       "count": count,
                       "max_id": max_id,
                       "result_type": result_type,
-                      "include_entities": include_entities}
+                      "include_entities": include_entities,
+                      "tweet_mode": tweet_mode}
         parameters = self.merge_params(parameters, params)
 
         return self.api_call("search/tweets.json", parameters)
 
     def user(self, username, count=200, max_id=None, exclude_replies=False,
-             include_retweets=False, params=None):
+             include_retweets=False, tweet_mode='extended', params=None):
         parameters = {"screen_name": username,
                       "count": count,
                       "max_id": max_id,
                       "exclude_replies": exclude_replies,
-                      "include_rts": include_retweets}
+                      "include_rts": include_retweets,
+                      "tweet_mode": tweet_mode}
         parameters = self.merge_params(parameters, params)
 
         return self.api_call("statuses/user_timeline.json", parameters)

@@ -181,6 +181,9 @@ class IterIter:
         except IterError as e:
             if not self.skip_inner_errors:
                 raise e
+            else:
+                self.outer_jump = True
+                return self.__next__()
 
 
 class Facebook(Source, FacebookFunctions):
