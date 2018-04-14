@@ -1,7 +1,7 @@
 build/
 dist/
+builders/out.xml
 tests/test.py
 socialreaper.egg-info/
-socreates.py
 .idea
 *__pycache__*

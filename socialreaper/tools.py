@@ -127,7 +127,7 @@ def to_csv(data, field_names=None, filename='data.csv',
            write_headers=True, append=False, flat=True,
            primary_fields=None, sort_fields=True):
     """
-    Write a list of dicts to a csv file
+    DEPRECATED    Write a list of dicts to a csv file
 
     :param data: List of dicts
     :param field_names: The list column names
