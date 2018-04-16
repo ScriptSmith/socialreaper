@@ -9,7 +9,9 @@
 Not a programmer? [Try the GUI](https://github.com/scriptsmith/reaper)
 
 # Install
-`pip3 install socialreaper`
+```
+pip3 install socialreaper
+```
 
 # Examples
 ## Facebook
