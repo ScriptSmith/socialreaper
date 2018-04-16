@@ -94,4 +94,4 @@ from socialreaper.tools import CSV
 
 fbk = Facebook("api_key")
 posts = list(fbk.page_posts("mcdonalds"))
-CSV(data, file_name='data.csv')
+CSV(posts, file_name='mcdonalds.csv')
