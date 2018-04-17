@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='socialreaper',
-    version='1.0.0',
+    version='1.0.1',
     packages=['socialreaper'],
     package_dir={'socialreaper': 'socialreaper'},
     install_requires=['requests>=2.11.1', 'requests-oauthlib>=0.7.0',
