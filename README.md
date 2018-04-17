@@ -1,16 +1,17 @@
-[![](https://readthedocs.org/projects/socialreaper/badge/?version=latest)](https://socialreaper.readthedocs.io)
-[![](https://travis-ci.org/ScriptSmith/socialreaper.svg?branch=master)](https://travis-ci.org/ScriptSmith/socialreaper/)
 # socialreaper
-`socialreaper` is a Python 3 library that scrapes Facebook, Twitter, Reddit, Youtube, Pinterest, and Tumblr. 
+[![](https://readthedocs.org/projects/socialreaper/badge/?version=latest)](https://socialreaper.readthedocs.io)
+[![Downloads](http://pepy.tech/badge/socialreaper)](http://pepy.tech/count/socialreaper)
+
+`socialreaper` is a Python 3.6+ library that scrapes Facebook, Twitter, Reddit, Youtube, Pinterest, and Tumblr. 
 
 [Documentation](https://socialreaper.readthedocs.io)
 
 Not a programmer? [Try the GUI](https://github.com/scriptsmith/reaper)
 
 # Install
-`pip install socialreaper`
-
-`>>> import socialreaper`
+```
+pip3 install socialreaper
+```
 
 # Examples
 ## Facebook
@@ -83,3 +84,14 @@ comments = ytb.channel_video_comments(channel_id, video_count=500,
 for comment in comments:
     print(comment)
 ```
+
+# CSV export
+You can export a list of dictionaries using socialreaper's `CSV` class
+
+```python
+from socialreaper import Facebook
+from socialreaper.tools import CSV
+
+fbk = Facebook("api_key")
+posts = list(fbk.page_posts("mcdonalds"))
+CSV(posts, file_name='mcdonalds.csv')
