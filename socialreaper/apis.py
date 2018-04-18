@@ -314,7 +314,7 @@ class Reddit(API):
         return self.api_call('search.json', parameters)
 
     def subreddit(self, subreddit, count=100, category="new", page='',
-                  **params, time_period='all'):
+                  time_period='all', **params):
 
         parameters = {"limit": count,
                       "t": time_period,
@@ -324,7 +324,7 @@ class Reddit(API):
         return self.api_call('r/%s/%s.json' % (subreddit, category), parameters)
 
     def user(self, user, count=100, order="new", page='',
-             result_type="overview", **params, time_period='all'):
+             result_type="overview", time_period='all', **params):
 
         parameters = {"show": "all",
                       "limit": count,
