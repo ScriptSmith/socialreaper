@@ -1,9 +1,9 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 setup(
     name='socialreaper',
-    version='1.0.1',
-    packages=['socialreaper'],
+    version='1.0.3',
+    packages=find_packages(),
     package_dir={'socialreaper': 'socialreaper'},
     install_requires=['requests>=2.11.1', 'requests-oauthlib>=0.7.0',
                       'oauthlib>=2.0.1'],
