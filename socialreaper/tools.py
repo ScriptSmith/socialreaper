@@ -53,6 +53,8 @@ class CSV:
     def __init__(self, data, file_name='data.csv', write_headers=True,
                  append=False, key_column=None, flat=True, encoding='utf-8',
                  fill_gaps=True, field_names=None):
+        self.PRIM_COL = 'primary_key'
+
         self.data = data
         self.file_name = file_name
         self.write_headers = write_headers
@@ -64,13 +66,18 @@ class CSV:
         self.field_names = field_names
 
         if self.flat:
-            self.data = [flatten(datum) for datum in self.data]
+            self.data = (flatten(datum) for datum in self.data)
 
         if self.key_column:
-            for datum in self.data:
-                datum['primary_key'] = self.key_column
+            self.data = (self.add_key(datum) for datum in self.data)
+            if self.field_names:
+                self.field_names.append(self.PRIM_COL)
 
         self.write()
+
+    def add_key(self, data):
+        data[self.PRIM_COL] = self.key_column
+        return data
 
     def read_fields(self):
         if path.isfile(self.file_name):

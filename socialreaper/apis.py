@@ -384,7 +384,7 @@ class Facebook(API):
         if return_results:
             return req.json()
 
-    def node_edge(self, node, edge, fields=None, **params):
+    def node_edge(self, node, edge, fields=None, params=None):
 
         """
 
