@@ -17,7 +17,7 @@ pip3 install socialreaper
 For version 0.3.0 only
 
 ```
-pip3 install socialreaper=0.3.0
+pip3 install socialreaper==0.3.0
 ```
 
 ## Facebook
