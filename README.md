@@ -14,6 +14,12 @@ pip3 install socialreaper
 ```
 
 # Examples
+For version 0.3.0 only
+
+```
+pip3 install socialreaper==0.3.0
+```
+
 ## Facebook
 Get the comments from McDonalds' 1000 most recent posts
 ```python
