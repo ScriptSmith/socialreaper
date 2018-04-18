@@ -121,7 +121,7 @@ class Youtube(API):
                video_definition=None, video_dimension=None,
                video_duration=None, video_embeddable=None,
                video_license=None, video_syndicated=None, video_type=None,
-               params=None):
+               **params):
 
         count = 50 if count > 50 else count
         parameters = {"part": "snippet",
@@ -165,7 +165,7 @@ class Youtube(API):
         return self.api_call('channels', parameters)['items']
 
     def channel(self, channel_id, count=50, order="date", page='',
-                result_type="video", params=None):
+                result_type="video", **params):
 
         count = 50 if count > 50 else count
         parameters = {"part": "snippet,id",
@@ -179,7 +179,7 @@ class Youtube(API):
 
         return self.api_call('search', parameters)
 
-    def videos(self, video_id, count=50, page='', params=None):
+    def videos(self, video_id, count=50, page='', **params):
         parts = ["contentDetails", "id", "liveStreamingDetails",
                  "localizations", "player", "recordingDetails", "snippet",
                  "statistics", "status", "topicDetails"]
@@ -195,7 +195,7 @@ class Youtube(API):
         return self.api_call('videos', parameters)
 
     def video_comments(self, video_id, count=100, order="time", page='',
-                       search_terms=None, text_format="html", params=None):
+                       search_terms=None, text_format="html", **params):
 
         count = 50 if count > 50 else count
         if type(search_terms) is list:
@@ -217,7 +217,7 @@ class Youtube(API):
         return self.api_call('commentThreads', parameters)
 
     def channel_comments(self, channel_id, count=100, order="time", page='',
-                         search_term="", text_format="html", params=None):
+                         search_term="", text_format="html", **params):
 
         count = 100 if count > 100 else count
         parts = ["id", "replies", "snippet"]
@@ -300,7 +300,7 @@ class Reddit(API):
             return req.json()
 
     def search(self, query, count=100, order="new", page='',
-               result_type="link", time_period="all", params=None):
+               result_type="link", time_period="all", **params):
 
         parameters = {"show": "all",
                       "q": query,
@@ -314,7 +314,7 @@ class Reddit(API):
         return self.api_call('search.json', parameters)
 
     def subreddit(self, subreddit, count=100, category="new", page='',
-                  params=None, time_period='all'):
+                  **params, time_period='all'):
 
         parameters = {"limit": count,
                       "t": time_period,
@@ -324,7 +324,7 @@ class Reddit(API):
         return self.api_call('r/%s/%s.json' % (subreddit, category), parameters)
 
     def user(self, user, count=100, order="new", page='',
-             result_type="overview", params=None, time_period='all'):
+             result_type="overview", **params, time_period='all'):
 
         parameters = {"show": "all",
                       "limit": count,
@@ -338,7 +338,7 @@ class Reddit(API):
                              parameters)
 
     def thread_comments(self, thread, subreddit, count=1000, order="top",
-                        params=None):
+                        **params):
 
         parameters = {"limit": count,
                       "depth": 50,
@@ -350,7 +350,7 @@ class Reddit(API):
                              parameters)
 
     def more_children(self, children, link_id, sort="new",
-                      params=None):
+                      **params):
         parameters = {"api_type": "json",
                       "children": ",".join(children),
                       "link_id": link_id,
@@ -384,7 +384,7 @@ class Facebook(API):
         if return_results:
             return req.json()
 
-    def node_edge(self, node, edge, fields=None, params=None):
+    def node_edge(self, node, edge, fields=None, **params):
 
         """
 
@@ -403,7 +403,7 @@ class Facebook(API):
 
         return self.api_call('%s/%s' % (node, edge), parameters)
 
-    def post(self, post_id, fields=None, params=None):
+    def post(self, post_id, fields=None, **params):
 
         """
 
@@ -422,7 +422,7 @@ class Facebook(API):
         return self.api_call('%s' % post_id, parameters)
 
     def page_posts(self, page_id, after='', post_type="posts",
-                   include_hidden=False, fields=None, params=None):
+                   include_hidden=False, fields=None, **params):
 
         """
 
@@ -446,7 +446,7 @@ class Facebook(API):
         return self.api_call('%s/%s' % (page_id, post_type), parameters)
 
     def post_comments(self, post_id, after='', order="chronological",
-                      filter="stream", fields=None, params=None):
+                      filter="stream", fields=None, **params):
 
         """
 
@@ -498,7 +498,7 @@ class Tumblr(API):
         if return_results:
             return req.json()
 
-    def blog(self, blog, limit=20, offset=0, params=None):
+    def blog(self, blog, limit=20, offset=0, **params):
         parameters = {
             "limit": limit,
             "offset": offset
@@ -508,7 +508,7 @@ class Tumblr(API):
         return self.api_call("blog/%s/info" % blog, parameters)
 
     def blog_posts(self, blog, type="text", limit=20, offset=0, filter="text", notes_info=True, reblog_info=True,
-                   params=None):
+                   **params):
         parameters = {
             "limit": limit,
             "offset": offset,
@@ -520,7 +520,7 @@ class Tumblr(API):
 
         return self.api_call("blog/%s/posts/%s" % (blog, type), parameters)
 
-    def tag(self, tag, limit=20, before=None, filter=None, params=None):
+    def tag(self, tag, limit=20, before=None, filter=None, **params):
         parameters = {
             "tag": tag,
             "limit": limit,
@@ -562,7 +562,7 @@ class Twitter(API):
             return req.json()
 
     def search(self, query, count=100, max_id='',
-               result_type="mixed", include_entities=True, tweet_mode='extended', params=None):
+               result_type="mixed", include_entities=True, tweet_mode='extended', **params):
 
         count = 100 if count < 100 else count
         parameters = {"q": query,
@@ -576,7 +576,7 @@ class Twitter(API):
         return self.api_call("search/tweets.json", parameters)
 
     def user(self, username, count=200, max_id=None, exclude_replies=False,
-             include_retweets=False, tweet_mode='extended', params=None):
+             include_retweets=False, tweet_mode='extended', **params):
         parameters = {"screen_name": username,
                       "count": count,
                       "max_id": max_id,
@@ -611,7 +611,7 @@ class Instagram(API):
         if return_results:
             return req.json()
 
-    def endpoint_node_edge(self, endpoint, node, edge=None, params=None):
+    def endpoint_node_edge(self, endpoint, node, edge=None, **params):
         parameters = {}
         parameters = self.merge_params(parameters, params)
 
@@ -620,7 +620,7 @@ class Instagram(API):
         else:
             return self.api_call(f"{endpoint}/{node}", parameters)
 
-    def user(self, user, params=None):
+    def user(self, user, **params):
         parameters = {}
         parameters = self.merge_params(parameters, params)
 
