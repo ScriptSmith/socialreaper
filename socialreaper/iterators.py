@@ -4,7 +4,7 @@ from urllib.parse import parse_qs, urlparse
 from .apis import Facebook as FacebookApi, Twitter as TwitterApi, \
     Reddit as RedditApi, Youtube as YoutubeApi, Tumblr as TumblrApi, Instagram as InstagramApi, \
     Pinterest as PinterestAPI
-from .builders import FacebookFunctions
+from .builders import *
 from .exceptions import ApiError
 from .tools import flatten
 

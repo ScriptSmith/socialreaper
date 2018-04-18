@@ -507,10 +507,14 @@ class Tumblr(API):
 
         return self.api_call("blog/%s/info" % blog, parameters)
 
-    def blog_posts(self, blog, type="text", limit=20, offset=0, params=None):
+    def blog_posts(self, blog, type="text", limit=20, offset=0, filter="text", notes_info=True, reblog_info=True,
+                   params=None):
         parameters = {
             "limit": limit,
-            "offset": offset
+            "offset": offset,
+            "filter": filter,
+            "notes_info": notes_info,
+            "reblog_info": reblog_info
         }
         parameters = self.merge_params(parameters, params)
 
