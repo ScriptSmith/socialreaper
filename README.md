@@ -1,6 +1,7 @@
 # socialreaper
 [![](https://readthedocs.org/projects/socialreaper/badge/?version=latest)](https://socialreaper.readthedocs.io)
 [![Downloads](http://pepy.tech/badge/socialreaper)](http://pepy.tech/count/socialreaper)
+[![Gitter](https://img.shields.io/gitter/room/socialreaper/socialreaper.svg)](https://gitter.im/socialreaper)
 
 `socialreaper` is a Python 3.6+ library that scrapes Facebook, Twitter, Reddit, Youtube, Pinterest, and Tumblr. 
 
