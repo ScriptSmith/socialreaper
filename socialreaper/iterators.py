@@ -481,7 +481,7 @@ class Reddit(Source):
             self.reply_data = []
             self.more = []
             self.more_i = 0
-            self.chunk_size = 20
+            self.chunk_size = 1
 
             if kwargs.get('count'):
                 self.max = int(kwargs.pop('count'))
@@ -497,33 +497,39 @@ class Reddit(Source):
             lst = []
             if comment['data'].get('replies'):
                 for reply in comment['data']['replies']['data']['children']:
-                    lst.append(reply)
-                    comments = self._extract_comment(reply)
-                    lst.extend(comments)
+                    # print(f"{reply['data']['id']}: {reply['kind']}")
+                    if reply['kind'] == 'more' and reply['data']['children']:
+                        self.more.append(reply['data']['children'])
+                    else:
+                        lst.append(reply)
+                        comments = self._extract_comment(reply)
+                        lst.extend(comments)
 
-                del comment['data']['replies']
-
-                # if include_comment:
-                #     lst.insert(0, comment)
+                # del comment['data']['replies']
             return lst
 
-        def _classify_comment(self, comments, include_top=False):
+        def _classify_comment(self, comments, more_data=False):
             data = []
+            data.extend(comments)
 
-            if include_top:
-                data.extend(comments)
+            if more_data:
+                for comment in comments:
+                    if comment['kind'] == 'more':
+                        if comment['data']['children']:
+                            self.more.append(comment['data']['children'])
+
+                        sub_thread = comment['data']['parent_id'].split('_')[1]
+                        # sub_thread_data = self.function(self.thread, self.subreddit, sub_thread=sub_thread)
+                        # root_comment = sub_thread_data[1]['data']['children']
+                        # data.extend(self._classify_comment(root_comment))
+
+                        sub_thread_data = Reddit.ThreadCommentsIter(self.api, self.subreddit,  self.thread, sub_thread=sub_thread)
+                        sub_thread_data = list(sub_thread_data)
+                        data.extend(sub_thread_data)
 
             for comment in comments:
-
                 replies = self._extract_comment(comment)
-
-                for reply in replies:
-                    if reply['data']['id'] == "dueic24":
-                        print()
-                    if reply['kind'] == 'more':
-                        self.more.extend(reply['data']['children'])
-                    else:
-                        data.append(reply)
+                data.extend(replies)
 
             return data
 
@@ -535,30 +541,23 @@ class Reddit(Source):
                     self.response = self.function(self.thread, self.subreddit,
                                                   **self.params)
                     self.data = self.response[1]['data']['children']
+                    self.data = self._classify_comment(self.data)
                 except ApiError as e:
                     raise IterError(e, vars(self))
                 self.level = 1
                 return
 
             elif self.level == 1:
-                replies = self._classify_comment(self.data)
-
-                if len(replies) > 0:
-                    self.level = 2
-                    self.data = replies
-                    return
-
-            elif self.level == 2:
                 if self.more_i < len(self.more):
-                    chunk = self.more[self.more_i:self.more_i + self.chunk_size]
-                    self.more_i += self.chunk_size
+                    # chunk = self.more[self.more_i:self.more_i + self.chunk_size]
+                    # self.more_i += len(chunk)
 
-                    self.response = self.api.more_children(chunk,
-                                                           "t3_" + self.thread)
-                    more_data = self.response['json']['data']['things']
+                    chunk = self.more[self.more_i]
+                    self.more_i += 1
 
-                    self.data = self._classify_comment(more_data,
-                                                       include_top=True)
+                    self.response = self.api.more_children(chunk, "t3_" + self.thread)
+
+                    self.data = self._classify_comment(self.response['json']['data']['things'], more_data=True)
                     return
 
             raise StopIteration

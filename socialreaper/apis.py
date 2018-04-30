@@ -337,24 +337,29 @@ class Reddit(API):
         return self.api_call('user/%s/%s.json' % (user, result_type),
                              parameters)
 
-    def thread_comments(self, thread, subreddit, count=1000, order="top",
+    def thread_comments(self, thread, subreddit, order="top", sub_thread=None,
                         **params):
 
-        parameters = {"limit": count,
-                      "depth": 50,
+        parameters = {"depth": 50,
                       "showmore": True,
                       "sort": order}
         parameters = self.merge_params(parameters, params)
 
-        return self.api_call('r/%s/comments/%s.json' % (subreddit, thread),
-                             parameters)
+        path = None
+        if sub_thread:
+            path = 'r/%s/comments/%s/_/%s.json' % (subreddit, thread, sub_thread)
+        else:
+            path = 'r/%s/comments/%s.json' % (subreddit, thread)
+
+        return self.api_call(path, parameters)
 
     def more_children(self, children, link_id, sort="new",
                       **params):
         parameters = {"api_type": "json",
                       "children": ",".join(children),
                       "link_id": link_id,
-                      "sort": sort
+                      "sort": sort,
+                      "limit_children": False
                       }
         parameters = self.merge_params(parameters, params)
 
