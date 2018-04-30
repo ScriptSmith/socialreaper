@@ -81,7 +81,7 @@ class CSV:
 
     def read_fields(self):
         if path.isfile(self.file_name):
-            with open(self.file_name, 'r', encoding='utf-8') as f:
+            with open(self.file_name, 'r', encoding='utf-8', newline='') as f:
                 reader = csv.DictReader(f)
                 return reader.fieldnames
         else:
@@ -91,7 +91,7 @@ class CSV:
         if not path.isfile(self.file_name):
             return
 
-        with open(self.file_name, 'r', encoding='utf-8') as f:
+        with open(self.file_name, 'r', encoding='utf-8', newline='') as f:
             reader = csv.DictReader(f)
 
             data = []
@@ -119,7 +119,7 @@ class CSV:
                 self.field_names = field_names
                 file_mode = 'a'
 
-        with open(self.file_name, file_mode, encoding=self.encoding, errors='ignore') as f:
+        with open(self.file_name, file_mode, encoding=self.encoding, errors='ignore', newline='') as f:
             writer = csv.DictWriter(f, fieldnames=self.field_names,
                                     lineterminator='\n')
 
