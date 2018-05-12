@@ -216,6 +216,20 @@ class Youtube(API):
 
         return self.api_call('commentThreads', parameters)
 
+    def comments_list(self, parent_id, max_results=100, page='', text_format='html', **params):
+        parts = ["id", "snippet"]
+        parameters = {
+            "part": ",".join(parts),
+            "parentId": parent_id,
+            "maxResults": max_results,
+            "textFormat": text_format,
+            "pageToken": page,
+            "key": self.key
+        }
+        parameters = self.merge_params(parameters, params)
+
+        return self.api_call('comments', parameters)
+
     def channel_comments(self, channel_id, count=100, order="time", page='',
                          search_term="", text_format="html", **params):
 

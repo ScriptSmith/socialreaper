@@ -644,7 +644,11 @@ class YouTube(Source):
                 raise StopIteration
 
         def _get_after(self):
-            self.params['page'] = self.response.get('nextPageToken')
+            nextPage = self.response.get('nextPageToken')
+            if nextPage or self.page_count == 1:
+                self.params['page'] = nextPage
+            else:
+                raise StopIteration
 
     class YoutubeVideoIter(YouTubeIter):
         def _read_response(self):
@@ -654,12 +658,40 @@ class YouTube(Source):
             if self.response:
                 raise StopIteration
 
-    class YoutubeVideoCommentsIter(YouTubeIter):
+    class YoutubeThreadCommentsIter(YouTubeIter):
         def _read_response(self):
             return self.response['items']
 
         def _get_after(self):
-            self.params['page'] = self.response.get('nextPageToken')
+            nextPage = self.response.get('nextPageToken')
+            if nextPage or self.page_count == 1:
+                self.params['page'] = nextPage
+            else:
+                raise StopIteration
+
+    class YoutubeVideoCommentsIter(YouTubeIter):
+        def __init__(self, function, thread_replies, video_id, **kwargs):
+            super().__init__(function, video_id, **kwargs)
+            self.thread_replies = thread_replies
+
+        def _read_response(self):
+            data = self.response['items']
+            for thread in data:
+                if thread.get('replies'):
+                    if len(thread['replies']['comments']) == thread['snippet']['totalReplyCount']:
+                        data.extend(thread['replies']['comments'])
+                    else:
+                        data.extend(self.thread_replies(thread['id']))
+                    del thread['replies']
+
+            return data
+
+        def _get_after(self):
+            nextPage = self.response.get('nextPageToken')
+            if nextPage or self.page_count == 1:
+                self.params['page'] = nextPage
+            else:
+                raise StopIteration
 
     def search(self, query, **kwargs):
         return self.YouTubeSearchIter(self.api.search, query, **kwargs)
@@ -679,8 +711,12 @@ class YouTube(Source):
     def video(self, video, **kwargs):
         return self.YoutubeVideoIter(self.api.videos, video, **kwargs)
 
+    def thread_replies(self, video_id, **kwargs):
+        return self.YoutubeThreadCommentsIter(self.api.comments_list, video_id,
+                                             **kwargs)
+
     def video_comments(self, video_id, **kwargs):
-        return self.YoutubeVideoCommentsIter(self.api.video_comments, video_id,
+        return self.YoutubeVideoCommentsIter(self.api.video_comments, self.thread_replies, video_id,
                                              **kwargs)
 
 
