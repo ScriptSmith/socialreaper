@@ -94,7 +94,7 @@ class Youtube(API):
 
         self.key = api_key
         self.url = "https://www.googleapis.com/youtube/v3"
-        self.request_rate = 2
+        self.request_rate = 5
         self.last_request = time()
 
     def api_call(self, edge, parameters, return_results=True):
@@ -102,7 +102,7 @@ class Youtube(API):
 
         time_diff = time() - self.last_request
         if time_diff < self.request_rate:
-            sleep(time_diff)
+            sleep(self.request_rate - time_diff)
 
         self.last_request = time()
 
@@ -295,7 +295,7 @@ class Reddit(API):
 
         time_diff = time() - self.last_request
         if time_diff < self.request_rate:
-            sleep(time_diff)
+            sleep(self.request_rate - time_diff)
 
         self.last_request = time()
 
@@ -396,7 +396,7 @@ class Facebook(API):
 
         time_diff = time() - self.last_request
         if time_diff < self.request_rate:
-            sleep(time_diff)
+            sleep(self.request_rate - time_diff)
 
         self.last_request = time()
 
@@ -510,7 +510,7 @@ class Tumblr(API):
 
         time_diff = time() - self.last_request
         if time_diff < self.request_rate:
-            sleep(time_diff)
+            sleep(self.request_rate - time_diff)
 
         self.last_request = time()
 
@@ -573,7 +573,7 @@ class Twitter(API):
 
         time_diff = time() - self.last_request
         if time_diff < self.request_rate:
-            sleep(time_diff)
+            sleep(self.request_rate - time_diff)
 
         self.last_request = time()
 
@@ -623,7 +623,7 @@ class Instagram(API):
 
         time_diff = time() - self.last_request
         if time_diff < self.request_rate:
-            sleep(time_diff)
+            sleep(self.request_rate - time_diff)
 
         self.last_request = time()
 
@@ -662,7 +662,7 @@ class Pinterest(API):
 
         time_diff = time() - self.last_request
         if time_diff < self.request_rate:
-            sleep(time_diff)
+            sleep(self.request_rate - time_diff)
 
         self.last_request = time()
 
