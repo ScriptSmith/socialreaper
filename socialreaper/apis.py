@@ -260,7 +260,7 @@ class Reddit(API):
 
         self.url = "https://oauth.reddit.com"
         self.request_rate = 5
-        self.user_agent = "SocialReaper/0.1"
+        self.user_agent = "SocialReaper"
         self.headers = {}
         self.token_expiry = 0
         self.requires_reauth = True
