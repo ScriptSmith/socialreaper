@@ -4,7 +4,7 @@ from urllib.parse import parse_qs, urlparse
 from .apis import Facebook as FacebookApi, Twitter as TwitterApi, \
     Reddit as RedditApi, Youtube as YoutubeApi, Tumblr as TumblrApi, Instagram as InstagramApi, \
     Pinterest as PinterestAPI
-from .builders import *
+from .builders.build import Shell
 from .exceptions import ApiError
 from .tools import flatten
 
@@ -186,7 +186,7 @@ class IterIter:
                 return self.__next__()
 
 
-class Facebook(Source, FacebookFunctions):
+class Facebook(Source, Shell):
     def __init__(self, access_token):
         super().__init__()
         self.api_key = access_token

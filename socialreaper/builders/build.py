@@ -3,11 +3,13 @@ import sys
 import xml.etree.ElementTree as ET
 from xml.etree.ElementTree import tostring
 
+import os
+
 max_depth = 3
 
 
-def get_nodes():
-    with open('facebook_nodes', 'r') as f:
+def get_nodes(path):
+    with open(os.path.join(path, 'facebook_nodes'), 'r') as f:
         lines = f.readlines()
 
         nodes = {}
@@ -44,8 +46,8 @@ def expand_nodes(nodes):
     return nodes
 
 
-def get_fields():
-    with open('facebook_fields.json', 'r') as f:
+def get_fields(path):
+    with open(os.path.join(path, 'facebook_fields.json'), 'r') as f:
         return json.load(f)
 
 
@@ -79,17 +81,22 @@ def build_functions(nodes, parent=None, depth=0):
         function_args = "fields=None, **kwargs"
         function_definition = f"def {function_name}(self, {function_node}_id, {function_args}):"
 
+        method = None
         if depth == 0:
-            function_type = f"self.SingleIter(self.api.node_edge, {function_node}_id, fields=fields, **kwargs)"
+            # function_type = f"self.SingleIter(self.api.node_edge, {function_node}_id, fields=fields, **kwargs)"
+            def method(self, node_id, fields=None, **kwargs):
+                return self.SingleIter(self.api.node_edge, node_id, fields=fields, **kwargs)
         elif depth == 1:
-            function_type = f"self.FacebookIter(self.api.node_edge, {function_node}_id, '{node}', fields=fields, **kwargs)"
+            # function_type = f"self.FacebookIter(self.api.node_edge, {function_node}_id, '{node}', fields=fields, **kwargs)"
+            def method(self, node_id, fields=None, _node=node, **kwargs):
+                return self.FacebookIter(self.api.node_edge, node_id, _node, fields=fields, **kwargs)
+
         else:
-            function_type = \
-                f"self.iter_iter(self.{parent['name']}({function_node}_id), 'id', self.{nodes['node_name']}_{node}, fields=fields, **kwargs)"
+            # function_type = f"self.iter_iter(self.{parent['name']}({function_node}_id), 'id', self.{nodes['node_name']}_{node}, fields=fields, **kwargs)"
+            def method(self, node_id, fields=None, _parent_name=parent['name'], _node_name=f"{nodes['node_name']}_{node}", **kwargs):
+                return self.iter_iter(getattr(self, _parent_name)(node_id), 'id', getattr(self, _node_name), fields=fields, **kwargs)
 
-        function_full = f"\t{function_definition}\n\t\treturn {function_type}\n\n"
-
-        functions.append(function_full)
+        functions.append((function_name, method))
 
         this = {
             'node': function_node,
@@ -190,28 +197,30 @@ def build_nodes(nodes, root, parent_id=None, depth=0):
 
 sys.setrecursionlimit(1500)
 
-nodes = get_nodes()
+path = os.path.dirname(__file__)
+nodes = get_nodes(path)
 expand_nodes(nodes)
 
-fields = get_fields()
+fields = get_fields(path)
 
-root = ET.Element("source")
-root_name = ET.SubElement(root, 'name')
-root_name.text = "Facebook"
-keys = ET.SubElement(root, 'keys')
-key = ET.SubElement(keys, 'key')
-key_name = ET.SubElement(key, 'name')
-key_name.text = "Access token"
-key_value = ET.SubElement(key, 'value')
-key_value.text = "access_token"
-children = build_nodes(nodes, root)
+### To generate XML for github.com/scriptsmith/reaper
+# root = ET.Element("source")
+# root_name = ET.SubElement(root, 'name')
+# root_name.text = "Facebook"
+# keys = ET.SubElement(root, 'keys')
+# key = ET.SubElement(keys, 'key')
+# key_name = ET.SubElement(key, 'name')
+# key_name.text = "Access token"
+# key_value = ET.SubElement(key, 'value')
+# key_value.text = "access_token"
+# children = build_nodes(nodes, root)
+#
+# with open('out.xml', 'wb') as f:
+#     f.write(tostring(root))
 
-with open('out.xml', 'wb') as f:
-    f.write(tostring(root))
+class Shell():
+    def __init__(self):
+        pass
 
-functions = build_functions(nodes)
-
-with open('output.py', 'w') as f:
-    class_definition = "class FacebookFunctions:\n"
-    f.write(class_definition)
-    f.writelines(functions)
+for name, method in build_functions(nodes):
+    setattr(Shell, name, method)
