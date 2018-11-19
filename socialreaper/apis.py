@@ -9,7 +9,7 @@ from .exceptions import *
 
 
 class API:
-    def __init__(self):
+    def __init__(self, session=None):
         self.log_function = print
         self.retry_rate = 5
         self.num_retries = 5
@@ -19,6 +19,7 @@ class API:
         self.common_errors = (requests.exceptions.ConnectionError,
                               requests.exceptions.Timeout,
                               requests.exceptions.HTTPError)
+        self.session = session
 
     def __str__(self):
         return pformat(vars(self))
@@ -61,7 +62,8 @@ class API:
         """
 
         try:
-            req = requests.get(*args, **kwargs)
+            req_func = self.session.get if self.session else requests.get
+            req = req_func(*args, **kwargs)
             req.raise_for_status()
             self.failed_last = False
             return req
@@ -674,3 +676,52 @@ class Pinterest(API):
         parameters = self.merge_params(parameters, params)
 
         return self.api_call(edge, parameters)
+
+
+class Twitch(API):
+    def __init__(self, client_id):
+        super().__init__()
+
+        self.client_id = client_id
+        self.url = "https://api.twitch.tv/helix"
+        self.request_rate = 5
+
+        self.last_request = time()
+
+    def api_call(self, edge, parameters, return_results=True):
+        headers = {
+            'Client-ID': self.client_id
+        }
+        req = self.get(f"{self.url}/{edge}", params=parameters,
+                       headers=headers)
+
+        time_diff = time() - self.last_request
+        if time_diff < self.request_rate:
+            sleep(self.request_rate - time_diff)
+
+        self.last_request = time()
+
+        if return_results:
+            return req.json()
+
+    def videos(self, id=None, user_id=None, game_id=None, after=None,
+               before=None, first=100, period='all', sort='time',
+               type='all', **kwargs):
+
+        parameters = {
+            'id': id,
+            'user_id': user_id,
+            'game_id': game_id,
+            'after': after,
+            'before': before,
+            'first': first,
+            'period': period,
+            'sort': sort,
+            'type': type
+        }
+
+        parameters = self.merge_params(parameters, kwargs)
+        return self.api_call('videos', parameters=parameters)
+
+    def user_id(self, username):
+        return self.api_call('users', parameters={'login': username})
