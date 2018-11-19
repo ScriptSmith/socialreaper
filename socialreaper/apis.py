@@ -218,7 +218,8 @@ class Youtube(API):
 
         return self.api_call('commentThreads', parameters)
 
-    def comments_list(self, parent_id, max_results=100, page='', text_format='html', **params):
+    def comments_list(self, parent_id, max_results=100, page='',
+                      text_format='html', **params):
         parts = ["id", "snippet"]
         parameters = {
             "part": ",".join(parts),
@@ -363,7 +364,8 @@ class Reddit(API):
 
         path = None
         if sub_thread:
-            path = 'r/%s/comments/%s/_/%s.json' % (subreddit, thread, sub_thread)
+            path = 'r/%s/comments/%s/_/%s.json' % (
+            subreddit, thread, sub_thread)
         else:
             path = 'r/%s/comments/%s.json' % (subreddit, thread)
 
@@ -528,7 +530,8 @@ class Tumblr(API):
 
         return self.api_call("blog/%s/info" % blog, parameters)
 
-    def blog_posts(self, blog, type="text", limit=20, offset=0, filter="text", notes_info=True, reblog_info=True,
+    def blog_posts(self, blog, type="text", limit=20, offset=0, filter="text",
+                   notes_info=True, reblog_info=True,
                    **params):
         parameters = {
             "limit": limit,
@@ -583,7 +586,8 @@ class Twitter(API):
             return req.json()
 
     def search(self, query, count=100, max_id='',
-               result_type="mixed", include_entities=True, tweet_mode='extended', **params):
+               result_type="mixed", include_entities=True,
+               tweet_mode='extended', **params):
 
         count = 100 if count < 100 else count
         parameters = {"q": query,
@@ -607,45 +611,6 @@ class Twitter(API):
         parameters = self.merge_params(parameters, params)
 
         return self.api_call("statuses/user_timeline.json", parameters)
-
-
-class Instagram(API):
-    def __init__(self, access_token):
-        super().__init__()
-
-        self.access_token = access_token
-        self.url = "https://api.instagram.com/v1"
-        self.request_rate = 1
-
-        self.last_request = time()
-
-    def api_call(self, edge, parameters, return_results=True):
-        parameters['access_token'] = self.access_token
-        req = self.get(f"{self.url}/{edge}", params=parameters)
-
-        time_diff = time() - self.last_request
-        if time_diff < self.request_rate:
-            sleep(self.request_rate - time_diff)
-
-        self.last_request = time()
-
-        if return_results:
-            return req.json()
-
-    def endpoint_node_edge(self, endpoint, node, edge=None, **params):
-        parameters = {}
-        parameters = self.merge_params(parameters, params)
-
-        if edge:
-            return self.api_call(f"{endpoint}/{node}/{edge}", parameters)
-        else:
-            return self.api_call(f"{endpoint}/{node}", parameters)
-
-    def user(self, user, **params):
-        parameters = {}
-        parameters = self.merge_params(parameters, params)
-
-        return self.api_call(f"users/{user}", parameters)
 
 
 class Pinterest(API):

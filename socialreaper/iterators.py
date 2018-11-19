@@ -2,7 +2,7 @@ from pprint import pformat
 from urllib.parse import parse_qs, urlparse
 
 from .apis import Facebook as FacebookApi, Twitter as TwitterApi, \
-    Reddit as RedditApi, Youtube as YoutubeApi, Tumblr as TumblrApi, Instagram as InstagramApi, \
+    Reddit as RedditApi, Youtube as YoutubeApi, Tumblr as TumblrApi, \
     Pinterest as PinterestAPI
 from .builders.build import Shell
 from .exceptions import ApiError
@@ -523,7 +523,10 @@ class Reddit(Source):
                         # root_comment = sub_thread_data[1]['data']['children']
                         # data.extend(self._classify_comment(root_comment))
 
-                        sub_thread_data = Reddit.ThreadCommentsIter(self.api, self.subreddit,  self.thread, sub_thread=sub_thread)
+                        sub_thread_data = Reddit.ThreadCommentsIter(self.api,
+                                                                    self.subreddit,
+                                                                    self.thread,
+                                                                    sub_thread=sub_thread)
                         sub_thread_data = list(sub_thread_data)
                         data.extend(sub_thread_data)
 
@@ -555,9 +558,11 @@ class Reddit(Source):
                     chunk = self.more[self.more_i]
                     self.more_i += 1
 
-                    self.response = self.api.more_children(chunk, "t3_" + self.thread)
+                    self.response = self.api.more_children(chunk,
+                                                           "t3_" + self.thread)
 
-                    self.data = self._classify_comment(self.response['json']['data']['things'], more_data=True)
+                    self.data = self._classify_comment(
+                        self.response['json']['data']['things'], more_data=True)
                     return
 
             raise StopIteration
@@ -678,7 +683,8 @@ class YouTube(Source):
             data = self.response['items']
             for thread in data:
                 if thread.get('replies'):
-                    if len(thread['replies']['comments']) == thread['snippet']['totalReplyCount']:
+                    if len(thread['replies']['comments']) == thread['snippet'][
+                        'totalReplyCount']:
                         data.extend(thread['replies']['comments'])
                     else:
                         data.extend(self.thread_replies(thread['id']))
@@ -713,10 +719,11 @@ class YouTube(Source):
 
     def thread_replies(self, video_id, **kwargs):
         return self.YoutubeThreadCommentsIter(self.api.comments_list, video_id,
-                                             **kwargs)
+                                              **kwargs)
 
     def video_comments(self, video_id, **kwargs):
-        return self.YoutubeVideoCommentsIter(self.api.video_comments, self.thread_replies, video_id,
+        return self.YoutubeVideoCommentsIter(self.api.video_comments,
+                                             self.thread_replies, video_id,
                                              **kwargs)
 
 
@@ -797,61 +804,6 @@ class Tumblr(Source):
         return self.TumblrTagIter(self.api.tag, tag, **kwargs)
 
 
-class Instagram(Source):
-    def __init__(self, access_token):
-        self.access_token = access_token
-        self.api = InstagramApi(access_token)
-
-    class InstagramIter(Iter):
-        def __init__(self, function, query, **kwargs):
-            super().__init__()
-
-            self.function = function
-
-            if kwargs.get('count'):
-                self.max = int(kwargs.pop('count'))
-
-            self.params = kwargs
-            self.query = query
-
-            self.run = False
-
-        def _read_response(self):
-            data = self.response['data']
-            if len(data) > 0:
-                return data
-            else:
-                raise StopIteration
-
-        def get_data(self):
-            self.page_count += 1
-            if self.run:
-                raise StopIteration
-            else:
-                self.run = True
-
-            try:
-                self.response = self.function(*self.query, **self.params)
-                self.data = self._read_response()
-            except ApiError as e:
-                raise IterError(e, vars(self))
-
-    def user_media(self, user, **kwargs):
-        return self.InstagramIter(self.api.endpoint_node_edge, ('users', user, 'media/recent'), **kwargs)
-
-    def user_liked(self, user, **kwargs):
-        return self.InstagramIter(self.api.endpoint_node_edge, ('users', user, 'media/liked'), **kwargs)
-
-    def user_follows(self, user, **kwargs):
-        return self.InstagramIter(self.api.endpoint_node_edge, ('users', user, 'follows'), **kwargs)
-
-    def user_followed_by(self, user, **kwargs):
-        return self.InstagramIter(self.api.endpoint_node_edge, ('users', user, 'followed-by'), **kwargs)
-
-    def user_requested_by(self, user, **kwargs):
-        return self.InstagramIter(self.api.endpoint_node_edge, ('users', user, 'requested-by'), **kwargs)
-
-
 class Pinterest(Source):
     def __init__(self, access_token):
         self.access_token = access_token
@@ -907,19 +859,27 @@ class Pinterest(Source):
             raise StopIteration
 
     def user(self, user, fields=None, **kwargs):
-        return self.PinterestUserIter(self.api.read_edge, (f"{user}/", fields), **kwargs)
+        return self.PinterestUserIter(self.api.read_edge, (f"{user}/", fields),
+                                      **kwargs)
 
     def user_boards(self, user, fields=None, **kwargs):
-        return self.PinterestUserIter(self.api.read_edge, (f"{user}/boards/", fields), **kwargs)
+        return self.PinterestUserIter(self.api.read_edge,
+                                      (f"{user}/boards/", fields), **kwargs)
 
     def user_pins(self, user, fields=None, **kwargs):
-        return self.PinterestUserIter(self.api.read_edge, (f"{user}/pins/", fields), **kwargs)
+        return self.PinterestUserIter(self.api.read_edge,
+                                      (f"{user}/pins/", fields), **kwargs)
 
     def board(self, user, board, fields=None, **kwargs):
-        return self.PinterestUserIter(self.api.read_edge, (f"boards/{user}/{board}/", fields), **kwargs)
+        return self.PinterestUserIter(self.api.read_edge,
+                                      (f"boards/{user}/{board}/", fields),
+                                      **kwargs)
 
     def board_pins(self, user, board, fields=None, **kwargs):
-        return self.PinterestUserIter(self.api.read_edge, (f"boards/{user}/{board}/pins/", fields), **kwargs)
+        return self.PinterestUserIter(self.api.read_edge,
+                                      (f"boards/{user}/{board}/pins/", fields),
+                                      **kwargs)
 
     def pin(self, pin, fields=None, **kwargs):
-        return self.PinterestUserIter(self.api.read_edge, (f"pins/{pin}/", fields), **kwargs)
+        return self.PinterestUserIter(self.api.read_edge,
+                                      (f"pins/{pin}/", fields), **kwargs)
