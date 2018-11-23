@@ -66,7 +66,7 @@ class CSV:
         self.field_names = field_names
 
         if self.flat:
-            self.data = (flatten(datum) for datum in self.data)
+            self.data = [flatten(datum) for datum in self.data]
 
         if self.key_column:
             self.data = (self.add_key(datum) for datum in self.data)
