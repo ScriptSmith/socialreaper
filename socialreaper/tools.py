@@ -1,7 +1,7 @@
 import requests
 import json
 import csv
-from os import path, mkdir
+from os import path, makedirs
 import collections
 
 
@@ -221,7 +221,7 @@ def save_file(filename, source, folder="Downloads"):
     r = requests.get(source, stream=True)
     if r.status_code == 200:
         if not path.isdir(folder):
-            mkdir(folder)
+            makedirs(folder, exist_ok=True)
         with open("%s/%s" % (folder, filename), 'wb') as f:
             for chunk in r:
                 f.write(chunk)
