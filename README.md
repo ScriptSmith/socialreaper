@@ -41,8 +41,8 @@ Save the 500 most recent tweets from the user `@realDonaldTrump` to a csv file
 from socialreaper import Twitter
 from socialreaper.tools import to_csv
 
-twt = Twitter(app_key="xxx", app_secret="xxx", oauth_token="xxx", 
-    oauth_token_secret="xxx")
+twt = Twitter(api_key="xxx", api_secret="xxx", access_token="xxx", 
+    access_token_secret="xxx")
     
 tweets = twt.user("realDonaldTrump", count=500, exclude_replies=True, 
     include_retweets=False)
